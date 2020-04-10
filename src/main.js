@@ -1,3 +1,7 @@
+import {data} from "./mock/data";
+import {generateFilms} from "./mock/films";
+import {generateFilters} from "./mock/filter";
+
 import {createProfileTemplate} from "./components/profile.js";
 import {createNavigationTemplate} from "./components/navigation.js";
 import {createSortingTemplate} from "./components/sorting.js";
@@ -35,8 +39,11 @@ const renderFilms = (container, template, filmCount) => {
 const siteHeaderElement = document.querySelector(`.header`);
 const siteMainElement = document.querySelector(`.main`);
 
+const films = generateFilms(2);
+const filters = generateFilters();
+
 render(siteHeaderElement, createProfileTemplate());
-render(siteMainElement, createNavigationTemplate());
+render(siteMainElement, createNavigationTemplate(filters));
 render(siteMainElement, createSortingTemplate());
 render(siteMainElement, createFilmsTemplate());
 
@@ -52,3 +59,28 @@ render(filmListContainerElements[FILMS_LIST_CONTAINER.FILM], createShowMoreButto
 
 renderFilms(filmListContainerElements[FILMS_LIST_CONTAINER.TOP_RATED], createFilmCardTemplate(), COUNT.TOP_RATED);
 renderFilms(filmListContainerElements[FILMS_LIST_CONTAINER.MOST_COMMENTED], createFilmCardTemplate(), COUNT.MOST_COMMENTED);
+
+// let titles = [];
+// titles = data.map((item) => {
+//   return item.film_info.director;
+// });
+
+let titles = new Set();
+data.forEach((item) => {
+  item.film_info.actors.forEach((element) => {
+    // console.log(element);
+    titles.add(element);
+  });
+});
+
+// eslint-disable-next-line no-console
+// console.log(Array.from(titles));
+
+// eslint-disable-next-line no-console
+
+// console.log(testFilms);
+// films.forEach((item) => console.log(item.film_info.release.date));
+// eslint-disable-next-line no-console
+films.forEach((item) => console.log(item));
+
+

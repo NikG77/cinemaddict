@@ -15,5 +15,5 @@ node_modules/
 public/bundle.js
 public/bundle.js.map
 
-public/src/data.js
+public/src/mock/data.js
 
