@@ -7,21 +7,28 @@ const WRITERS_FILM = {
   MIN: 0,
   MAX: 3,
 };
+
 const ACTORS_FILM = {
   MIN: 5,
   MAX: 14,
 };
 
+const GENRE_FILM = {
+  MIN: 1,
+  MAX: 3,
+};
 
-const titleItems = [`A Shark Who Bought The Carpet`, `Happiness Of The Floor`, `A Man Who Bought The Wall`, `A Shark Of The Room`, `Raiders Who The Storm`, `A Lion Of The Darkness`, `A Little Pony Within The Wall`, `Family Who Sold The Wall`, `Pioneers Who Saw The Carpet`, `Raiders In The Void`, `A Shark In Him`, `Friends Of Him`, `A Little Pony With The Floor`, `A Tale Of A Little Bird Of Him`, `Country Who Saw The Room`, `Family In The Wall`, `Guest Who Us`, `Country Who Saw Him`, `Country On Us`, `Pioneers Of Himself`];
+const GenreItems = [`Action`, `Sci-Fi`, `Adventure`, `Comedy`, `Animation`, `Thriller`, `Horror`, `Drama`, `Family`];
 
-const alternativeTitleItems = [`A Lion Who Sold The Void`, `A Lion On Us`, `Laziness In Us`, `A Shark Who Sold The Floor`, `A Man In The Floor`, `A Tale Of A Little Bird In Himself`, `A Man Who Bought Himself`, `Raiders Without The Room`, `Raiders Who The Darkness`, `Happiness Of The Floor`, `A Shark Of Himself`, `A Tale Of A Little Bird With The Wall`, `Country On Himself`, `Country On The Storm`, `Family Who Bought Us`, `Country In The Darkness`, `Happiness Who Sold Themselves`, `Laziness Who Stole The Wall`, `Laziness Who The Darkness`, `A Tale Of A Little Bird Within The Room`];
+const TitleItems = [`A Shark Who Bought The Carpet`, `Happiness Of The Floor`, `A Man Who Bought The Wall`, `A Shark Of The Room`, `Raiders Who The Storm`, `A Lion Of The Darkness`, `A Little Pony Within The Wall`, `Family Who Sold The Wall`, `Pioneers Who Saw The Carpet`, `Raiders In The Void`, `A Shark In Him`, `Friends Of Him`, `A Little Pony With The Floor`, `A Tale Of A Little Bird Of Him`, `Country Who Saw The Room`, `Family In The Wall`, `Guest Who Us`, `Country Who Saw Him`, `Country On Us`, `Pioneers Of Himself`];
 
-let directorItems = Array.from(new Set([`Quentin Tarantino`, `Clint Eastwood`, `Quentin Tarantino`, `Clint Eastwood`, `Tom Ford`, `Brad Bird`, `Chrostopher Nolan`, `Alejandro Gonsales Inarritu`, `Tom Ford`, `Brad Bird`, `Clint Eastwood`, `Brad Bird`, `Tom Ford`, `Alejandro Gonsales Inarritu`, `Clint Eastwood`, `Alejandro Gonsales Inarritu`, `Akira Kurosawa`, `James Cameron`, `Tom Ford`, `Clint Eastwood`]));
+const AlternativeTitleItems = [`A Lion Who Sold The Void`, `A Lion On Us`, `Laziness In Us`, `A Shark Who Sold The Floor`, `A Man In The Floor`, `A Tale Of A Little Bird In Himself`, `A Man Who Bought Himself`, `Raiders Without The Room`, `Raiders Who The Darkness`, `Happiness Of The Floor`, `A Shark Of Himself`, `A Tale Of A Little Bird With The Wall`, `Country On Himself`, `Country On The Storm`, `Family Who Bought Us`, `Country In The Darkness`, `Happiness Who Sold Themselves`, `Laziness Who Stole The Wall`, `Laziness Who The Darkness`, `A Tale Of A Little Bird Within The Room`];
 
-const writersItems = [`Brad Bird`, `Robert Rodrigues`, `Takeshi Kitano`, `Hayao Miazaki`, `Robert Zemeckis`, `Martin Scorsese`, `Quentin Tarantino`, `Stephen King`];
+const DirectorItems = [`Quentin Tarantino`, `Clint Eastwood`, `Tom Ford`, `Brad Bird`, `Chrostopher Nolan`, `Alejandro Gonsales Inarritu`, `Akira Kurosawa`, `James Cameron`];
 
-const actorsItems = [`Robert De Niro`, `Matt Damon`, `Tom Hanks`, `Takeshi Kitano`, `Christian Bale`, `Gary Oldman`, `Harrison Ford`, `Ralph Fiennes`, `Morgan Freeman `, `Michael Caine`, `Brad Pitt`, `Leonardo DiCaprio`, `Edward Norton`, `Al Pacino`, `Cillian Murphy`];
+const WritersItems = [`Brad Bird`, `Robert Rodrigues`, `Takeshi Kitano`, `Hayao Miazaki`, `Robert Zemeckis`, `Martin Scorsese`, `Quentin Tarantino`, `Stephen King`];
+
+const ActorsItems = [`Robert De Niro`, `Matt Damon`, `Tom Hanks`, `Takeshi Kitano`, `Christian Bale`, `Gary Oldman`, `Harrison Ford`, `Ralph Fiennes`, `Morgan Freeman `, `Michael Caine`, `Brad Pitt`, `Leonardo DiCaprio`, `Edward Norton`, `Al Pacino`, `Cillian Murphy`];
 
 // class Comments {
 //   constructor(emotion, data, avtor, message) {
@@ -32,9 +39,7 @@ const actorsItems = [`Robert De Niro`, `Matt Damon`, `Tom Hanks`, `Takeshi Kitan
 //   }
 // }
 
-
-let descriptionItems = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.`;
-descriptionItems = descriptionItems.split(`.`);
+const DescriptionItems = [`Lorem ipsum dolor sit amet, consectetur adipiscing elit.`, ` Cras aliquet varius magna, non porta ligula feugiat eget.`, ` Fusce tristique felis at fermentum pharetra.`, ` Aliquam id orci ut lectus varius viverra.`, ` Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante.`, ` Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum.`, ` Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui.`, ` Sed sed nisi sed augue convallis suscipit in sed felis.`, ` Aliquam erat volutpat.`, ` Nunc fermentum tortor ac porta dapibus.`, ` In rutrum ac purus sit amet tempus.`];
 
 // Выдает на основе входящего массива массив с рандомным кол-вом элементов
 const getRandomArray = function (arr, min, max) {
@@ -74,27 +79,40 @@ const getRandomDate = () => {
   return targetDate;
 };
 
+let commentsItems = [];
+let commentsCounter = 0;
+
+const getComments = (id) => {
+  const commentsNumber = getRandomIntegerNumber(1, 5);
+  commentsItems[id] = [];
+  for (let i = commentsCounter; i < commentsCounter + commentsNumber; i++) {
+    commentsItems[id].push(i);
+  }
+  commentsCounter += commentsNumber;
+  return commentsItems[id];
+};
+
 let id = -1;
 const generateFilm = () => {
   id++;
   return {
     "id": id,
     "film_info": {
-      "title": getRandomArray(titleItems, DECRIPTION_FILM.MIN, DECRIPTION_FILM.MAX),
-      "alternative_title": getRandomArrayItem(alternativeTitleItems),
+      "title": getRandomArrayItem(TitleItems),
+      "alternative_title": getRandomArrayItem(AlternativeTitleItems),
       "total_rating": getRandomReiting(),
-      "poster": `../../publick/images/posters/made-for-each-other.png`,
+      "poster": `./images/posters/the-great-flamarion.jpg`,
       "age_rating": 6,
-      "director": getRandomArrayItem(directorItems),
-      "writers": getRandomArray(writersItems, WRITERS_FILM.MIN, WRITERS_FILM.MAX),
-      "actors": getRandomArray(actorsItems, ACTORS_FILM.MIN, ACTORS_FILM.MAX),
+      "director": getRandomArrayItem(DirectorItems),
+      "writers": getRandomArray(WritersItems, WRITERS_FILM.MIN, WRITERS_FILM.MAX),
+      "actors": getRandomArray(ActorsItems, ACTORS_FILM.MIN, ACTORS_FILM.MAX),
       "release": {
         "date": getRandomDate(),
         "release_country": `Italy`
       },
-      "runtime": 186,
-      "genre": [`Action`, `Sci-Fi`],
-      "description": getRandomArrayItem(descriptionItems),
+      "runtime": getRandomIntegerNumber(80, 130),
+      "genre": getRandomArray(GenreItems, GENRE_FILM.MIN, GENRE_FILM.MAX),
+      "description": getRandomArray(DescriptionItems, DECRIPTION_FILM.MIN, DECRIPTION_FILM.MAX),
     },
     "user_details": {
       "personal_rating": 5,
@@ -103,7 +121,7 @@ const generateFilm = () => {
       "watching_date": `2020-04-08T08:28:00.929Z`,
       "favorite": Math.random() > 0.5
     },
-    "comments": [`0`, `1`, `2`, `3`, `4`],
+    "comments": getComments(id),
   };
 };
 

@@ -1,4 +1,3 @@
-import {data} from "./mock/data";
 import {generateFilms} from "./mock/films";
 import {generateFilters} from "./mock/filter";
 
@@ -26,21 +25,19 @@ const FILMS_LIST_CONTAINER = {
   MOST_COMMENTED: 2,
 };
 
+const films = generateFilms(3);
+const filters = generateFilters();
+
 const render = (container, template, place = `beforeend`) => {
   container.insertAdjacentHTML(place, template);
 };
 
-const renderFilms = (container, template, filmCount) => {
-  for (let i = 0; i < filmCount; i++) {
-    render(container, template);
-  }
+const renderFilms = (container, filmCount, startElement = 0) => {
+  films.slice(startElement, filmCount).forEach((film) => render(container, createFilmCardTemplate(film)));
 };
 
 const siteHeaderElement = document.querySelector(`.header`);
 const siteMainElement = document.querySelector(`.main`);
-
-const films = generateFilms(2);
-const filters = generateFilters();
 
 render(siteHeaderElement, createProfileTemplate());
 render(siteMainElement, createNavigationTemplate(filters));
@@ -54,33 +51,10 @@ render(filmsElement, createMostCommentedTemplate());
 
 const filmListContainerElements = filmsElement.querySelectorAll(`.films-list__container`);
 
-renderFilms(filmListContainerElements[FILMS_LIST_CONTAINER.FILM], createFilmCardTemplate(), COUNT.FILM);
+
+renderFilms(filmListContainerElements[FILMS_LIST_CONTAINER.FILM], COUNT.FILM);
 render(filmListContainerElements[FILMS_LIST_CONTAINER.FILM], createShowMoreButtonTemplate(), `afterend`);
 
-renderFilms(filmListContainerElements[FILMS_LIST_CONTAINER.TOP_RATED], createFilmCardTemplate(), COUNT.TOP_RATED);
-renderFilms(filmListContainerElements[FILMS_LIST_CONTAINER.MOST_COMMENTED], createFilmCardTemplate(), COUNT.MOST_COMMENTED);
-
-// let titles = [];
-// titles = data.map((item) => {
-//   return item.film_info.director;
-// });
-
-let titles = new Set();
-data.forEach((item) => {
-  item.film_info.actors.forEach((element) => {
-    // console.log(element);
-    titles.add(element);
-  });
-});
-
-// eslint-disable-next-line no-console
-// console.log(Array.from(titles));
-
-// eslint-disable-next-line no-console
-
-// console.log(testFilms);
-// films.forEach((item) => console.log(item.film_info.release.date));
-// eslint-disable-next-line no-console
-films.forEach((item) => console.log(item));
-
-
+renderFilms(filmListContainerElements[FILMS_LIST_CONTAINER.TOP_RATED], COUNT.TOP_RATED);
+renderFilms(filmListContainerElements[FILMS_LIST_CONTAINER.MOST_COMMENTED], COUNT.MOST_COMMENTED);
+Git
