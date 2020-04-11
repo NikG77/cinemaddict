@@ -1,5 +1,6 @@
 import {generateFilms} from "./mock/films";
 import {generateFilters} from "./mock/filter";
+import {isEscEvent} from "./utils";
 
 import {createProfileTemplate} from "./components/profile.js";
 import {createNavigationTemplate} from "./components/navigation.js";
@@ -11,7 +12,7 @@ import {createTopRatedTemplate} from "./components/top-rated.js";
 import {createMostCommentedTemplate} from "./components/most-commented.js";
 
 // Разметка попапа, из-за неиспользуемости переменной временно закомментировал код
-// import {createFilmDetailsTemplate} from "./components/film-details.js";
+import {createFilmDetailsTemplate} from "./components/film-details.js";
 
 const COUNT = {
   FILM: 5,
@@ -57,4 +58,39 @@ render(filmListContainerElements[FILMS_LIST_CONTAINER.FILM], createShowMoreButto
 
 renderFilms(filmListContainerElements[FILMS_LIST_CONTAINER.TOP_RATED], COUNT.TOP_RATED);
 renderFilms(filmListContainerElements[FILMS_LIST_CONTAINER.MOST_COMMENTED], COUNT.MOST_COMMENTED);
-Git
+
+const footerElement = document.querySelector(`.footer`);
+
+const filmCardElement = document.querySelectorAll(`.film-card`);
+
+const closePopup = () => {
+  const filmDetails = document.querySelector(`.film-details`);
+  document.querySelector(`body`).removeChild(filmDetails);
+
+  document.removeEventListener(`keydown`, onPopupEscPress);
+};
+
+// Обработчик закрытия окна карточки ESC
+const onPopupEscPress = (evt) => {
+  isEscEvent(evt, closePopup);
+};
+
+const onPopupOpenClick = (evt) => {
+  // eslint-disable-next-line no-console
+  console.log(`открываем попап`, evt.target);
+  render(footerElement, createFilmDetailsTemplate(), `afterend`);
+
+  // Включаю слушатель на закрытие по ESC
+  document.addEventListener(`keydown`, onPopupEscPress);
+  const filmDetailsPopupClose = document.querySelector(`.film-details__close-btn`);
+  // включаю слушатель закрытия карточки объявления по клику
+  filmDetailsPopupClose.addEventListener(`click`, () => closePopup());
+};
+
+
+filmCardElement.forEach((card) => {
+  card.addEventListener(`click`, onPopupOpenClick);
+});
+
+// render(footerElement, createFilmDetailsTemplate(), `afterend`);
+
