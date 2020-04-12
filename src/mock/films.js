@@ -30,6 +30,8 @@ const WritersItems = [`Brad Bird`, `Robert Rodrigues`, `Takeshi Kitano`, `Hayao 
 
 const ActorsItems = [`Robert De Niro`, `Matt Damon`, `Tom Hanks`, `Takeshi Kitano`, `Christian Bale`, `Gary Oldman`, `Harrison Ford`, `Ralph Fiennes`, `Morgan Freeman `, `Michael Caine`, `Brad Pitt`, `Leonardo DiCaprio`, `Edward Norton`, `Al Pacino`, `Cillian Murphy`];
 
+const EmojiItems = [`./images/emoji/angry.png`, `./images/emoji/puke.png`, `./images/emoji/sleeping.png`, `./images/emoji/smile.png`];
+
 class Comments {
   constructor(emotion, data, avtor, message) {
     this.emotion = emotion;
@@ -84,14 +86,18 @@ let commentsCounter = 0;
 
 const getComments = (id) => {
   const commentsNumber = getRandomIntegerNumber(1, 5);
-  commentsItems[id] = [];
-  for (let i = commentsCounter; i < commentsCounter + commentsNumber; i++) {
-    commentsItems[id].push(i);
-    commentsItems[id][i] = new Comments(`emotion id-${id} N-${i}`, `data`, `avtor`, `message`);
+  const commentsFilmsItems = [];
+  for (let i = 0; i < commentsNumber; i++) {
+    commentsFilmsItems.push(String(commentsCounter));
+
+    commentsFilmsItems[i] = new Comments(getRandomArrayItem(EmojiItems), `data id-${id} N-${commentsCounter}`, `avtor id-${id} N-${commentsCounter}`, `message id-${id} N-${commentsCounter}`);
+    commentsCounter++;
   }
-  commentsCounter += commentsNumber;
+  commentsItems.push(commentsFilmsItems);
+
   return commentsItems[id];
 };
+
 
 let id = -1;
 const generateFilm = () => {

@@ -90,6 +90,6 @@ filmCardElement.forEach((card) => {
 });
 
 
-// console.log(films[2].id);
+// console.log(films[1].comments[0].emotion);
 // films.forEach((item) => console.log(item.film_info.release.date));
 
