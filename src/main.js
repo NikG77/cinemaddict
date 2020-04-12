@@ -2,20 +2,20 @@ import {generateFilms} from "./mock/films";
 import {generateFilters} from "./mock/filter";
 import {isEscEvent} from "./utils";
 
-import {createProfileTemplate} from "./components/profile.js";
-import {createNavigationTemplate} from "./components/navigation.js";
-import {createSortingTemplate} from "./components/sorting.js";
-import {createFilmsTemplate} from "./components/films.js";
-import {createFilmCardTemplate} from "./components/film-card.js";
-import {createShowMoreButtonTemplate} from "./components/show-more-button.js";
-import {createTopRatedTemplate} from "./components/top-rated.js";
-import {createMostCommentedTemplate} from "./components/most-commented.js";
-
-// Разметка попапа, из-за неиспользуемости переменной временно закомментировал код
-import {createFilmDetailsTemplate} from "./components/film-details.js";
+import {createProfileTemplate} from "./components/profile";
+import {createNavigationTemplate} from "./components/navigation";
+import {createSortingTemplate} from "./components/sorting";
+import {createFilmsTemplate} from "./components/films";
+import {createFilmCardTemplate} from "./components/film-card";
+import {createFooterTemplate} from "./components/footer";
+import {createShowMoreButtonTemplate} from "./components/show-more-button";
+import {createTopRatedTemplate} from "./components/top-rated";
+import {createMostCommentedTemplate} from "./components/most-commented";
+import {createFilmDetailsTemplate} from "./components/film-details";
 
 const COUNT = {
-  FILM: 5,
+  ALL_FILM: 17,
+  FILM_SHOW: 5,
   TOP_RATED: 2,
   MOST_COMMENTED: 2,
 };
@@ -26,8 +26,15 @@ const FILMS_LIST_CONTAINER = {
   MOST_COMMENTED: 2,
 };
 
-const films = generateFilms(3);
+const films = generateFilms(COUNT.ALL_FILM);
 const filters = generateFilters();
+
+// считает кол-во true user_details.already_watched
+// const initialValue = 0;
+// const alreadyWatchedFilms = films.reduce((accumulator, currentValue) => {
+//   return accumulator + +currentValue.user_details.already_watched;
+// }, initialValue);
+
 
 const render = (container, template, place = `beforeend`) => {
   container.insertAdjacentHTML(place, template);
@@ -52,14 +59,15 @@ render(filmsElement, createMostCommentedTemplate());
 
 const filmListContainerElements = filmsElement.querySelectorAll(`.films-list__container`);
 
-
-renderFilms(filmListContainerElements[FILMS_LIST_CONTAINER.FILM], COUNT.FILM);
+renderFilms(filmListContainerElements[FILMS_LIST_CONTAINER.FILM], COUNT.FILM_SHOW);
 render(filmListContainerElements[FILMS_LIST_CONTAINER.FILM], createShowMoreButtonTemplate(), `afterend`);
-
 renderFilms(filmListContainerElements[FILMS_LIST_CONTAINER.TOP_RATED], COUNT.TOP_RATED);
 renderFilms(filmListContainerElements[FILMS_LIST_CONTAINER.MOST_COMMENTED], COUNT.MOST_COMMENTED);
 
 const footerElement = document.querySelector(`.footer`);
+const footerStatisticsElement = footerElement.querySelector(`.footer__statistics`);
+
+render(footerStatisticsElement, createFooterTemplate(films.length));
 
 const closePopup = () => {
   const filmDetails = document.querySelector(`.film-details`);
@@ -89,7 +97,19 @@ filmCardElement.forEach((card) => {
   card.addEventListener(`click`, onPopupOpenClick);
 });
 
+const showMoreButton = filmsElement.querySelector(`.films-list__show-more`);
 
-// console.log(films[1].comments[0].emotion);
-// films.forEach((item) => console.log(item.film_info.release.date));
+let showingFilmcount = COUNT.FILM_SHOW;
+
+showMoreButton.addEventListener(`click`, () => {
+  const prevFilmCount = showingFilmcount;
+  showingFilmcount = prevFilmCount + COUNT.FILM_SHOW;
+
+  renderFilms(filmListContainerElements[FILMS_LIST_CONTAINER.FILM], showingFilmcount, prevFilmCount);
+
+  if (showingFilmcount >= films.length) {
+    showMoreButton.remove();
+  }
+
+});
 
