@@ -30,14 +30,14 @@ const WritersItems = [`Brad Bird`, `Robert Rodrigues`, `Takeshi Kitano`, `Hayao 
 
 const ActorsItems = [`Robert De Niro`, `Matt Damon`, `Tom Hanks`, `Takeshi Kitano`, `Christian Bale`, `Gary Oldman`, `Harrison Ford`, `Ralph Fiennes`, `Morgan Freeman `, `Michael Caine`, `Brad Pitt`, `Leonardo DiCaprio`, `Edward Norton`, `Al Pacino`, `Cillian Murphy`];
 
-// class Comments {
-//   constructor(emotion, data, avtor, message) {
-//     this.emotion = emotion;
-//     this.data = data;
-//     this.avtor = avtor;
-//     this.message = message;
-//   }
-// }
+class Comments {
+  constructor(emotion, data, avtor, message) {
+    this.emotion = emotion;
+    this.data = data;
+    this.avtor = avtor;
+    this.message = message;
+  }
+}
 
 const DescriptionItems = [`Lorem ipsum dolor sit amet, consectetur adipiscing elit.`, ` Cras aliquet varius magna, non porta ligula feugiat eget.`, ` Fusce tristique felis at fermentum pharetra.`, ` Aliquam id orci ut lectus varius viverra.`, ` Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante.`, ` Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum.`, ` Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui.`, ` Sed sed nisi sed augue convallis suscipit in sed felis.`, ` Aliquam erat volutpat.`, ` Nunc fermentum tortor ac porta dapibus.`, ` In rutrum ac purus sit amet tempus.`];
 
@@ -63,7 +63,7 @@ const getRandomArrayItem = (array) => {
 };
 
 const getRandomIntegerNumber = (min, max) => {
-  return min + Math.floor(Math.random() * (max + 1 - min));
+  return min + Math.floor(Math.random() * (max - min));
 };
 
 const getRandomReiting = () => {
@@ -87,6 +87,7 @@ const getComments = (id) => {
   commentsItems[id] = [];
   for (let i = commentsCounter; i < commentsCounter + commentsNumber; i++) {
     commentsItems[id].push(i);
+    commentsItems[id][i] = new Comments(`emotion id-${id} N-${i}`, `data`, `avtor`, `message`);
   }
   commentsCounter += commentsNumber;
   return commentsItems[id];
@@ -132,4 +133,4 @@ const generateFilms = (count) => {
 };
 
 
-export {generateFilm, generateFilms};
+export {generateFilms};
