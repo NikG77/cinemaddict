@@ -10,6 +10,7 @@ const DECRIPTION = {
 export const createFilmCardTemplate = (film) => {
 
   const {
+    id,
     film_info: {
       title,
       total_rating: totalRating,
@@ -33,7 +34,7 @@ export const createFilmCardTemplate = (film) => {
   const commentsNumber = comments.length;
 
   return (
-    `<article class="film-card">
+    `<article class="film-card" data-index="${id}">
       <h3 class="film-card__title">${title}</h3>
       <p class="film-card__rating">${totalRating}</p>
       <p class="film-card__info">

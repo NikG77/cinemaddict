@@ -70,14 +70,17 @@ const closePopup = () => {
 const onPopupCloseEscPress = (evt) => isEscEvent(evt, closePopup);
 
 const onPopupOpenClick = (evt) => {
-  // eslint-disable-next-line no-console
-  console.log(`открываем попап`, evt.target);
-  // Пока рендерится первый фильм
-  render(footerElement, createFilmDetailsTemplate(films[0]), `afterend`);
+  const target = evt.target;
+  if (target && target.className === `film-card__title` || target.className === `film-card__poster` || target.className === `film-card__comments`) {
+    const articleElement = target.closest(`article`);
+    const idFilm = articleElement.dataset.index;
 
-  document.addEventListener(`keydown`, onPopupCloseEscPress);
-  const filmDetailsPopupClose = document.querySelector(`.film-details__close-btn`);
-  filmDetailsPopupClose.addEventListener(`click`, () => closePopup());
+    render(footerElement, createFilmDetailsTemplate(films[idFilm]), `afterend`);
+
+    document.addEventListener(`keydown`, onPopupCloseEscPress);
+    const filmDetailsPopupClose = document.querySelector(`.film-details__close-btn`);
+    filmDetailsPopupClose.addEventListener(`click`, () => closePopup());
+  }
 };
 
 const filmCardElement = document.querySelectorAll(`.film-card`);
@@ -87,6 +90,6 @@ filmCardElement.forEach((card) => {
 });
 
 
-// console.log(films[0]);
+// console.log(films[2].id);
 // films.forEach((item) => console.log(item.film_info.release.date));
 
