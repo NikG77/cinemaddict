@@ -61,36 +61,32 @@ renderFilms(filmListContainerElements[FILMS_LIST_CONTAINER.MOST_COMMENTED], COUN
 
 const footerElement = document.querySelector(`.footer`);
 
-const filmCardElement = document.querySelectorAll(`.film-card`);
-
 const closePopup = () => {
   const filmDetails = document.querySelector(`.film-details`);
   document.querySelector(`body`).removeChild(filmDetails);
-
-  document.removeEventListener(`keydown`, onPopupEscPress);
+  document.removeEventListener(`keydown`, onPopupCloseEscPress);
 };
 
-// Обработчик закрытия окна карточки ESC
-const onPopupEscPress = (evt) => {
-  isEscEvent(evt, closePopup);
-};
+const onPopupCloseEscPress = (evt) => isEscEvent(evt, closePopup);
 
 const onPopupOpenClick = (evt) => {
   // eslint-disable-next-line no-console
   console.log(`открываем попап`, evt.target);
-  render(footerElement, createFilmDetailsTemplate(), `afterend`);
+  // Пока рендерится первый фильм
+  render(footerElement, createFilmDetailsTemplate(films[0]), `afterend`);
 
-  // Включаю слушатель на закрытие по ESC
-  document.addEventListener(`keydown`, onPopupEscPress);
+  document.addEventListener(`keydown`, onPopupCloseEscPress);
   const filmDetailsPopupClose = document.querySelector(`.film-details__close-btn`);
-  // включаю слушатель закрытия карточки объявления по клику
   filmDetailsPopupClose.addEventListener(`click`, () => closePopup());
 };
 
+const filmCardElement = document.querySelectorAll(`.film-card`);
 
 filmCardElement.forEach((card) => {
   card.addEventListener(`click`, onPopupOpenClick);
 });
 
-// render(footerElement, createFilmDetailsTemplate(), `afterend`);
+
+// console.log(films[0]);
+// films.forEach((item) => console.log(item.film_info.release.date));
 
