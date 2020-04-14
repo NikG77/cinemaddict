@@ -27,14 +27,7 @@ const FILMS_LIST_CONTAINER = {
 };
 
 const films = generateFilms(COUNT.ALL_FILM);
-const filters = generateFilters();
-
-// считает кол-во true user_details.already_watched
-// const initialValue = 0;
-// const alreadyWatchedFilms = films.reduce((accumulator, currentValue) => {
-//   return accumulator + +currentValue.user_details.already_watched;
-// }, initialValue);
-
+const filters = generateFilters(films);
 
 const render = (container, template, place = `beforeend`) => {
   container.insertAdjacentHTML(place, template);
