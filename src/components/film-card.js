@@ -1,4 +1,5 @@
 import {MINUTE_IN_HOUR} from "../const.js";
+import {createElement} from "../utils.js";
 
 const DECRIPTION = {
   START: 0,
@@ -7,7 +8,7 @@ const DECRIPTION = {
 };
 
 
-export const createFilmCardTemplate = (film) => {
+const createFilmCardTemplate = (film) => {
 
   const {
     id,
@@ -53,3 +54,26 @@ export const createFilmCardTemplate = (film) => {
     </article>`
   );
 };
+
+export default class FilmCard {
+  constructor(film) {
+    this._film = film;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFilmCardTemplate(this._film);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

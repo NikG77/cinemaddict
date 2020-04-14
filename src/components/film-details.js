@@ -1,4 +1,5 @@
 import {MONTH_NAMES, MINUTE_IN_HOUR} from "../const.js";
+import {createElement} from "../utils.js";
 
 const createGenreMarkup = (genres) => {
   return genres.map((genre) => {
@@ -30,7 +31,7 @@ const createCommmentsMarkup = (comments) => {
 };
 
 
-export const createFilmDetailsTemplate = (film) => {
+const createFilmDetailsTemplate = (film) => {
   const {
     film_info: {
       title,
@@ -186,3 +187,27 @@ export const createFilmDetailsTemplate = (film) => {
     </section>`
   );
 };
+
+
+export default class FilmDetails {
+  constructor(film) {
+    this._film = film;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFilmDetailsTemplate(this._film);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

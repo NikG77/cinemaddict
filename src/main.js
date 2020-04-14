@@ -1,17 +1,17 @@
 import {generateFilms} from "./mock/films";
 import {generateFilters} from "./mock/filter";
-import {isEscEvent} from "./utils";
+import {isEscEvent, render, RenderPosition} from "./utils";
 
-import {createProfileTemplate} from "./components/profile";
-import {createNavigationTemplate} from "./components/navigation";
-import {createSortingTemplate} from "./components/sorting";
-import {createFilmsTemplate} from "./components/films";
-import {createFilmCardTemplate} from "./components/film-card";
-import {createFooterTemplate} from "./components/footer";
-import {createShowMoreButtonTemplate} from "./components/show-more-button";
-import {createTopRatedTemplate} from "./components/top-rated";
-import {createMostCommentedTemplate} from "./components/most-commented";
-import {createFilmDetailsTemplate} from "./components/film-details";
+import Profile from "./components/profile";
+import Navigation from "./components/navigation";
+import Sort from "./components/sorting";
+import Films from "./components/films";
+import FilmCard from "./components/film-card";
+import Footer from "./components/footer";
+import ShowMoreButton from "./components/show-more-button";
+import TopRated from "./components/top-rated";
+import MostCommented from "./components/most-commented";
+import FilmDetails from "./components/film-details";
 
 const COUNT = {
   ALL_FILM: 17,
@@ -29,9 +29,9 @@ const FILMS_LIST_CONTAINER = {
 const films = generateFilms(COUNT.ALL_FILM);
 const filters = generateFilters(films);
 
-const render = (container, template, place = `beforeend`) => {
-  container.insertAdjacentHTML(place, template);
-};
+// const render = (container, template, place = `beforeend`) => {
+//   container.insertAdjacentHTML(place, template);
+// };
 
 const renderFilms = (container, filmCount, startElement = 0) => {
   films.slice(startElement, filmCount).forEach((film) => render(container, createFilmCardTemplate(film)));
