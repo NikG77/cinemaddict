@@ -102,7 +102,7 @@ const showFilms = () => {
 const siteHeaderElement = document.querySelector(`.header`);
 const siteMainElement = document.querySelector(`.main`);
 
-render(siteHeaderElement, new ProfileComponent().getElement(), RenderPosition.BEFOREEND);
+render(siteHeaderElement, new ProfileComponent(films).getElement(), RenderPosition.BEFOREEND);
 render(siteMainElement, new NavigationComponent(filters).getElement(), RenderPosition.BEFOREEND);
 render(siteMainElement, new SortComponent().getElement(), RenderPosition.BEFOREEND);
 
