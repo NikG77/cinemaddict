@@ -15,7 +15,7 @@ import MostCommentedComponent from "./components/most-commented";
 import FilmDetailsComponent from "./components/film-details";
 
 const COUNT = {
-  ALL_FILM: 0,
+  ALL_FILM: 6,
   FILM_SHOW: 5,
   TOP_RATED: 2,
   MOST_COMMENTED: 2,
@@ -29,7 +29,7 @@ const FILMS_LIST_CONTAINER = {
 
 
 const films = generateFilms(COUNT.ALL_FILM);
-const filters = generateFilters(films);
+let filters = generateFilters(films);
 
 
 const renderFilm = (container, film) => {
@@ -59,6 +59,22 @@ const renderFilm = (container, film) => {
   filmCardElement.addEventListener(`click`, onPopupOpenClick);
 
   render(container, filmCardComponent.getElement(), RenderPosition.BEFOREEND);
+
+  const filmCardControlAddWatchlist = filmCardElement.querySelector(`.film-card__controls-item--add-to-watchlist`);
+  const historyCountElement = navigationElement.getElement()
+    .querySelector(`a[href="#history"]`)
+    .querySelector(`span`);
+  filmCardControlAddWatchlist.addEventListener(`click`, (evt) => {
+    evt.preventDefault();
+    film[`user_details`][`already_watched`] = true;
+
+    filters = generateFilters(films);
+
+    historyCountElement.textContent = filters[2][`count`];
+
+  });
+
+
 };
 
 
@@ -103,7 +119,9 @@ const siteHeaderElement = document.querySelector(`.header`);
 const siteMainElement = document.querySelector(`.main`);
 
 render(siteHeaderElement, new ProfileComponent(films).getElement(), RenderPosition.BEFOREEND);
-render(siteMainElement, new NavigationComponent(filters).getElement(), RenderPosition.BEFOREEND);
+
+let navigationElement = new NavigationComponent(filters);
+render(siteMainElement, navigationElement.getElement(), RenderPosition.BEFOREEND);
 render(siteMainElement, new SortComponent().getElement(), RenderPosition.BEFOREEND);
 
 if (films.length === 0) {
