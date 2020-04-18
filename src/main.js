@@ -1,6 +1,6 @@
 import {generateFilms} from "./mock/films";
 import {generateFilters} from "./mock/filter";
-import {isEscEvent} from "./utils/utils";
+import {isEscEvent} from "./utils/common";
 import {render, remove, append, RenderPosition} from "./utils/render";
 
 import ProfileComponent from "./components/profile";
