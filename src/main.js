@@ -1,6 +1,7 @@
 import {generateFilms} from "./mock/films";
 import {generateFilters} from "./mock/filter";
-import {isEscEvent, render, RenderPosition} from "./utils";
+import {isEscEvent} from "./utils/utils";
+import {render, RenderPosition} from "./utils/render";
 
 import ProfileComponent from "./components/profile";
 import NavigationComponent from "./components/navigation";
@@ -58,7 +59,7 @@ const renderFilm = (container, film) => {
 
   filmCardElement.addEventListener(`click`, onPopupOpenClick);
 
-  render(container, filmCardComponent.getElement(), RenderPosition.BEFOREEND);
+  render(container, filmCardComponent, RenderPosition.BEFOREEND);
 
   const filmCardControlAddWatchlist = filmCardElement.querySelector(`.film-card__controls-item--add-to-watchlist`);
   const historyCountElement = navigationElement.getElement()
@@ -85,18 +86,18 @@ const renderFilms = (container, filmCount, startElement = 0) => {
 
 
 const showFilms = () => {
-  render(siteMainElement, new FilmsComponent().getElement(), RenderPosition.BEFOREEND);
+  render(siteMainElement, new FilmsComponent(), RenderPosition.BEFOREEND);
 
   const filmsElement = siteMainElement.querySelector(`.films`);
 
-  render(filmsElement, new TopRatedComponent().getElement(), RenderPosition.BEFOREEND);
-  render(filmsElement, new MostCommentedComponent().getElement(), RenderPosition.BEFOREEND);
+  render(filmsElement, new TopRatedComponent(), RenderPosition.BEFOREEND);
+  render(filmsElement, new MostCommentedComponent(), RenderPosition.BEFOREEND);
 
   const filmsListElement = filmsElement.querySelector(`.films-list`);
   const filmListContainerElements = filmsElement.querySelectorAll(`.films-list__container`);
 
   renderFilms(filmListContainerElements[FILMS_LIST_CONTAINER.FILM], COUNT.FILM_SHOW);
-  render(filmsListElement, new ShowMoreButtonComponent().getElement(), RenderPosition.BEFOREEND);
+  render(filmsListElement, new ShowMoreButtonComponent(), RenderPosition.BEFOREEND);
 
   renderFilms(filmListContainerElements[FILMS_LIST_CONTAINER.TOP_RATED], COUNT.TOP_RATED);
   renderFilms(filmListContainerElements[FILMS_LIST_CONTAINER.MOST_COMMENTED], COUNT.MOST_COMMENTED);
@@ -119,14 +120,14 @@ const showFilms = () => {
 const siteHeaderElement = document.querySelector(`.header`);
 const siteMainElement = document.querySelector(`.main`);
 
-render(siteHeaderElement, new ProfileComponent(films).getElement(), RenderPosition.BEFOREEND);
+render(siteHeaderElement, new ProfileComponent(films), RenderPosition.BEFOREEND);
 
 let navigationElement = new NavigationComponent(filters);
-render(siteMainElement, navigationElement.getElement(), RenderPosition.BEFOREEND);
-render(siteMainElement, new SortComponent().getElement(), RenderPosition.BEFOREEND);
+render(siteMainElement, navigationElement, RenderPosition.BEFOREEND);
+render(siteMainElement, new SortComponent(), RenderPosition.BEFOREEND);
 
 if (films.length === 0) {
-  render(siteMainElement, new NoFilmsComponent().getElement(), RenderPosition.BEFOREEND);
+  render(siteMainElement, new NoFilmsComponent(), RenderPosition.BEFOREEND);
 } else {
   showFilms();
 }
@@ -134,4 +135,4 @@ if (films.length === 0) {
 const footerElement = document.querySelector(`.footer`);
 const footerStatisticsElement = footerElement.querySelector(`.footer__statistics`);
 
-render(footerStatisticsElement, new FooterComponent(films.length).getElement(), RenderPosition.BEFOREEND);
+render(footerStatisticsElement, new FooterComponent(films.length), RenderPosition.BEFOREEND);
