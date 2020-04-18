@@ -66,6 +66,7 @@ const renderFilm = (container, film) => {
     .querySelector(`span`);
   filmCardControlAddWatchlist.addEventListener(`click`, (evt) => {
     evt.preventDefault();
+    // Добавить проверку на true, чтоб избежать ненужных действий
     film[`user_details`][`already_watched`] = true;
 
     filters = generateFilters(films);
