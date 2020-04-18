@@ -1,7 +1,7 @@
 import {generateFilms} from "./mock/films";
 import {generateFilters} from "./mock/filter";
 import {isEscEvent} from "./utils/utils";
-import {render, remove, RenderPosition} from "./utils/render";
+import {render, remove, append, RenderPosition} from "./utils/render";
 
 import ProfileComponent from "./components/profile";
 import NavigationComponent from "./components/navigation";
@@ -46,7 +46,7 @@ const renderFilm = (container, film) => {
     const target = evt.target;
 
     if (target && target.className === `film-card__title` || target.className === `film-card__poster` || target.className === `film-card__comments`) {
-      container.appendChild(filmDetailsComponent.getElement());
+      append(container, filmDetailsComponent);
 
       document.addEventListener(`keydown`, onPopupCloseEscPress);
       const filmDetailsPopupClose = filmDetailsComponent.getElement().querySelector(`.film-details__close-btn`);

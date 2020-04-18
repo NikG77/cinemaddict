@@ -43,3 +43,7 @@ export const remove = (component) => {
     parentElement.removeChild(component.getElement());
   }
 };
+
+export const append = (container, component) => {
+  container.appendChild(component.getElement());
+};
