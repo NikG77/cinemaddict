@@ -109,7 +109,7 @@ const showFilms = () => {
 
   let showingFilmCount = COUNT.FILM_SHOW;
 
-  showMoreButtonComponent.getElement().addEventListener(`click`, () => {
+  showMoreButtonComponent.setClickHandler(() => {
     const prevFilmCount = showingFilmCount;
     showingFilmCount = prevFilmCount + COUNT.FILM_SHOW;
 
