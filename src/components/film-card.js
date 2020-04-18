@@ -1,5 +1,5 @@
 import {MINUTE_IN_HOUR} from "../const.js";
-import {createElement} from "../utils.js";
+import AbstractComponent from "./abstract-component";
 
 const DECRIPTION = {
   START: 0,
@@ -55,25 +55,18 @@ const createFilmCardTemplate = (film) => {
   );
 };
 
-export default class FilmCard {
+export default class FilmCard extends AbstractComponent {
   constructor(film) {
+    super();
     this._film = film;
-    this._element = null;
   }
 
   getTemplate() {
     return createFilmCardTemplate(this._film);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  setClickHandler(handler) {
+    this.getElement().addEventListener(`click`, handler);
   }
 
-  removeElement() {
-    this._element = null;
-  }
 }

@@ -1,5 +1,5 @@
 import {MONTH_NAMES, MINUTE_IN_HOUR} from "../const.js";
-import {createElement} from "../utils.js";
+import AbstractComponent from "./abstract-component";
 
 const createGenreMarkup = (genres) => {
   return genres.map((genre) => {
@@ -189,25 +189,18 @@ const createFilmDetailsTemplate = (film) => {
 };
 
 
-export default class FilmDetails {
+export default class FilmDetails extends AbstractComponent {
   constructor(film) {
+    super();
     this._film = film;
-    this._element = null;
   }
 
   getTemplate() {
     return createFilmDetailsTemplate(this._film);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
+  setPopupCloseClickHandler(handler) {
+    this.getElement().querySelector(`.film-details__close-btn`)
+      .addEventListener(`click`, handler);
   }
 }
