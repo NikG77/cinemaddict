@@ -117,13 +117,10 @@ export default class PageController {
 
   render(films) {
     const renderShowMoreButton = () => {
-
       if (showingFilmCount >= films.length) {
         return;
       }
-
       render(filmsListElement, this._showMoreButtonComponent, RenderPosition.BEFOREEND);
-
     };
 
     let filters = generateFilters(films);
@@ -164,7 +161,7 @@ export default class PageController {
     });
 
     this._sortComponent.setSortTypeChangeHandler((sortType) => {
-      showingFilmCount = COUNT.FILM_SHOW;
+      // showingFilmCount = COUNT.FILM_SHOW;
       currentFilms = getSortedFilms(films, sortType, 0, films.length);
 
       filmListContainerElements[FILMS_LIST_CONTAINER.FILM].innerHTML = ``;
