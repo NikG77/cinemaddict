@@ -114,20 +114,29 @@ export default class PageController {
 
     const filmsListElement = filmsElement.querySelector(`.films-list`);
     const filmListContainerElements = filmsElement.querySelectorAll(`.films-list__container`);
-    const showMoreButtonComponent = new ShowMoreButtonComponent();
-    render(filmsListElement, showMoreButtonComponent, RenderPosition.BEFOREEND);
 
-    let showingFilmCount = COUNT.FILM_SHOW;
-    showMoreButtonComponent.setClickHandler(() => {
-      const prevFilmCount = showingFilmCount;
-      showingFilmCount = prevFilmCount + COUNT.FILM_SHOW;
-
-      renderFilms(filmListContainerElements[FILMS_LIST_CONTAINER.FILM], films, showingFilmCount, prevFilmCount);
-
+    const renderShowMoreButton = () => {
+      let showingFilmCount = COUNT.FILM_SHOW;
       if (showingFilmCount >= films.length) {
-        remove(showMoreButtonComponent);
+        return;
       }
-    });
+
+      const showMoreButtonComponent = new ShowMoreButtonComponent();
+      render(filmsListElement, showMoreButtonComponent, RenderPosition.BEFOREEND);
+
+      showMoreButtonComponent.setClickHandler(() => {
+        const prevFilmCount = showingFilmCount;
+        showingFilmCount = prevFilmCount + COUNT.FILM_SHOW;
+
+        renderFilms(filmListContainerElements[FILMS_LIST_CONTAINER.FILM], films, showingFilmCount, prevFilmCount);
+
+        if (showingFilmCount >= films.length) {
+          remove(showMoreButtonComponent);
+        }
+      });
+
+    };
+    renderShowMoreButton();
 
 
     showFilms(filmListContainerElements, films);
