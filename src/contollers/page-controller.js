@@ -1,11 +1,17 @@
 import {isEscEvent} from "../utils/common";
 import {render, remove, append, RenderPosition} from "../utils/render";
+import {generateFilters} from "../mock/filter";
 import FilmCardComponent from "../components/film-card";
 
 import ShowMoreButtonComponent from "../components/show-more-button";
 import TopRatedComponent from "../components/top-rated";
 import MostCommentedComponent from "../components/most-commented";
 import FilmDetailsComponent from "../components/film-details";
+
+import NavigationComponent from "../components/navigation";
+import SortComponent from "../components/sort";
+import FilmsComponent from "../components/films";
+import NoFilmsComponent from "../components/no-films";
 
 const COUNT = {
   FILM_SHOW: 5,
@@ -107,6 +113,22 @@ export default class PageController {
   }
 
   render(films) {
-    showFilms(this._container, films);
+    let filters = generateFilters(films);
+
+    const navigationElement = new NavigationComponent(filters);
+    render(this._container, navigationElement, RenderPosition.BEFOREEND);
+    render(this._container, new SortComponent(), RenderPosition.BEFOREEND);
+
+    if (films.length === 0) {
+      render(this._container, new NoFilmsComponent(), RenderPosition.BEFOREEND);
+    } else {
+      const filmsComponent = new FilmsComponent();
+
+      render(this._container, filmsComponent, RenderPosition.BEFOREEND);
+
+      const filmsElement = filmsComponent.getElement();
+      showFilms(filmsElement, films);
+    }
   }
+
 }
