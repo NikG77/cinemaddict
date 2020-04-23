@@ -1,17 +1,18 @@
-import {isEscEvent} from "../utils/common";
-import {render, remove, append, RenderPosition} from "../utils/render";
+// import {isEscEvent} from "../utils/common";
+import {render, remove, RenderPosition} from "../utils/render";
 import {generateFilters} from "../mock/filter";
-import FilmCardComponent from "../components/film-card";
+// import FilmCardComponent from "../components/film-card";
 
 import ShowMoreButtonComponent from "../components/show-more-button";
 import TopRatedComponent from "../components/top-rated";
 import MostCommentedComponent from "../components/most-commented";
-import FilmDetailsComponent from "../components/film-details";
+// import FilmDetailsComponent from "../components/film-details";
 
 import NavigationComponent from "../components/navigation";
 import SortComponent, {SortType} from "../components/sort";
 import FilmsComponent from "../components/films";
 import NoFilmsComponent from "../components/no-films";
+import MovieController from "./moviecontoller";
 
 const COUNT = {
   FILM_SHOW: 5,
@@ -26,55 +27,15 @@ const FILMS_LIST_CONTAINER = {
 };
 
 const renderFilm = (container, film) => {
-  const closePopup = () => {
 
-    remove(filmDetailsComponent);
-    document.removeEventListener(`keydown`, onPopupCloseEscPress);
-  };
-
-  const onPopupCloseEscPress = (evt) => isEscEvent(evt, closePopup);
-
-  const onPopupOpenClick = (evt) => {
-    const target = evt.target;
-
-    if (target && target.className === `film-card__title` || target.className === `film-card__poster` || target.className === `film-card__comments`) {
-      append(container, filmDetailsComponent);
-
-      document.addEventListener(`keydown`, onPopupCloseEscPress);
-
-      filmDetailsComponent.setPopupCloseClickHandler(closePopup);
-    }
-  };
-
-  const filmCardComponent = new FilmCardComponent(film);
-  const filmDetailsComponent = new FilmDetailsComponent(film);
-
-  filmCardComponent.setClickHandler(onPopupOpenClick);
-  render(container, filmCardComponent, RenderPosition.BEFOREEND);
-
-  // // Подумать как повесить один обработчик на три условия карточки и где
-  // const filmCardElement = filmCardComponent.getElement();
-  // const filmCardControlAddWatchlist = filmCardElement.querySelector(`.film-card__controls-item--add-to-watchlist`);
-  // let navigationElement = new NavigationComponent(filters);
-  // const historyCountElement = navigationElement.getElement()
-  //   .querySelector(`a[href="#history"]`)
-  //   .querySelector(`span`);
-  // filmCardControlAddWatchlist.addEventListener(`click`, (evt) => {
-  //   evt.preventDefault();
-  //   // Добавить проверку на true, чтоб избежать ненужных действий
-  //   film[`user_details`][`already_watched`] = true;
-
-  //   filters = generateFilters(films);
-
-  //   historyCountElement.textContent = filters[2][`count`];
-
-  // });
+  const movieController = new MovieController(container);
+  movieController.render(film);
 
 };
 
 
-const renderFilms = (container, movielist, filmCount, startElement = 0) => {
-  movielist.slice(startElement, filmCount).forEach((film) => renderFilm(container, film));
+const renderFilms = (container, films, filmCount, startElement = 0) => {
+  films.slice(startElement, filmCount).forEach((film) => renderFilm(container, film));
 };
 
 
@@ -176,3 +137,22 @@ export default class PageController {
   }
 
 }
+
+
+// // Подумать как повесить один обработчик на три условия карточки и где
+// const filmCardElement = filmCardComponent.getElement();
+// const filmCardControlAddWatchlist = filmCardElement.querySelector(`.film-card__controls-item--add-to-watchlist`);
+// let navigationElement = new NavigationComponent(filters);
+// const historyCountElement = navigationElement.getElement()
+//   .querySelector(`a[href="#history"]`)
+//   .querySelector(`span`);
+// filmCardControlAddWatchlist.addEventListener(`click`, (evt) => {
+//   evt.preventDefault();
+//   // Добавить проверку на true, чтоб избежать ненужных действий
+//   film[`user_details`][`already_watched`] = true;
+
+//   filters = generateFilters(films);
+
+//   historyCountElement.textContent = filters[2][`count`];
+
+// });

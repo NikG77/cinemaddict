@@ -5,7 +5,7 @@ import PageController from "./contollers/page-controller";
 import ProfileComponent from "./components/profile";
 import FooterComponent from "./components/footer";
 
-const COUNT_FILMS = 16;
+const COUNT_FILMS = 6;
 
 const films = generateFilms(COUNT_FILMS);
 
