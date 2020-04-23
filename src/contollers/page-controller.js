@@ -74,12 +74,16 @@ export default class PageController {
     this._filmsComponent = new FilmsComponent();
     this._showMoreButtonComponent = new ShowMoreButtonComponent();
 
+    this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChange);
+
   }
 
   render(films) {
+    this._films = films;
+
     const renderShowMoreButton = () => {
 
-      if (showingFilmCount >= films.length) {
+      if (this._showingFilmCount >= this._films.length) {
         return;
       }
 
@@ -87,14 +91,14 @@ export default class PageController {
 
     };
 
-    let filters = generateFilters(films);
-    let currentFilms = films.slice();
+    let filters = generateFilters(this._films);
+    this._currentFilms = this._films.slice();
 
     const navigationElement = new NavigationComponent(filters);
     render(this._container, navigationElement, RenderPosition.BEFOREEND);
     render(this._container, this._sortComponent, RenderPosition.BEFOREEND);
 
-    if (films.length === 0) {
+    if (this._films.length === 0) {
       render(this._container, this._noFilmsComponent, RenderPosition.BEFOREEND);
       return;
     }
@@ -106,53 +110,41 @@ export default class PageController {
     render(filmsElement, new MostCommentedComponent(), RenderPosition.BEFOREEND);
 
     const filmsListElement = filmsElement.querySelector(`.films-list`);
-    const filmListContainerElements = filmsElement.querySelectorAll(`.films-list__container`);
+    this._filmListContainerElements = filmsElement.querySelectorAll(`.films-list__container`);
 
-    showFilms(filmListContainerElements, films);
+    showFilms(this._filmListContainerElements, this._films);
 
-    let showingFilmCount = COUNT.FILM_SHOW;
+    this._showingFilmCount = COUNT.FILM_SHOW;
     renderShowMoreButton();
 
     this._showMoreButtonComponent.setClickHandler(() => {
-      const prevFilmCount = showingFilmCount;
-      showingFilmCount = prevFilmCount + COUNT.FILM_SHOW;
-      renderFilms(filmListContainerElements[FILMS_LIST_CONTAINER.FILM], currentFilms, showingFilmCount, prevFilmCount);
-      if (showingFilmCount >= films.length) {
+      const prevFilmCount = this._showingFilmCount;
+      this._showingFilmCount = prevFilmCount + COUNT.FILM_SHOW;
+      renderFilms(this._filmListContainerElements[FILMS_LIST_CONTAINER.FILM], this._currentFilms, this._showingFilmCount, prevFilmCount);
+      if (this._showingFilmCount >= this._films.length) {
         remove(this._showMoreButtonComponent);
       }
     });
 
-    this._sortComponent.setSortTypeChangeHandler((sortType) => {
-      // Если нужна реализация с дефолтным кол-вом карточек после сортировки
-      // то надо разкомментировать следующую строку
-      // showingFilmCount = COUNT.FILM_SHOW;
-      currentFilms = getSortedFilms(films, sortType, 0, films.length);
+  }
 
-      filmListContainerElements[FILMS_LIST_CONTAINER.FILM].innerHTML = ``;
 
-      renderFilms(filmListContainerElements[FILMS_LIST_CONTAINER.FILM], currentFilms, showingFilmCount);
+  _onSortTypeChange(sortType) {
+    console.log(`this._films-`, this._films);
 
-      renderShowMoreButton();
-    });
+
+    // Если нужна реализация с дефолтным кол-вом карточек после сортировки
+    // то надо разкомментировать следующую строку или наоборот
+    this._showingFilmCount = COUNT.FILM_SHOW;
+    this._currentFilms = getSortedFilms(this._films, sortType, 0, this._films.length);
+
+    this._filmListContainerElements[FILMS_LIST_CONTAINER.FILM].innerHTML = ``;
+
+    renderFilms(this._filmListContainerElements[FILMS_LIST_CONTAINER.FILM], this._currentFilms, this._showingFilmCount);
+    // renderFilms(this._filmListContainerElements[FILMS_LIST_CONTAINER.FILM], this._currentFilms);
+
+
+    this._renderShowMoreButton();
   }
 
 }
-
-
-// // Подумать как повесить один обработчик на три условия карточки и где
-// const filmCardElement = filmCardComponent.getElement();
-// const filmCardControlAddWatchlist = filmCardElement.querySelector(`.film-card__controls-item--add-to-watchlist`);
-// let navigationElement = new NavigationComponent(filters);
-// const historyCountElement = navigationElement.getElement()
-//   .querySelector(`a[href="#history"]`)
-//   .querySelector(`span`);
-// filmCardControlAddWatchlist.addEventListener(`click`, (evt) => {
-//   evt.preventDefault();
-//   // Добавить проверку на true, чтоб избежать ненужных действий
-//   film[`user_details`][`already_watched`] = true;
-
-//   filters = generateFilters(films);
-
-//   historyCountElement.textContent = filters[2][`count`];
-
-// });

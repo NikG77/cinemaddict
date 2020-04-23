@@ -65,3 +65,22 @@ export const data = [{
 {"id": `17`, "film_info": {"title": `Country Who Saw Him`, "alternative_title": `Laziness Who Stole The Wall`, "total_rating": 7.6, "poster": `images/posters/the-great-flamarion.jpg`, "age_rating": 0, "director": `James Cameron`, "writers": [`Hayao Miazaki`], "actors": [`Leonardo DiCaprio`, `Matt Damon`, `Christian Bale`, `Harrison Ford`], "release": {"date": `2012-06-25T19:25:50.341Z`, "release_country": `Japan`}, "runtime": 92, "genre": [`Action`, `Adventure`, `Comedy`, `Sci-Fi`], "description": `true masterpiece where love and death are closer to heroes than their family, from the creators of timeless classic "Nu, Pogodi!" and "Alice in Wonderland", a film about a journey that heroes are about to make in finding themselves.`}, "user_details": {"personal_rating": 8, "watchlist": false, "already_watched": true, "watching_date": `2019-06-18T08:28:00.930Z`, "favorite": false}, "comments": [`81`, `82`, `83`]},
 {"id": `18`, "film_info": {"title": `Country On Us`, "alternative_title": `Laziness Who The Darkness`, "total_rating": 4.6, "poster": `images/posters/santa-claus-conquers-the-martians.jpg`, "age_rating": 0, "director": `Tom Ford`, "writers": [`Robert Zemeckis`, `Martin Scorsese`], "actors": [`Morgan Freeman `, `Leonardo DiCaprio`, `Takeshi Kitano`, `Gary Oldman`, `Al Pacino`, `Harrison Ford`], "release": {"date": `1994-01-03T21:16:45.603Z`, "release_country": `Spain`}, "runtime": 153, "genre": [`Horror`], "description": `a war drama about two young people, true masterpiece where love and death are closer to heroes than their family, a film about a journey that heroes are about to make in finding themselves, with the best fight scenes since Bruce Lee.`}, "user_details": {"personal_rating": 6, "watchlist": false, "already_watched": false, "watching_date": null, "favorite": false}, "comments": [`84`, `85`, `86`, `87`]},
 {"id": `19`, "film_info": {"title": `Pioneers Of Himself`, "alternative_title": `A Tale Of A Little Bird Within The Room`, "total_rating": 5.9, "poster": `images/posters/santa-claus-conquers-the-martians.jpg`, "age_rating": 18, "director": `Clint Eastwood`, "writers": [`Robert Rodrigues`, `Hayao Miazaki`], "actors": [`Leonardo DiCaprio`, `Michael Caine`, `Robert De Niro`, `Takeshi Kitano`, `Al Pacino`, `Ralph Fiennes`], "release": {"date": `2009-01-21T04:12:09.450Z`, "release_country": `Russia`}, "runtime": 153, "genre": [`Animation`, `Action`, `Family`], "description": `Oscar-winning film, true masterpiece where love and death are closer to heroes than their family, with the best fight scenes since Bruce Lee.`}, "user_details": {"personal_rating": 7, "watchlist": false, "already_watched": true, "watching_date": `2020-03-07T08:28:00.930Z`, "favorite": false}, "comments": [`88`, `89`, `90`, `91`]}];
+
+
+// // Подумать как повесить один обработчик на три условия карточки и где
+// const filmCardElement = filmCardComponent.getElement();
+// const filmCardControlAddWatchlist = filmCardElement.querySelector(`.film-card__controls-item--add-to-watchlist`);
+// let navigationElement = new NavigationComponent(filters);
+// const historyCountElement = navigationElement.getElement()
+//   .querySelector(`a[href="#history"]`)
+//   .querySelector(`span`);
+// filmCardControlAddWatchlist.addEventListener(`click`, (evt) => {
+//   evt.preventDefault();
+//   // Добавить проверку на true, чтоб избежать ненужных действий
+//   film[`user_details`][`already_watched`] = true;
+
+//   filters = generateFilters(films);
+
+//   historyCountElement.textContent = filters[2][`count`];
+
+// });
