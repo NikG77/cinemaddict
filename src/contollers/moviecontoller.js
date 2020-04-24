@@ -25,18 +25,27 @@ export default class MovieController {
     this._filmCardComponent.setClickHandler(this._onPopupOpenClick);
 
     this._filmCardComponent.setWatchlistButtonClickHandler(() => {
-      console.log(`1`, film.user_details.watchlist);
-      this._onDataChange(this, film, Object.assign({}, film, {
-        watchlist: !film.user_details.watchlist,
-      }));
-      console.log(`2`, film.user_details.watchlist);
+      const newFilm = Object.assign({}, film);
+      newFilm[`user_details`][`watchlist`] = !film[`user_details`][`watchlist`];
+
+      this._onDataChange(this, film, newFilm);
+
     });
 
 
     this._filmCardComponent.setHistoryButtonClickHandler(() => {
+      const newFilm = Object.assign({}, film);
+      newFilm[`user_details`][`already_watched`] = !film[`user_details`][`already_watched`];
 
+      this._onDataChange(this, film, newFilm);
     });
-    this._filmCardComponent.setFavoriteButtonClickHandler();
+
+    this._filmCardComponent.setFavoriteButtonClickHandler(() => {
+      const newFilm = Object.assign({}, film);
+      newFilm[`user_details`][`favorite`] = !film[`user_details`][`favorite`];
+
+      this._onDataChange(this, film, newFilm);
+    });
 
   }
 
