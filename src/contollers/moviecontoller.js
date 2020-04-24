@@ -5,8 +5,9 @@ import {isEscEvent} from "../utils/common";
 import {render, remove, append, RenderPosition} from "../utils/render";
 
 export default class MovieController {
-  constructor(container) {
+  constructor(container, onDataChange) {
     this._container = container;
+    this._onDataChange = onDataChange;
     this._filmCardComponent = null;
     this._filmDetailsComponent = null;
 
@@ -20,8 +21,22 @@ export default class MovieController {
     this._filmCardComponent = new FilmCardComponent(film);
     this._filmDetailsComponent = new FilmDetailsComponent(film);
 
-    this._filmCardComponent.setClickHandler(this._onPopupOpenClick);
     render(this._container, this._filmCardComponent, RenderPosition.BEFOREEND);
+    this._filmCardComponent.setClickHandler(this._onPopupOpenClick);
+
+    this._filmCardComponent.setWatchlistButtonClickHandler(() => {
+      console.log(`1`, film.user_details.watchlist);
+      this._onDataChange(this, film, Object.assign({}, film, {
+        watchlist: !film.user_details.watchlist,
+      }));
+      console.log(`2`, film.user_details.watchlist);
+    });
+
+
+    this._filmCardComponent.setHistoryButtonClickHandler(() => {
+
+    });
+    this._filmCardComponent.setFavoriteButtonClickHandler();
 
   }
 
