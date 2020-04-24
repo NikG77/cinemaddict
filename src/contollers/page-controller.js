@@ -1,12 +1,9 @@
-// import {isEscEvent} from "../utils/common";
 import {render, remove, RenderPosition} from "../utils/render";
 import {generateFilters} from "../mock/filter";
-// import FilmCardComponent from "../components/film-card";
 
 import ShowMoreButtonComponent from "../components/show-more-button";
 import TopRatedComponent from "../components/top-rated";
 import MostCommentedComponent from "../components/most-commented";
-// import FilmDetailsComponent from "../components/film-details";
 
 import NavigationComponent from "../components/navigation";
 import SortComponent, {SortType} from "../components/sort";
@@ -26,23 +23,21 @@ const FILMS_LIST_CONTAINER = {
   MOST_COMMENTED: 2,
 };
 
-const renderFilm = (container, film) => {
 
-  const movieController = new MovieController(container);
-  movieController.render(film);
+const renderFilms = (container, films) => {
+  return films.map((film) => {
+    const movieController = new MovieController(container);
 
-};
-
-
-const renderFilms = (container, films, filmCount, startElement = 0) => {
-  films.slice(startElement, filmCount).forEach((film) => renderFilm(container, film));
+    movieController.render(film);
+    return movieController;
+  });
 };
 
 
 const showFilms = (container, films) => {
-  renderFilms(container[FILMS_LIST_CONTAINER.FILM], films, COUNT.FILM_SHOW);
-  renderFilms(container[FILMS_LIST_CONTAINER.TOP_RATED], films, COUNT.TOP_RATED);
-  renderFilms(container[FILMS_LIST_CONTAINER.MOST_COMMENTED], films, COUNT.MOST_COMMENTED);
+  renderFilms(container[FILMS_LIST_CONTAINER.FILM], films.slice(0, COUNT.FILM_SHOW));
+  renderFilms(container[FILMS_LIST_CONTAINER.TOP_RATED], films.slice(0, COUNT.TOP_RATED));
+  renderFilms(container[FILMS_LIST_CONTAINER.MOST_COMMENTED], films.slice(0, COUNT.MOST_COMMENTED));
 };
 
 const getSortedFilms = (films, sortType, from, to) => {
@@ -114,7 +109,7 @@ export default class PageController {
     this._showMoreButtonComponent.setClickHandler(() => {
       const prevFilmCount = this._showingFilmCount;
       this._showingFilmCount = prevFilmCount + COUNT.FILM_SHOW;
-      renderFilms(this._filmListContainerElements[FILMS_LIST_CONTAINER.FILM], this._currentFilms, this._showingFilmCount, prevFilmCount);
+      renderFilms(this._filmListContainerElements[FILMS_LIST_CONTAINER.FILM], this._currentFilms.slice(prevFilmCount, this._showingFilmCount));
       if (this._showingFilmCount >= this._films.length) {
         remove(this._showMoreButtonComponent);
       }
@@ -132,14 +127,14 @@ export default class PageController {
 
 
   _onSortTypeChange(sortType) {
-    // Если нужна реализация без дефолтного кол-ва карточек после сортировки
-    // то надо закомментировать следующую строку
-    this._showingFilmCount = COUNT.FILM_SHOW;
+    // Если нужна реализация c дефолтым кол-вом карточек после сортировки
+    // то надо разкомментировать следующую строку
+    // this._showingFilmCount = COUNT.FILM_SHOW;
     this._currentFilms = getSortedFilms(this._films, sortType, 0, this._films.length);
 
     this._filmListContainerElements[FILMS_LIST_CONTAINER.FILM].innerHTML = ``;
 
-    renderFilms(this._filmListContainerElements[FILMS_LIST_CONTAINER.FILM], this._currentFilms, this._showingFilmCount);
+    renderFilms(this._filmListContainerElements[FILMS_LIST_CONTAINER.FILM], this._currentFilms.slice(0, this._showingFilmCount));
 
     this._renderShowMoreButton();
   }
