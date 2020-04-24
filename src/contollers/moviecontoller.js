@@ -24,14 +24,14 @@ export default class MovieController {
     render(this._container, this._filmCardComponent, RenderPosition.BEFOREEND);
     this._filmCardComponent.setClickHandler(this._onPopupOpenClick);
 
-    this._filmCardComponent.setWatchlistButtonClickHandler(() => {
+
+    this._filmCardComponent.setWatchListButtonClickHandler(() => {
       const newFilm = Object.assign({}, film);
       newFilm[`user_details`][`watchlist`] = !film[`user_details`][`watchlist`];
 
       this._onDataChange(this, film, newFilm);
 
     });
-
 
     this._filmCardComponent.setHistoryButtonClickHandler(() => {
       const newFilm = Object.assign({}, film);
@@ -46,6 +46,20 @@ export default class MovieController {
 
       this._onDataChange(this, film, newFilm);
     });
+
+
+    this._filmDetailsComponent.setPopupWatchListButtonClickHandler(() => {
+      console.log(`клик PopupWatchList`);
+    });
+
+    this._filmDetailsComponent.setPopupHistoryButtonClickHandler(() => {
+      console.log(`клик PopupHistory`);
+    });
+
+    this._filmDetailsComponent.setPopupFavoriteButtonClickHandler(() => {
+      console.log(`клик PopupFavorite`);
+    });
+
 
   }
 
