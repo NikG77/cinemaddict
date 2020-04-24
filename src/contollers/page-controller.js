@@ -69,10 +69,14 @@ export default class PageController {
   constructor(container) {
     this._container = container;
 
+    this._films = [];
+
     this._sortComponent = new SortComponent();
     this._noFilmsComponent = new NoFilmsComponent();
     this._filmsComponent = new FilmsComponent();
     this._showMoreButtonComponent = new ShowMoreButtonComponent();
+
+    this._onSortTypeChange = this._onSortTypeChange.bind(this);
 
     this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChange);
 
@@ -80,16 +84,6 @@ export default class PageController {
 
   render(films) {
     this._films = films;
-
-    const renderShowMoreButton = () => {
-
-      if (this._showingFilmCount >= this._films.length) {
-        return;
-      }
-
-      render(filmsListElement, this._showMoreButtonComponent, RenderPosition.BEFOREEND);
-
-    };
 
     let filters = generateFilters(this._films);
     this._currentFilms = this._films.slice();
@@ -109,13 +103,13 @@ export default class PageController {
     render(filmsElement, new TopRatedComponent(), RenderPosition.BEFOREEND);
     render(filmsElement, new MostCommentedComponent(), RenderPosition.BEFOREEND);
 
-    const filmsListElement = filmsElement.querySelector(`.films-list`);
+    this._filmsListElement = filmsElement.querySelector(`.films-list`);
     this._filmListContainerElements = filmsElement.querySelectorAll(`.films-list__container`);
 
     showFilms(this._filmListContainerElements, this._films);
 
     this._showingFilmCount = COUNT.FILM_SHOW;
-    renderShowMoreButton();
+    this._renderShowMoreButton();
 
     this._showMoreButtonComponent.setClickHandler(() => {
       const prevFilmCount = this._showingFilmCount;
@@ -128,21 +122,24 @@ export default class PageController {
 
   }
 
+  _renderShowMoreButton() {
+    if (this._showingFilmCount >= this._films.length) {
+      return;
+    }
+    render(this._filmsListElement, this._showMoreButtonComponent, RenderPosition.BEFOREEND);
+
+  }
+
 
   _onSortTypeChange(sortType) {
-    console.log(`this._films-`, this._films);
-
-
-    // Если нужна реализация с дефолтным кол-вом карточек после сортировки
-    // то надо разкомментировать следующую строку или наоборот
+    // Если нужна реализация без дефолтного кол-ва карточек после сортировки
+    // то надо закомментировать следующую строку
     this._showingFilmCount = COUNT.FILM_SHOW;
     this._currentFilms = getSortedFilms(this._films, sortType, 0, this._films.length);
 
     this._filmListContainerElements[FILMS_LIST_CONTAINER.FILM].innerHTML = ``;
 
     renderFilms(this._filmListContainerElements[FILMS_LIST_CONTAINER.FILM], this._currentFilms, this._showingFilmCount);
-    // renderFilms(this._filmListContainerElements[FILMS_LIST_CONTAINER.FILM], this._currentFilms);
-
 
     this._renderShowMoreButton();
   }
