@@ -157,11 +157,11 @@ const createFilmDetailsTemplate = (film) => {
 
             <div class="film-details__new-comment">
               <div for="add-emoji" class="film-details__add-emoji-label">
-                <img src="images/emoji/smile.png" width="55" height="55" alt="emoji-smile">
+                <img src="" width="55" height="55" alt="">
               </div>
 
               <label class="film-details__comment-label">
-                <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">Great movie!</textarea>
+                <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
               </label>
 
               <div class="film-details__emoji-list">
@@ -192,7 +192,9 @@ const createFilmDetailsTemplate = (film) => {
     </section>`
   );
 };
-
+// <div for="add-emoji" class="film-details__add-emoji-label">
+//    <img src="images/emoji/smile.png" width="55" height="55" alt="emoji-smile">
+// </div>
 
 export default class FilmDetails extends AbstractSmartComponent {
   constructor(film) {
@@ -229,19 +231,40 @@ export default class FilmDetails extends AbstractSmartComponent {
 
     element.querySelector(`#watchlist`).addEventListener(`click`, () => {
       this._film[`user_details`][`watchlist`] = !this._film[`user_details`][`watchlist`];
-      this.rerender();
+      // this.rerender();
     });
 
     element.querySelector(`#watched`).addEventListener(`click`, () => {
       this._film[`user_details`][`already_watched`] = !this._film[`user_details`][`already_watched`];
-      this.rerender();
+      // this.rerender();
     });
 
     element.querySelector(`#favorite`).addEventListener(`click`, () => {
       this._film[`user_details`][`favorite`] = !this._film[`user_details`][`favorite`];
-      this.rerender();
+      // this.rerender();
     });
+
+    element.querySelector(`.film-details__emoji-list`).addEventListener(`click`, (evt) => {
+      const target = evt.target;
+      const elementImgEmoji = target.closest(`img`);
+      console.log(`target-`, target);
+      if (target && elementImgEmoji) {
+        const newElementImgEmoji = element.querySelector(`.film-details__add-emoji-label`)
+          .querySelector(`img`);
+        newElementImgEmoji.src = elementImgEmoji.src;
+        newElementImgEmoji.alt = elementImgEmoji.alt;
+      }
+
+      const elementInputEmoji = target.closest(`input`);
+      console.log(`elementImgEmoji- `, elementImgEmoji, `elementInputEmoji- `, elementInputEmoji);
+
+    });
+
+    // element.querySelector(`.film-details__comment-input`).addEventListener(`imput`, () => {
+    //
+    // });
 
   }
 
 }
+
