@@ -231,9 +231,7 @@ export default class FilmDetails extends AbstractSmartComponent {
   }
 
   reset() {
-    this._newElementImgEmojiSrc = ``;
-    this._newElementImgEmojiAlt = ``;
-    this._resetTextariaEmojValue = ``;
+    this._clear();
 
     this.rerender();
   }
@@ -243,6 +241,12 @@ export default class FilmDetails extends AbstractSmartComponent {
       .addEventListener(`click`, handler);
 
     this._submitHandler = handler;
+  }
+
+  _clear() {
+    this._newElementImgEmojiSrc = ``;
+    this._newElementImgEmojiAlt = ``;
+    this._resetTextariaEmojValue = ``;
   }
 
   _subscribeOnEvents() {
