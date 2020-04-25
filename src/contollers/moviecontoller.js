@@ -2,12 +2,21 @@
 import FilmCardComponent from "../components/film-card";
 import FilmDetailsComponent from "../components/film-details";
 import {isEscEvent} from "../utils/common";
-import {render, remove, append, RenderPosition} from "../utils/render";
+import {render, remove, append, RenderPosition, replace} from "../utils/render";
+
+const Mode = {
+  DEFAULT: `default`,
+  EDIT: `edit`,
+};
 
 export default class MovieController {
-  constructor(container, onDataChange) {
+  constructor(container, onDataChange, onViewChange) {
     this._container = container;
     this._onDataChange = onDataChange;
+    this._onViewChange = onViewChange;
+
+    this._mode = Mode.DEFAULT;
+
     this._filmCardComponent = null;
     this._filmDetailsComponent = null;
 
@@ -18,14 +27,23 @@ export default class MovieController {
   }
 
   render(film) {
+    const oldfilmCardComponent = this._filmCardComponent;
+    const oldfilmDetailsComponent = this._filmDetailsComponent;
+
     this._filmCardComponent = new FilmCardComponent(film);
     this._filmDetailsComponent = new FilmDetailsComponent(film);
 
-    render(this._container, this._filmCardComponent, RenderPosition.BEFOREEND);
+    if (oldfilmCardComponent && oldfilmDetailsComponent) {
+      replace(this._filmCardComponent, oldfilmCardComponent);
+    } else {
+      render(this._container, this._filmCardComponent, RenderPosition.BEFOREEND);
+    }
+
     this._filmCardComponent.setClickHandler(this._onPopupOpenClick);
 
 
-    this._filmCardComponent.setWatchListButtonClickHandler(() => {
+    this._filmCardComponent.setWatchListButtonClickHandler((evt) => {
+      evt.preventDefault();
       const newFilm = Object.assign({}, film);
       newFilm[`user_details`][`watchlist`] = !film[`user_details`][`watchlist`];
 
@@ -33,14 +51,16 @@ export default class MovieController {
 
     });
 
-    this._filmCardComponent.setHistoryButtonClickHandler(() => {
+    this._filmCardComponent.setHistoryButtonClickHandler((evt) => {
+      evt.preventDefault();
       const newFilm = Object.assign({}, film);
       newFilm[`user_details`][`already_watched`] = !film[`user_details`][`already_watched`];
 
       this._onDataChange(this, film, newFilm);
     });
 
-    this._filmCardComponent.setFavoriteButtonClickHandler(() => {
+    this._filmCardComponent.setFavoriteButtonClickHandler((evt) => {
+      evt.preventDefault();
       const newFilm = Object.assign({}, film);
       newFilm[`user_details`][`favorite`] = !film[`user_details`][`favorite`];
 
@@ -49,7 +69,16 @@ export default class MovieController {
 
   }
 
+  setDefaultView() {
+    if (this._mode !== Mode.DEFAULT) {
+      this._closePopup();
+    }
+  }
+
   _closePopup() {
+    this._filmDetailsComponent.reset();
+    this._mode = Mode.DEFAULT;
+
     remove(this._filmDetailsComponent);
     document.removeEventListener(`keydown`, this._onPopupCloseEscPress);
   }
@@ -62,7 +91,9 @@ export default class MovieController {
     const target = evt.target;
 
     if (target && target.className === `film-card__title` || target.className === `film-card__poster` || target.className === `film-card__comments`) {
+      this._onViewChange();
       append(this._container, this._filmDetailsComponent);
+      this._mode = Mode.EDIT;
 
       document.addEventListener(`keydown`, this._onPopupCloseEscPress);
 

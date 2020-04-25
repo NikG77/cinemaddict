@@ -31,7 +31,7 @@ const createCommmentsMarkup = (comments) => {
 };
 
 
-const createFilmDetailsTemplate = (film) => {
+const createFilmDetailsTemplate = (film, options = {}) => {
   const {
     film_info: {
       title,
@@ -57,6 +57,8 @@ const createFilmDetailsTemplate = (film) => {
     },
     comments,
   } = film;
+
+  const {newElementImgEmojiSrc, newElementImgEmojiAlt, resetTextariaEmojValue} = options;
 
   const writersDetails = writers.join(`, `);
   const actorsDetails = actors.join(`, `);
@@ -157,11 +159,11 @@ const createFilmDetailsTemplate = (film) => {
 
             <div class="film-details__new-comment">
               <div for="add-emoji" class="film-details__add-emoji-label">
-                <img src="" width="55" height="55" alt="">
+                <img src="${newElementImgEmojiSrc}" width="55" height="55" alt="${newElementImgEmojiAlt}">
               </div>
 
               <label class="film-details__comment-label">
-                <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
+                <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${resetTextariaEmojValue}</textarea>
               </label>
 
               <div class="film-details__emoji-list">
@@ -203,11 +205,20 @@ export default class FilmDetails extends AbstractSmartComponent {
     this._film = film;
     this._submitHandler = null;
 
+    this._newElementImgEmojiSrc = ``;
+    this._newElementImgEmojiAlt = ``;
+    this._resetTextariaEmojValue = ``;
+
     this._subscribeOnEvents();
   }
 
   getTemplate() {
-    return createFilmDetailsTemplate(this._film);
+    return createFilmDetailsTemplate(this._film, {
+      newElementImgEmojiSrc: this._newElementImgEmojiSrc,
+      newElementImgEmojiAlt: this._newElementImgEmojiAlt,
+      resetTextariaEmojValue: this._resetTextariaEmojValue,
+    });
+
   }
 
   recoveryListeners() {
@@ -217,6 +228,14 @@ export default class FilmDetails extends AbstractSmartComponent {
 
   rerender() {
     super.rerender();
+  }
+
+  reset() {
+    this._newElementImgEmojiSrc = ``;
+    this._newElementImgEmojiAlt = ``;
+    this._resetTextariaEmojValue = ``;
+
+    this.rerender();
   }
 
   setPopupCloseClickHandler(handler) {
@@ -247,22 +266,20 @@ export default class FilmDetails extends AbstractSmartComponent {
     element.querySelector(`.film-details__emoji-list`).addEventListener(`click`, (evt) => {
       const target = evt.target;
       const elementImgEmoji = target.closest(`img`);
-      console.log(`target-`, target);
+      // console.log(`target-`, target);
       if (target && elementImgEmoji) {
-        const newElementImgEmoji = element.querySelector(`.film-details__add-emoji-label`)
-          .querySelector(`img`);
-        newElementImgEmoji.src = elementImgEmoji.src;
-        newElementImgEmoji.alt = elementImgEmoji.alt;
+        this._newElementImgEmojiSrc = elementImgEmoji.src;
+        // console.log(this._newElementImgEmojiSrc);
+        this._newElementImgEmojiAlt = elementImgEmoji.alt;
       }
 
-      const elementInputEmoji = target.closest(`input`);
-      console.log(`elementImgEmoji- `, elementImgEmoji, `elementInputEmoji- `, elementInputEmoji);
-
+      this.rerender();
     });
 
-    // element.querySelector(`.film-details__comment-input`).addEventListener(`imput`, () => {
-    //
-    // });
+    element.querySelector(`.film-details__comment-input`).addEventListener(`change`, (evt) => {
+      this._resetTextariaEmojValue = evt.target.value;
+    });
+
 
   }
 
