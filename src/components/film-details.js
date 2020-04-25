@@ -1,5 +1,5 @@
 import {MONTH_NAMES, MINUTE_IN_HOUR} from "../const.js";
-import AbstractComponent from "./abstract-component";
+import AbstractSmartComponent from "./abstract-smart-component";
 
 const createGenreMarkup = (genres) => {
   return genres.map((genre) => {
@@ -194,37 +194,54 @@ const createFilmDetailsTemplate = (film) => {
 };
 
 
-export default class FilmDetails extends AbstractComponent {
+export default class FilmDetails extends AbstractSmartComponent {
   constructor(film) {
     super();
+
     this._film = film;
+    this._submitHandler = null;
+
+    this._subscribeOnEvents();
   }
 
   getTemplate() {
     return createFilmDetailsTemplate(this._film);
   }
 
+  recoveryListeners() {
+    this.setPopupCloseClickHandler(this._submitHandler);
+    this._subscribeOnEvents();
+  }
+
+  rerender() {
+    super.rerender();
+  }
+
   setPopupCloseClickHandler(handler) {
     this.getElement().querySelector(`.film-details__close-btn`)
       .addEventListener(`click`, handler);
+
+    this._submitHandler = handler;
   }
 
-  setPopupWatchListButtonClickHandler(handler) {
-    this.getElement()
-      .querySelector(`#watchlist`)
-      .addEventListener(`click`, handler);
-  }
+  _subscribeOnEvents() {
+    const element = this.getElement();
 
-  setPopupHistoryButtonClickHandler(handler) {
-    this.getElement()
-      .querySelector(`#watched`)
-      .addEventListener(`click`, handler);
-  }
+    element.querySelector(`#watchlist`).addEventListener(`click`, () => {
+      this._film[`user_details`][`watchlist`] = !this._film[`user_details`][`watchlist`];
+      this.rerender();
+    });
 
-  setPopupFavoriteButtonClickHandler(handler) {
-    this.getElement()
-      .querySelector(`#favorite`)
-      .addEventListener(`click`, handler);
+    element.querySelector(`#watched`).addEventListener(`click`, () => {
+      this._film[`user_details`][`already_watched`] = !this._film[`user_details`][`already_watched`];
+      this.rerender();
+    });
+
+    element.querySelector(`#favorite`).addEventListener(`click`, () => {
+      this._film[`user_details`][`favorite`] = !this._film[`user_details`][`favorite`];
+      this.rerender();
+    });
+
   }
 
 }
