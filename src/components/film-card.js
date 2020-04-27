@@ -1,5 +1,5 @@
-import {MINUTE_IN_HOUR} from "../const.js";
 import AbstractComponent from "./abstract-component";
+import {formatTimeHour, formatTimeMinute} from "../utils/common";
 
 const DECRIPTION = {
   START: 0,
@@ -33,8 +33,10 @@ const createFilmCardTemplate = (film) => {
   } = film;
 
   const fullYearDate = date.getFullYear();
-  const durationHour = Math.floor(runtime / MINUTE_IN_HOUR);
-  const durationMinute = runtime - durationHour * MINUTE_IN_HOUR;
+
+  const durationMinute = formatTimeMinute(runtime);
+  const durationHour = formatTimeHour(runtime);
+
   const genreFilm = genre.join(` `);
   const descriptionFilm = description.join(``).slice(DECRIPTION.START, DECRIPTION.END) + description.join(`.`).slice(DECRIPTION.END, DECRIPTION.END + DECRIPTION.POINT_CONTINUATION).replace(/./g, `.`);
   const commentsNumber = comments.length;
