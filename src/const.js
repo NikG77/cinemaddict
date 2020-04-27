@@ -13,5 +13,9 @@ export const MONTH_NAMES = [
   `December`,
 ];
 
-export const MINUTE_IN_HOUR = 60;
+export const TIME = {
+  MINUTES_IN_HOUR: 60,
+  SECUNDS_IN_MINUTE: 60,
+  MILISECONDS_IN_SECOND: 1000,
+};
 

@@ -81,6 +81,13 @@ const getRandomDate = () => {
   return targetDate;
 };
 
+const getRandomDateCommit = () => {
+  const targetDate = new Date();
+
+  targetDate.setHours(targetDate.getHours() - getRandomIntegerNumber(0, 40));
+  return targetDate;
+};
+
 let commentsItems = [];
 let commentsCounter = 0;
 
@@ -90,7 +97,7 @@ const getComments = (id) => {
   for (let i = 0; i < commentsNumber; i++) {
     commentsFilmsItems.push(String(commentsCounter));
 
-    commentsFilmsItems[i] = new Comments(getRandomArrayItem(EmojiItems), `data id-${id} N-${commentsCounter}`, `avtor id-${id} N-${commentsCounter}`, `message id-${id} N-${commentsCounter}`);
+    commentsFilmsItems[i] = new Comments(getRandomArrayItem(EmojiItems), getRandomDateCommit(), `avtor id-${id} N-${commentsCounter}`, `message id-${id} N-${commentsCounter}`);
     commentsCounter++;
   }
   commentsItems.push(commentsFilmsItems);

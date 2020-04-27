@@ -1,5 +1,6 @@
-import {MONTH_NAMES, MINUTE_IN_HOUR} from "../const.js";
 import AbstractSmartComponent from "./abstract-smart-component";
+import {formatTimeHour, formatTimeMinute, formatDate, formatDateComment} from "../utils/common";
+
 
 const createGenreMarkup = (genres) => {
   return genres.map((genre) => {
@@ -12,6 +13,7 @@ const createGenreMarkup = (genres) => {
 
 const createCommmentsMarkup = (comments) => {
   return comments.map((comment) => {
+    const commentTimeAgo = formatDateComment(comment.data);
     return (
       `<li class="film-details__comment">
         <span class="film-details__comment-emoji">
@@ -21,7 +23,7 @@ const createCommmentsMarkup = (comments) => {
           <p class="film-details__comment-text">${comment.message}</p>
           <p class="film-details__comment-info">
             <span class="film-details__comment-author">${comment.avtor}</span>
-            <span class="film-details__comment-day">${comment.data}</span>
+            <span class="film-details__comment-day">${commentTimeAgo}</span>
             <button class="film-details__comment-delete">Delete</button>
           </p>
         </div>
@@ -62,11 +64,12 @@ const createFilmDetailsTemplate = (film, options = {}) => {
 
   const writersDetails = writers.join(`, `);
   const actorsDetails = actors.join(`, `);
-  const fullYearDate = date.getFullYear();
-  const dayDate = date.getDate();
-  const monthDate = MONTH_NAMES[date.getMonth()];
-  const durationHour = Math.floor(runtime / MINUTE_IN_HOUR);
-  const durationMinute = runtime - durationHour * MINUTE_IN_HOUR;
+
+  const dateRelease = formatDate(date);
+
+  const durationMinute = formatTimeMinute(runtime);
+  const durationHour = formatTimeHour(runtime);
+
   const genreDeyails = genre.length > 1 ? `Genres` : `Genre`;
   const genreMarkup = createGenreMarkup(genre);
   const commentsNumber = comments.length;
@@ -113,7 +116,7 @@ const createFilmDetailsTemplate = (film, options = {}) => {
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Release Date</td>
-                  <td class="film-details__cell">${dayDate} ${monthDate} ${fullYearDate}</td>
+                  <td class="film-details__cell">${dateRelease}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Runtime</td>
