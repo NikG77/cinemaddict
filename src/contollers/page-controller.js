@@ -66,6 +66,9 @@ export default class PageController {
     this._films = [];
     this._showedFilmControllers = [];
 
+    this._showedAllFilmControllers = [];
+    this._showedRaringFilmControllers = [];
+
     this._showingFilmCount = COUNT.FILM_SHOW;
 
     this._sortComponent = new SortComponent();
@@ -105,15 +108,15 @@ export default class PageController {
     this._filmsListElement = filmsElement.querySelector(`.films-list`);
     this._filmListContainerElements = filmsElement.querySelectorAll(`.films-list__container`);
 
-    // const newFilms = showFilms(this._filmListContainerElements, this._films, this._onDataChange);
-    let newFilms = renderFilms(this._filmListContainerElements[FILMS_LIST_CONTAINER.FILM], films.slice(0, COUNT.FILM_SHOW), this._onDataChange, this._onViewChange);
-    this._showedFilmControllers = this._showedFilmControllers.concat(newFilms);
-
-    newFilms = renderFilms(this._filmListContainerElements[FILMS_LIST_CONTAINER.TOP_RATED], this._searchTopRatedFilms(films), this._onDataChange, this._onViewChange);
-    this._showedFilmControllers = this._showedFilmControllers.concat(newFilms);
+    let newFilms = renderFilms(this._filmListContainerElements[FILMS_LIST_CONTAINER.TOP_RATED], this._searchTopRatedFilms(films), this._onDataChange, this._onViewChange);
+    this._showedRaringFilmControllers = this._showedRaringFilmControllers.concat(newFilms);
 
     newFilms = renderFilms(this._filmListContainerElements[FILMS_LIST_CONTAINER.MOST_COMMENTED], this._searchMostCommentedFilms(films), this._onDataChange, this._onViewChange);
+    this._showedRaringFilmControllers = this._showedRaringFilmControllers.concat(newFilms);
+
+    newFilms = renderFilms(this._filmListContainerElements[FILMS_LIST_CONTAINER.FILM], films.slice(0, COUNT.FILM_SHOW), this._onDataChange, this._onViewChange);
     this._showedFilmControllers = this._showedFilmControllers.concat(newFilms);
+    this._showedAllFilmControllers = this._showedRaringFilmControllers.concat(this._showedFilmControllers);
 
     this._renderShowMoreButton();
 
@@ -121,7 +124,7 @@ export default class PageController {
       const prevFilmCount = this._showingFilmCount;
       this._showingFilmCount = prevFilmCount + COUNT.FILM_SHOW;
       newFilms = renderFilms(this._filmListContainerElements[FILMS_LIST_CONTAINER.FILM], this._currentFilms.slice(prevFilmCount, this._showingFilmCount), this._onDataChange, this._onViewChange);
-      this._showedFilmControllers = this._showedFilmControllers.concat(newFilms);
+      this._showedAllFilmControllers = this._showedAllFilmControllers.concat(newFilms);
 
       if (this._showingFilmCount >= this._films.length) {
         remove(this._showMoreButtonComponent);
@@ -131,7 +134,7 @@ export default class PageController {
   }
 
   _onViewChange() {
-    this._showedFilmControllers.forEach((it) => it.setDefaultView());
+    this._showedAllFilmControllers.forEach((it) => it.setDefaultView());
   }
 
   _renderShowMoreButton() {
@@ -165,8 +168,11 @@ export default class PageController {
 
     const newFilms = renderFilms(this._filmListContainerElements[FILMS_LIST_CONTAINER.FILM], this._currentFilms.slice(0, this._showingFilmCount), this._onDataChange, this._onViewChange);
     // Добавляются отсортиированные контроллеры повторно - подумать может такие не добавлять или обнулять за исключением двух лучших полей
+    this._showedFilmControllers = [];
     this._showedFilmControllers = this._showedFilmControllers.concat(newFilms);
-    // console.log(`this._showedFilmControllers- `, this._showedFilmControllers);
+    this._showedAllFilmControllers = this._showedRaringFilmControllers.concat(this._showedFilmControllers);
+
+    console.log(`this._showedAllFilmControllers- `, this._showedAllFilmControllers);
 
     this._renderShowMoreButton();
   }
@@ -176,7 +182,6 @@ export default class PageController {
     return topRatedFilms.sort(function (a, b) {
       return b.film_info.total_rating - a.film_info.total_rating;
     }).slice(0, COUNT.TOP_RATED);
-
   }
 
   _searchMostCommentedFilms() {
@@ -184,7 +189,6 @@ export default class PageController {
     return mostCommentedFilms.sort(function (a, b) {
       return b.comments.length - a.comments.length;
     }).slice(0, COUNT.MOST_COMMENTED);
-
   }
 
 }
