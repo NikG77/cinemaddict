@@ -81,6 +81,7 @@ export default class MovieController {
     this._mode = Mode.DEFAULT;
 
     remove(this._filmDetailsComponent);
+    document.querySelector(`body`).classList.remove(`hide-overflow`);
     document.removeEventListener(`keydown`, this._onPopupCloseEscPress);
   }
 
@@ -95,6 +96,7 @@ export default class MovieController {
 
       this._onViewChange();
       append(this._container, this._filmDetailsComponent);
+      document.querySelector(`body`).classList.add(`hide-overflow`);
       this._mode = Mode.EDIT;
 
       document.addEventListener(`keydown`, this._onPopupCloseEscPress);
