@@ -44,11 +44,12 @@ export default class MovieController {
 
     this._filmCardComponent.setWatchListButtonClickHandler((evt) => {
       evt.preventDefault();
+      console.log(`в карточке до-`, film[`user_details`][`watchlist`]);
       const newFilm = Object.assign({}, film);
       newFilm[`user_details`][`watchlist`] = !film[`user_details`][`watchlist`];
 
       this._onDataChange(this, film, newFilm);
-
+      console.log(`в карточке после-`, film[`user_details`][`watchlist`]);
     });
 
     this._filmCardComponent.setHistoryButtonClickHandler((evt) => {
@@ -91,6 +92,7 @@ export default class MovieController {
     const target = evt.target;
 
     if (target && target.className === `film-card__title` || target.className === `film-card__poster` || target.className === `film-card__comments`) {
+
       this._onViewChange();
       append(this._container, this._filmDetailsComponent);
       this._mode = Mode.EDIT;

@@ -256,7 +256,11 @@ export default class FilmDetails extends AbstractSmartComponent {
     const element = this.getElement();
 
     element.querySelector(`#watchlist`).addEventListener(`click`, () => {
+      // breakpoint;
+      // console.log(`до-`, this._film[`user_details`][`watchlist`]);
       this._film[`user_details`][`watchlist`] = !this._film[`user_details`][`watchlist`];
+      // console.log(`после-`, this._film[`user_details`][`watchlist`]);
+
       // this.rerender();
     });
 
@@ -273,13 +277,10 @@ export default class FilmDetails extends AbstractSmartComponent {
     element.querySelector(`.film-details__emoji-list`).addEventListener(`click`, (evt) => {
       const target = evt.target;
       const elementImgEmoji = target.closest(`img`);
-      // console.log(`target-`, target);
       if (target && elementImgEmoji) {
         this._newElementImgEmojiSrc = elementImgEmoji.src;
-        // console.log(this._newElementImgEmojiSrc);
         this._newElementImgEmojiAlt = elementImgEmoji.alt;
       }
-
       this.rerender();
     });
 
