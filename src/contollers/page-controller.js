@@ -163,7 +163,7 @@ export default class PageController {
 
     this._filmListContainerElements[FILMS_LIST_CONTAINER.FILM].innerHTML = ``;
 
-    const newFilms = renderFilms(this._filmListContainerElements[FILMS_LIST_CONTAINER.FILM], this._currentFilms.slice(0, this._showingFilmCount), this._onDataChange);
+    const newFilms = renderFilms(this._filmListContainerElements[FILMS_LIST_CONTAINER.FILM], this._currentFilms.slice(0, this._showingFilmCount), this._onDataChange, this._onViewChange);
     // Добавляются отсортиированные контроллеры повторно - подумать может такие не добавлять или обнулять за исключением двух лучших полей
     this._showedFilmControllers = this._showedFilmControllers.concat(newFilms);
     // console.log(`this._showedFilmControllers- `, this._showedFilmControllers);
