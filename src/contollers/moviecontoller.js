@@ -80,6 +80,7 @@ export default class MovieController {
     this._filmDetailsComponent.reset();
     this._mode = Mode.DEFAULT;
 
+
     remove(this._filmDetailsComponent);
     document.querySelector(`body`).classList.remove(`hide-overflow`);
     document.removeEventListener(`keydown`, this._onPopupCloseEscPress);

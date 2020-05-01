@@ -92,6 +92,7 @@ class Comments {
 
 let commentsItems = [];
 let commentsCounter = 0;
+const comments = [];
 
 const getComments = (id) => {
   const commentsNumber = getRandomIntegerNumber(1, 5);
@@ -101,6 +102,7 @@ const getComments = (id) => {
 
     commentsFilmsItems[i] = new Comments(commentsCounter, `avtor id-${id} N-${commentsCounter}`, `сomment id-${id} N-${commentsCounter}`, getRandomDateCommit(), getRandomArrayItem(EmojiItems));
     commentsCounter++;
+    comments.push(commentsFilmsItems[i]);
   }
   commentsItems.push(commentsFilmsItems);
   return commentsItems[id];
@@ -147,4 +149,4 @@ const generateFilms = (count) => {
 };
 
 
-export {generateFilms};
+export {generateFilms, comments};

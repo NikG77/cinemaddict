@@ -20,7 +20,7 @@ const createCommmentsMarkup = (comments) => {
           <img src="${comment.emotion}" width="55" height="55" alt="emoji-smile">
         </span>
         <div>
-          <p class="film-details__comment-text">${comment.message}</p>
+          <p class="film-details__comment-text">${comment.сomment}</p>
           <p class="film-details__comment-info">
             <span class="film-details__comment-author">${comment.avtor}</span>
             <span class="film-details__comment-day">${commentTimeAgo}</span>
