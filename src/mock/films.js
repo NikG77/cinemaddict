@@ -32,14 +32,6 @@ const ActorsItems = [`Robert De Niro`, `Matt Damon`, `Tom Hanks`, `Takeshi Kitan
 
 const EmojiItems = [`./images/emoji/angry.png`, `./images/emoji/puke.png`, `./images/emoji/sleeping.png`, `./images/emoji/smile.png`];
 
-class Comments {
-  constructor(emotion, data, avtor, message) {
-    this.emotion = emotion;
-    this.data = data;
-    this.avtor = avtor;
-    this.message = message;
-  }
-}
 
 const DescriptionItems = [`Lorem ipsum dolor sit amet, consectetur adipiscing elit.`, ` Cras aliquet varius magna, non porta ligula feugiat eget.`, ` Fusce tristique felis at fermentum pharetra.`, ` Aliquam id orci ut lectus varius viverra.`, ` Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante.`, ` Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum.`, ` Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui.`, ` Sed sed nisi sed augue convallis suscipit in sed felis.`, ` Aliquam erat volutpat.`, ` Nunc fermentum tortor ac porta dapibus.`, ` In rutrum ac purus sit amet tempus.`];
 
@@ -88,6 +80,16 @@ const getRandomDateCommit = () => {
   return targetDate;
 };
 
+class Comments {
+  constructor(id, avtor, сomment, data, emotion) {
+    this.id = id;
+    this.avtor = avtor;
+    this.сomment = сomment;
+    this.data = data;
+    this.emotion = emotion;
+  }
+}
+
 let commentsItems = [];
 let commentsCounter = 0;
 
@@ -97,11 +99,10 @@ const getComments = (id) => {
   for (let i = 0; i < commentsNumber; i++) {
     commentsFilmsItems.push(String(commentsCounter));
 
-    commentsFilmsItems[i] = new Comments(getRandomArrayItem(EmojiItems), getRandomDateCommit(), `avtor id-${id} N-${commentsCounter}`, `message id-${id} N-${commentsCounter}`);
+    commentsFilmsItems[i] = new Comments(commentsCounter, `avtor id-${id} N-${commentsCounter}`, `сomment id-${id} N-${commentsCounter}`, getRandomDateCommit(), getRandomArrayItem(EmojiItems));
     commentsCounter++;
   }
   commentsItems.push(commentsFilmsItems);
-
   return commentsItems[id];
 };
 
