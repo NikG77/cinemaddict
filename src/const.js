@@ -19,3 +19,9 @@ export const TIME = {
   MILISECONDS_IN_SECOND: 1000,
 };
 
+export const FilterType = {
+  ALL: `all`,
+  WATCHLIST: `watchlist`,
+  FAVORITES: `favorites`,
+  HISTORY: `history`,
+};
