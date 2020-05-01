@@ -3,6 +3,7 @@ import FilmCardComponent from "../components/film-card";
 import FilmDetailsComponent from "../components/film-details";
 import {isEscEvent} from "../utils/common";
 import {render, remove, append, RenderPosition, replace} from "../utils/render";
+import FilmCommentsComponent from "../components/comments";
 
 const Mode = {
   DEFAULT: `default`,
@@ -19,6 +20,7 @@ export default class MovieController {
 
     this._filmCardComponent = null;
     this._filmDetailsComponent = null;
+    this._filmCommentsComponent = null;
 
     this._onPopupOpenClick = this._onPopupOpenClick.bind(this);
     this._onPopupCloseEscPress = this._onPopupCloseEscPress.bind(this);
@@ -32,6 +34,7 @@ export default class MovieController {
 
     this._filmCardComponent = new FilmCardComponent(film);
     this._filmDetailsComponent = new FilmDetailsComponent(film);
+    this._filmCommentsComponent = new FilmCommentsComponent(film.comments);
 
     if (oldfilmCardComponent && oldfilmDetailsComponent) {
       replace(this._filmCardComponent, oldfilmCardComponent);
@@ -78,6 +81,7 @@ export default class MovieController {
 
   _closePopup() {
     this._filmDetailsComponent.reset();
+    // this._filmCommentsComponent.reset();
     this._mode = Mode.DEFAULT;
 
 
@@ -97,6 +101,9 @@ export default class MovieController {
 
       this._onViewChange();
       append(this._container, this._filmDetailsComponent);
+
+      append(this._container.querySelector(`.film-details__inner`), this._filmCommentsComponent);
+
       document.querySelector(`body`).classList.add(`hide-overflow`);
       this._mode = Mode.EDIT;
 

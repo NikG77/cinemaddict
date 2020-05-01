@@ -172,8 +172,6 @@ export default class PageController {
     this._showedFilmControllers = this._showedFilmControllers.concat(newFilms);
     this._showedAllFilmControllers = this._showedRaringFilmControllers.concat(this._showedFilmControllers);
 
-    console.log(`this._showedAllFilmControllers- `, this._showedAllFilmControllers);
-
     this._renderShowMoreButton();
   }
 
