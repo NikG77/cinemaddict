@@ -20,8 +20,10 @@ export const TIME = {
 };
 
 export const FilterType = {
-  ALL: `all`,
-  WATCHLIST: `watchlist`,
-  FAVORITES: `favorites`,
-  HISTORY: `history`,
+  ALL: `All movies`,
+  WATCHLIST: `Watchlist`,
+  HISTORY: `History`,
+  FAVORITES: `Favorites`,
 };
+
+

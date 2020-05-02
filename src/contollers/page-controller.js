@@ -64,7 +64,7 @@ export default class PageController {
     this._container = container;
     this._filmsModel = filmsModel;
     this._commentsModel = commentsModel;
-    // this._films = [];
+
     this._showedFilmControllers = [];
 
     this._showedAllFilmControllers = [];
@@ -89,13 +89,8 @@ export default class PageController {
 
   render() {
     const films = this._filmsModel.getFilms();
-
-    // let filters = generateFilters(films);
     this._currentFilms = films.slice();
 
-    // const navigationComponent = new NavigationComponent(filters);
-
-    // render(this._container, navigationComponent, RenderPosition.BEFOREEND);
     const filterController = new FilterController(this._container, this._filmsModel);
     filterController.render();
 
@@ -121,15 +116,16 @@ export default class PageController {
     newFilms = renderFilms(this._filmListContainerElements[FILMS_LIST_CONTAINER.MOST_COMMENTED], this._searchMostCommentedFilms(this._currentFilms), this._onDataChange, this._onViewChange);
     this._showedRaringFilmControllers = this._showedRaringFilmControllers.concat(newFilms);
 
-    newFilms = renderFilms(this._filmListContainerElements[FILMS_LIST_CONTAINER.FILM], films.slice(0, COUNT.FILM_SHOW), this._onDataChange, this._onViewChange);
-    this._showedFilmControllers = this._showedFilmControllers.concat(newFilms);
-    this._showedAllFilmControllers = this._showedRaringFilmControllers.concat(this._showedFilmControllers);
+    this._renderFilms(films.slice(0, COUNT.FILM_SHOW));
 
     this._renderShowMoreButton();
   }
 
-
-
+  _renderFilms(films) {
+    const newFilms = renderFilms(this._filmListContainerElements[FILMS_LIST_CONTAINER.FILM], films, this._onDataChange, this._onViewChange);
+    this._showedFilmControllers = this._showedFilmControllers.concat(newFilms);
+    this._showedAllFilmControllers = this._showedRaringFilmControllers.concat(this._showedFilmControllers);
+  }
 
   _removeFilms() {
     this._showedFilmControllers.forEach((filmController) => filmController.destroy());
@@ -161,7 +157,7 @@ export default class PageController {
   _updateFilms(count) {
     this._removeFilms();
     this._renderFilms(this._filmsModel.getFilms().slice(0, count));
-    this._renderLoadMoreButton();
+    this._renderShowMoreButton();
   }
 
   _onDataChange(movieController, oldData, newData) {
