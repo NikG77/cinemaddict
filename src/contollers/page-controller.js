@@ -81,6 +81,7 @@ export default class PageController {
     this._onDataChange = this._onDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
     this._onFilterChange = this._onFilterChange.bind(this);
+    this._onShowMoreButtonClick = this._onShowMoreButtonClick.bind(this);
 
     this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChange);
     this._filmsModel.setFilterChangeHandler(this._onFilterChange);
@@ -125,19 +126,10 @@ export default class PageController {
     this._showedAllFilmControllers = this._showedRaringFilmControllers.concat(this._showedFilmControllers);
 
     this._renderShowMoreButton();
-
-    this._showMoreButtonComponent.setClickHandler(() => {
-      const prevFilmCount = this._showingFilmCount;
-      this._showingFilmCount = prevFilmCount + COUNT.FILM_SHOW;
-      newFilms = renderFilms(this._filmListContainerElements[FILMS_LIST_CONTAINER.FILM], this._currentFilms.slice(prevFilmCount, this._showingFilmCount), this._onDataChange, this._onViewChange);
-      this._showedAllFilmControllers = this._showedAllFilmControllers.concat(newFilms);
-
-      if (this._showingFilmCount >= this._filmsModel.getFilms().length) {
-        remove(this._showMoreButtonComponent);
-      }
-    });
-
   }
+
+
+
 
   _removeFilms() {
     this._showedFilmControllers.forEach((filmController) => filmController.destroy());
@@ -152,6 +144,18 @@ export default class PageController {
     }
     render(this._filmsListElement, this._showMoreButtonComponent, RenderPosition.BEFOREEND);
 
+    this._showMoreButtonComponent.setClickHandler(this._onShowMoreButtonClick);
+  }
+
+  _onShowMoreButtonClick() {
+    const prevFilmCount = this._showingFilmCount;
+    this._showingFilmCount = prevFilmCount + COUNT.FILM_SHOW;
+    let newFilms = renderFilms(this._filmListContainerElements[FILMS_LIST_CONTAINER.FILM], this._currentFilms.slice(prevFilmCount, this._showingFilmCount), this._onDataChange, this._onViewChange);
+    this._showedAllFilmControllers = this._showedAllFilmControllers.concat(newFilms);
+
+    if (this._showingFilmCount >= this._filmsModel.getFilms().length) {
+      remove(this._showMoreButtonComponent);
+    }
   }
 
   _updateFilms(count) {
@@ -176,7 +180,7 @@ export default class PageController {
   _onSortTypeChange(sortType) {
     // Если нужна реализация c дефолтым кол-вом карточек после сортировки
     // то надо разкомментировать следующую строку
-    // this._showingFilmCount = COUNT.FILM_SHOW;
+    this._showingFilmCount = COUNT.FILM_SHOW;
     const films = this._filmsModel.getFilms();
     this._currentFilms = getSortedFilms(films, sortType, 0, films.length);
 
