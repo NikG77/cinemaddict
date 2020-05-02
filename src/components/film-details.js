@@ -136,6 +136,8 @@ export default class FilmDetails extends AbstractSmartComponent {
 
     this._film = film;
     this._submitHandler = null;
+
+    this._subscribeOnEvents();
   }
 
   getTemplate() {
@@ -166,7 +168,7 @@ export default class FilmDetails extends AbstractSmartComponent {
     const element = this.getElement();
 
     element.querySelector(`#watchlist`).addEventListener(`click`, () => {
-      // breakpoint;
+
       // console.log(`до-`, this._film[`user_details`][`watchlist`]);
       this._film[`user_details`][`watchlist`] = !this._film[`user_details`][`watchlist`];
       // console.log(`после-`, this._film[`user_details`][`watchlist`]);

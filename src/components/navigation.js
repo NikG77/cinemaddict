@@ -1,9 +1,10 @@
 import AbstractComponent from "./abstract-component";
 
+
 const createFilterMarkup = (filter, isActive) => {
   const {name, count} = filter;
   return (
-    `<a href="#${name.toLowerCase().split(` `, 1)}" class="main-navigation__item
+    `<a href="#${name.toLowerCase().split(` `, 1)}" data-filter="${name.toLowerCase().split(` `, 1)}"class="main-navigation__item
     ${isActive ? `main-navigation__item--active` : ``}">
     ${name} ${isActive ? `` : `<span class="main-navigation__item-count">${count}</span>`}</a>`
   );
@@ -26,9 +27,22 @@ export default class Navigation extends AbstractComponent {
   constructor(filters) {
     super();
     this._filters = filters;
+
   }
 
   getTemplate() {
     return createNavigationTemplate(this._filters);
   }
+
+  setFilterChangeHandler(handler) {
+    this.getElement().addEventListener(`click`, (evt) => {
+      evt.preventDefault();
+      const target = evt.target;
+      if (target && target.closest(`a`)) {
+        const filterName = target.dataset.filter;
+        handler(filterName);
+      }
+    });
+  }
+
 }

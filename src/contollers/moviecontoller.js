@@ -81,7 +81,7 @@ export default class MovieController {
 
   _closePopup() {
     this._filmDetailsComponent.reset();
-    // this._filmCommentsComponent.reset();
+    this._filmCommentsComponent.reset();
     this._mode = Mode.DEFAULT;
 
 

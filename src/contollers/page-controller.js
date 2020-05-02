@@ -88,14 +88,14 @@ export default class PageController {
   }
 
   render() {
-    // this._films = films;
     const films = this._filmsModel.getFilms();
 
     let filters = generateFilters(films);
     this._currentFilms = films.slice();
 
-    const navigationElement = new NavigationComponent(filters);
-    render(this._container, navigationElement, RenderPosition.BEFOREEND);
+    const navigationComponent = new NavigationComponent(filters);
+
+    render(this._container, navigationComponent, RenderPosition.BEFOREEND);
     render(this._container, this._sortComponent, RenderPosition.BEFOREEND);
 
     if (films.length === 0) {
