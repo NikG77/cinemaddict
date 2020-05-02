@@ -1,4 +1,4 @@
-import {FilterType} from "../const.js";
+import {FilterType, FilterTypeOnClick} from "../const.js";
 
 export const getWatchListFilms = (films) => {
   return films.filter((film) => film.user_details.watchlist);
@@ -14,6 +14,7 @@ export const getFavoriteFilms = (films) => {
 };
 
 export const getFilmsByFilter = (films, filterType) => {
+  filterType = filterType.toLowerCase().split(` `, 1).join();
   switch (filterType) {
     case FilterType.ALL:
       return films;
@@ -24,7 +25,7 @@ export const getFilmsByFilter = (films, filterType) => {
     case FilterType.WATCHLIST:
       return getWatchListFilms(films);
     default:
-      console.log(`что-то пошло не так с getFilmsByFilter`);
+      console.log(`filterType-`, filterType, `что-то пошло не так с getFilmsByFilter`);
   }
 
   return films;

@@ -19,11 +19,17 @@ export const TIME = {
   MILISECONDS_IN_SECOND: 1000,
 };
 
-export const FilterType = {
+export const FilterTypeOutput = {
   ALL: `All movies`,
   WATCHLIST: `Watchlist`,
   HISTORY: `History`,
   FAVORITES: `Favorites`,
+};
+export const FilterType = {
+  ALL: `all`,
+  WATCHLIST: `watchlist`,
+  HISTORY: `history`,
+  FAVORITES: `favorites`,
 };
 
 

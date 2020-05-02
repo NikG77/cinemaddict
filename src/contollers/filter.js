@@ -1,5 +1,5 @@
 import FilterComponent from "../components/navigation";
-import {FilterType} from "../const.js";
+import {FilterType, FilterTypeOutput} from "../const.js";
 import {render, replace, RenderPosition} from "../utils/render.js";
 import {getFilmsByFilter} from "../utils/filter.js";
 
@@ -18,16 +18,18 @@ export default class FilterController {
   }
 
   render() {
+
+    console.log(`this._activeFilterType-`, this._activeFilterType);
     const container = this._container;
     const allFilms = this._filmsModel.getFilmsAll();
-    const filters = Object.values(FilterType).map((filterType) => {
+    const filters = Object.values(FilterTypeOutput).map((filterType) => {
       return {
         name: filterType,
         count: getFilmsByFilter(allFilms, filterType).length,
-        // checked: filterType === this._activeFilterType,
+        isActive: filterType.toLowerCase().split(` `, 1).join() === this._activeFilterType,
       };
     });
-    console.log(`новый фильтр`, filters);
+    console.log(`Получили фильтр`, filters);
 
     const oldComponent = this._filterComponent;
 

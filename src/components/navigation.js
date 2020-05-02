@@ -1,12 +1,12 @@
 import AbstractComponent from "./abstract-component";
 
 
-const createFilterMarkup = (filter, isActive) => {
-  const {name, count} = filter;
+const createFilterMarkup = (filter, isMain) => {
+  const {name, count, isActive} = filter;
   return (
     `<a href="#${name.toLowerCase().split(` `, 1)}" data-filter="${name.toLowerCase().split(` `, 1)}"class="main-navigation__item
     ${isActive ? `main-navigation__item--active` : ``}">
-    ${name} ${isActive ? `` : `<span class="main-navigation__item-count">${count}</span>`}</a>`
+    ${name} ${isMain ? `` : `<span class="main-navigation__item-count">${count}</span>`}</a>`
   );
 };
 
