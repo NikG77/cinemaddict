@@ -19,7 +19,7 @@ export default class FilterController {
 
   render() {
     const container = this._container;
-    const allFilms = this._filmsModel.getTasks();
+    const allFilms = this._filmsModel.getFilmsAll();
     const filters = Object.values(FilterType).map((filterType) => {
       return {
         name: filterType,
@@ -40,7 +40,7 @@ export default class FilterController {
   }
 
   _onFilterChange(filterType) {
-    // this._tasksModel.setFilter(filterType);
+    this._tasksModel.setFilter(filterType);
     this._activeFilterType = filterType;
   }
 
