@@ -11,7 +11,7 @@ export default class Movies {
     this._filterChangeHandlers = [];
   }
 
-  getFilm() {
+  getFilms() {
     return getFilmsByFilter(this._films, this._activeFilterType);
   }
 
@@ -41,6 +41,10 @@ export default class Movies {
     this._callHandlers(this._dataChangeHandlers);
 
     return true;
+  }
+
+  setFilterChangeHandler(handler) {
+    this._filterChangeHandlers.push(handler);
   }
 
   setDataChangeHandler(handler) {
