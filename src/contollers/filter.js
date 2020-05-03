@@ -19,7 +19,6 @@ export default class FilterController {
 
   render() {
 
-    console.log(`this._activeFilterType-`, this._activeFilterType);
     const container = this._container;
     const allFilms = this._filmsModel.getFilmsAll();
     const filters = Object.values(FilterTypeOutput).map((filterType) => {
@@ -29,7 +28,7 @@ export default class FilterController {
         isActive: filterType.toLowerCase().split(` `, 1).join() === this._activeFilterType,
       };
     });
-    console.log(`Получили фильтр`, filters);
+    // console.log(`Получили фильтр`, filters);
 
     const oldComponent = this._filterComponent;
 

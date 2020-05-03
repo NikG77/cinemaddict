@@ -146,8 +146,11 @@ export default class PageController {
   _onShowMoreButtonClick() {
     const prevFilmCount = this._showingFilmCount;
     this._showingFilmCount = prevFilmCount + COUNT.FILM_SHOW;
-    let newFilms = renderFilms(this._filmListContainerElements[FILMS_LIST_CONTAINER.FILM], this._currentFilms.slice(prevFilmCount, this._showingFilmCount), this._onDataChange, this._onViewChange);
-    this._showedAllFilmControllers = this._showedAllFilmControllers.concat(newFilms);
+    const films = this._filmsModel.getFilms();
+
+    const sortedFilms = getSortedFilms(films, this._sortComponent.getSortType(), prevFilmCount, this._showingFilmCount);
+
+    this._renderFilms(sortedFilms);
 
     if (this._showingFilmCount >= this._filmsModel.getFilms().length) {
       remove(this._showMoreButtonComponent);
@@ -178,11 +181,11 @@ export default class PageController {
     // то надо разкомментировать следующую строку
     this._showingFilmCount = COUNT.FILM_SHOW;
     const films = this._filmsModel.getFilms();
-    this._currentFilms = getSortedFilms(films, sortType, 0, films.length);
+    const sortedFilms = getSortedFilms(films, sortType, 0, films.length);
 
     this._filmListContainerElements[FILMS_LIST_CONTAINER.FILM].innerHTML = ``;
 
-    const newFilms = renderFilms(this._filmListContainerElements[FILMS_LIST_CONTAINER.FILM], this._currentFilms.slice(0, this._showingFilmCount), this._onDataChange, this._onViewChange);
+    const newFilms = renderFilms(this._filmListContainerElements[FILMS_LIST_CONTAINER.FILM], sortedFilms.slice(0, this._showingFilmCount), this._onDataChange, this._onViewChange);
     // Добавляются отсортиированные контроллеры повторно - подумать может такие не добавлять или обнулять за исключением двух лучших полей
     this._showedFilmControllers = [];
     this._showedFilmControllers = this._showedFilmControllers.concat(newFilms);
