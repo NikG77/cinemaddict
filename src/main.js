@@ -23,7 +23,7 @@ render(siteHeaderElement, new ProfileComponent(films), RenderPosition.BEFOREEND)
 
 const siteMainElement = document.querySelector(`.main`);
 const pageController = new PageController(siteMainElement, filmsModel, commentsModel);
-pageController.render(films);
+pageController.render();
 
 const footerElement = document.querySelector(`.footer`);
 const footerStatisticsElement = footerElement.querySelector(`.footer__statistics`);

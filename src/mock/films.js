@@ -81,9 +81,9 @@ const getRandomDateCommit = () => {
 };
 
 class Comments {
-  constructor(id, avtor, сomment, data, emotion) {
+  constructor(id, author, сomment, data, emotion) {
     this.id = id;
-    this.avtor = avtor;
+    this.author = author;
     this.сomment = сomment;
     this.data = data;
     this.emotion = emotion;

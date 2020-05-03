@@ -26,18 +26,22 @@ export default class MovieController {
     this._onPopupCloseEscPress = this._onPopupCloseEscPress.bind(this);
     this._closePopup = this._closePopup.bind(this);
 
+
+    this._film = null;
   }
 
   render(film) {
-    const oldfilmCardComponent = this._filmCardComponent;
-    const oldfilmDetailsComponent = this._filmDetailsComponent;
+    this._film = film;
+
+    const oldFilmCardComponent = this._filmCardComponent;
+    const oldFilmDetailsComponent = this._filmDetailsComponent;
 
     this._filmCardComponent = new FilmCardComponent(film);
     this._filmDetailsComponent = new FilmDetailsComponent(film);
     this._filmCommentsComponent = new FilmCommentsComponent(film.comments);
 
-    if (oldfilmCardComponent && oldfilmDetailsComponent) {
-      replace(this._filmCardComponent, oldfilmCardComponent);
+    if (oldFilmCardComponent && oldFilmDetailsComponent) {
+      replace(this._filmCardComponent, oldFilmCardComponent);
     } else {
       render(this._container, this._filmCardComponent, RenderPosition.BEFOREEND);
     }
@@ -47,12 +51,10 @@ export default class MovieController {
 
     this._filmCardComponent.setWatchListButtonClickHandler((evt) => {
       evt.preventDefault();
-      console.log(`в карточке до-`, film[`user_details`][`watchlist`]);
       const newFilm = Object.assign({}, film);
       newFilm[`user_details`][`watchlist`] = !film[`user_details`][`watchlist`];
 
       this._onDataChange(this, film, newFilm);
-      console.log(`в карточке после-`, film[`user_details`][`watchlist`]);
     });
 
     this._filmCardComponent.setHistoryButtonClickHandler((evt) => {
@@ -88,14 +90,15 @@ export default class MovieController {
 
 
   _closePopup() {
-    this._filmDetailsComponent.reset();
-    this._filmCommentsComponent.reset();
+    // this._filmDetailsComponent.reset();
+    // this._filmCommentsComponent.reset();
     this._mode = Mode.DEFAULT;
-
 
     remove(this._filmDetailsComponent);
     document.querySelector(`body`).classList.remove(`hide-overflow`);
     document.removeEventListener(`keydown`, this._onPopupCloseEscPress);
+
+    render(this._film);
   }
 
   _onPopupCloseEscPress(evt) {
