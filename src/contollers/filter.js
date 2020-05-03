@@ -18,7 +18,6 @@ export default class FilterController {
   }
 
   render() {
-
     const container = this._container;
     const allFilms = this._filmsModel.getFilmsAll();
     const filters = Object.values(FilterTypeOutput).map((filterType) => {
@@ -43,8 +42,11 @@ export default class FilterController {
   }
 
   _onFilterChange(filterType) {
-    this._filmsModel.setFilter(filterType);
-    this._activeFilterType = filterType;
+    if (this._activeFilterType !== filterType) {
+      this._filmsModel.setFilter(filterType);
+      this._activeFilterType = filterType;
+      this._onDataChange();
+    }
   }
 
   _onDataChange() {

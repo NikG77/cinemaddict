@@ -26,7 +26,6 @@ export default class Movies {
 
   setFilter(filterType) {
     this._activeFilterType = filterType;
-    console.log(`в setfilter filter`, this._activeFilterType);
     this._callHandlers(this._filterChangeHandlers);
   }
 

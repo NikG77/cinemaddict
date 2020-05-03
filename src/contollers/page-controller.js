@@ -27,7 +27,6 @@ const FILMS_LIST_CONTAINER = {
 const renderFilms = (container, films, onDataChange, onViewChange) => {
   return films.map((film) => {
     const movieController = new MovieController(container, onDataChange, onViewChange);
-
     movieController.render(film);
     return movieController;
   });
@@ -89,7 +88,6 @@ export default class PageController {
 
   render() {
     const films = this._filmsModel.getFilms();
-    this._currentFilms = films.slice();
 
     const filterController = new FilterController(this._container, this._filmsModel);
     filterController.render();
@@ -110,14 +108,13 @@ export default class PageController {
     this._filmsListElement = filmsElement.querySelector(`.films-list`);
     this._filmListContainerElements = filmsElement.querySelectorAll(`.films-list__container`);
 
-    let newFilms = renderFilms(this._filmListContainerElements[FILMS_LIST_CONTAINER.TOP_RATED], this._searchTopRatedFilms(this._currentFilms), this._onDataChange, this._onViewChange);
+    let newFilms = renderFilms(this._filmListContainerElements[FILMS_LIST_CONTAINER.TOP_RATED], this._searchTopRatedFilms(films), this._onDataChange, this._onViewChange);
     this._showedRaringFilmControllers = this._showedRaringFilmControllers.concat(newFilms);
 
-    newFilms = renderFilms(this._filmListContainerElements[FILMS_LIST_CONTAINER.MOST_COMMENTED], this._searchMostCommentedFilms(this._currentFilms), this._onDataChange, this._onViewChange);
+    newFilms = renderFilms(this._filmListContainerElements[FILMS_LIST_CONTAINER.MOST_COMMENTED], this._searchMostCommentedFilms(films), this._onDataChange, this._onViewChange);
     this._showedRaringFilmControllers = this._showedRaringFilmControllers.concat(newFilms);
 
     this._renderFilms(films.slice(0, COUNT.FILM_SHOW));
-
     this._renderShowMoreButton();
   }
 
@@ -175,29 +172,19 @@ export default class PageController {
     this._showedAllFilmControllers.forEach((it) => it.setDefaultView());
   }
 
-
   _onSortTypeChange(sortType) {
-    // Если нужна реализация c дефолтым кол-вом карточек после сортировки
-    // то надо разкомментировать следующую строку
     this._showingFilmCount = COUNT.FILM_SHOW;
     const films = this._filmsModel.getFilms();
     const sortedFilms = getSortedFilms(films, sortType, 0, films.length);
 
-    this._filmListContainerElements[FILMS_LIST_CONTAINER.FILM].innerHTML = ``;
-
-    const newFilms = renderFilms(this._filmListContainerElements[FILMS_LIST_CONTAINER.FILM], sortedFilms.slice(0, this._showingFilmCount), this._onDataChange, this._onViewChange);
-    // Добавляются отсортиированные контроллеры повторно - подумать может такие не добавлять или обнулять за исключением двух лучших полей
-    this._showedFilmControllers = [];
-    this._showedFilmControllers = this._showedFilmControllers.concat(newFilms);
-    this._showedAllFilmControllers = this._showedRaringFilmControllers.concat(this._showedFilmControllers);
-
+    this._removeFilms();
+    this._renderFilms(sortedFilms);
     this._renderShowMoreButton();
   }
 
   _onFilterChange() {
     this._updateFilms(this._showingFilmCount);
   }
-
 
   _searchTopRatedFilms(films) {
     const topRatedFilms = films.slice();
