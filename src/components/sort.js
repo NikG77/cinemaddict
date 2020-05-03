@@ -2,17 +2,25 @@ import AbstractComponent from "./abstract-component";
 
 export const SortType = {
   DEFAULT: `default`,
-  DATE_DOWN: `date-down`,
-  RATING_DOWN: `rating-down`,
+  DATE_DOWN: `date`,
+  RATING_DOWN: `rating`,
 };
 
-const createSortTemplate = (currenSortType) => {
-  // const isSortActive = currenSortType === SortType ? `sort__button--active` : ``;
+const createSortMarkup = (sortType, isActive) => {
+  return (
+    `<li>
+      <a href="#" data-sort-type="${sortType}"
+      class="sort__button ${isActive ? `sort__button--active` : ``}">Sort by ${sortType}</a>
+    </li>`
+  );
+};
+
+const createSortTemplate = (currentSortType) => {
+  const sortMarkup = Object.values(SortType).map((sortType) => createSortMarkup(sortType, sortType === currentSortType)).join(`\n`);
+
   return (
     `<ul class="sort">
-      <li><a href="#" data-sort-type="${SortType.DEFAULT}" class="sort__button sort__button--active">Sort by default</a></li>
-      <li><a href="#" data-sort-type="${SortType.DATE_DOWN}" class="sort__button">Sort by date</a></li>
-      <li><a href="#" data-sort-type="${SortType.RATING_DOWN}" class="sort__button">Sort by rating</a></li>
+        ${sortMarkup}
     </ul>`
   );
 };
@@ -20,15 +28,15 @@ export default class Sort extends AbstractComponent {
   constructor() {
     super();
 
-    this._currenSortType = SortType.DEFAULT;
+    this._currentSortType = SortType.DEFAULT;
   }
 
   getTemplate() {
-    return createSortTemplate(this._currenSortType);
+    return createSortTemplate(this._currentSortType);
   }
 
   getSortType() {
-    return this._currenSortType;
+    return this._currentSortType;
   }
 
   setSortTypeChangeHandler(handler) {
@@ -41,13 +49,13 @@ export default class Sort extends AbstractComponent {
 
       const sortType = evt.target.dataset.sortType;
 
-      if (this._currenSortType === sortType) {
+      if (this._currentSortType === sortType) {
         return;
       }
 
-      this._currenSortType = sortType;
+      this._currentSortType = sortType;
 
-      handler(this._currenSortType);
+      handler(this._currentSortType);
     });
   }
 }

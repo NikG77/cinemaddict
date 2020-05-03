@@ -8,7 +8,7 @@ import FilmsModel from "./models/movies";
 import CommentsModel from "./models/comments";
 
 
-const COUNT_FILMS = 7;
+const COUNT_FILMS = 12;
 
 const films = generateFilms(COUNT_FILMS);
 

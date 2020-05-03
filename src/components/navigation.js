@@ -1,6 +1,5 @@
 import AbstractComponent from "./abstract-component";
 
-
 const createFilterMarkup = (filter, isMain) => {
   const {name, count, isActive} = filter;
   return (
@@ -27,7 +26,6 @@ export default class Navigation extends AbstractComponent {
   constructor(filters) {
     super();
     this._filters = filters;
-
   }
 
   getTemplate() {
@@ -37,11 +35,20 @@ export default class Navigation extends AbstractComponent {
   setFilterChangeHandler(handler) {
     this.getElement().addEventListener(`click`, (evt) => {
       evt.preventDefault();
-      const target = evt.target;
-      if (target && target.closest(`a`)) {
-        const filterName = target.dataset.filter;
-        handler(filterName);
+
+      if (evt.target.tagName !== `A`) {
+        return;
       }
+
+      const filterName = evt.target.dataset.filter;
+      // if (this._currentFilterName === filterName) {
+      //   console.log(`совпали фильтры`, this._currentFilterName, filterName);
+      //   return;
+      // }
+      // console.log(`не совпали фильтры`, this._currentFilterName, filterName);
+      // this._currentFilterName = filterName;
+
+      handler(filterName);
     });
   }
 

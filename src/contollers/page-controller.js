@@ -32,12 +32,6 @@ const renderFilms = (container, films, onDataChange, onViewChange) => {
   });
 };
 
-// const showFilms = (container, films, onDataChange) => {
-//   renderFilms(container[FILMS_LIST_CONTAINER.FILM], films.slice(0, COUNT.FILM_SHOW), onDataChange);
-//   renderFilms(container[FILMS_LIST_CONTAINER.TOP_RATED], films.slice(0, COUNT.TOP_RATED), onDataChange);
-//   renderFilms(container[FILMS_LIST_CONTAINER.MOST_COMMENTED], films.slice(0, COUNT.MOST_COMMENTED), onDataChange);
-// };
-
 const getSortedFilms = (films, sortType, from, to) => {
   let sortedFilms = [];
   const showingFilms = films.slice();
@@ -175,11 +169,12 @@ export default class PageController {
   _onSortTypeChange(sortType) {
     this._showingFilmCount = COUNT.FILM_SHOW;
     const films = this._filmsModel.getFilms();
-    const sortedFilms = getSortedFilms(films, sortType, 0, films.length);
+    const sortedFilms = getSortedFilms(films, sortType, 0, this._showingFilmCount);
 
     this._removeFilms();
     this._renderFilms(sortedFilms);
     this._renderShowMoreButton();
+
   }
 
   _onFilterChange() {
