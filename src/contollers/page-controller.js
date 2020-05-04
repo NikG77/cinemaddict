@@ -4,12 +4,12 @@ import {render, remove, RenderPosition} from "../utils/render";
 import ShowMoreButtonComponent from "../components/show-more-button";
 import TopRatedComponent from "../components/top-rated";
 import MostCommentedComponent from "../components/most-commented";
-import FilterController from "../contollers/filter";
+import FilterController from "./filter-controller";
 // import NavigationComponent from "../components/navigation";
 import SortComponent, {SortType} from "../components/sort";
 import FilmsComponent from "../components/films";
 import NoFilmsComponent from "../components/no-films";
-import MovieController from "./moviecontoller";
+import MovieController from "./movie-contoller";
 
 const COUNT = {
   FILM_SHOW: 5,
