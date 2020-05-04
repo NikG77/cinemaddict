@@ -90,15 +90,16 @@ export default class MovieController {
 
 
   _closePopup() {
-    // this._filmDetailsComponent.reset();
-    // this._filmCommentsComponent.reset();
+    this._filmDetailsComponent.reset();
+    // можно не писать следующую строку так как сбрасывается пока из-за выше строки
+    this._filmCommentsComponent.reset();
     this._mode = Mode.DEFAULT;
 
     remove(this._filmDetailsComponent);
     document.querySelector(`body`).classList.remove(`hide-overflow`);
     document.removeEventListener(`keydown`, this._onPopupCloseEscPress);
 
-    render(this._film);
+    this._onDataChange(this, this._film, this._film);
   }
 
   _onPopupCloseEscPress(evt) {
@@ -111,9 +112,11 @@ export default class MovieController {
     if (target && target.className === `film-card__title` || target.className === `film-card__poster` || target.className === `film-card__comments`) {
 
       this._onViewChange();
-      append(this._container, this._filmDetailsComponent);
 
-      append(this._container.querySelector(`.film-details__inner`), this._filmCommentsComponent);
+      render(this._container, this._filmDetailsComponent, RenderPosition.BEFOREEND);
+      render(this._container.querySelector(`.film-details__inner`), this._filmCommentsComponent, RenderPosition.BEFOREEND);
+      // append(this._container, this._filmDetailsComponent);
+      // append(this._container.querySelector(`.film-details__inner`), this._filmCommentsComponent);
 
       document.querySelector(`body`).classList.add(`hide-overflow`);
       this._mode = Mode.EDIT;
