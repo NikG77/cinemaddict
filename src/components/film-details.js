@@ -168,10 +168,7 @@ export default class FilmDetails extends AbstractSmartComponent {
     const element = this.getElement();
 
     element.querySelector(`#watchlist`).addEventListener(`click`, () => {
-
-      // console.log(`до-`, this._film[`user_details`][`watchlist`]);
       this._film[`user_details`][`watchlist`] = !this._film[`user_details`][`watchlist`];
-      // console.log(`после-`, this._film[`user_details`][`watchlist`]);
 
       // this.rerender();
     });
