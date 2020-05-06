@@ -90,7 +90,7 @@ class Comments {
   }
 }
 
-let commentsItems = [];
+let commentsItems = {};
 let commentsCounter = 0;
 const comments = [];
 
@@ -100,12 +100,11 @@ const getComments = (id) => {
   for (let i = 0; i < commentsNumber; i++) {
     commentsFilmsItems.push(String(commentsCounter));
 
-    commentsFilmsItems[i] = new Comments(commentsCounter, `avtor id-${id} N-${commentsCounter}`, `сomment id-${id} N-${commentsCounter}`, getRandomDateCommit(), getRandomArrayItem(EmojiItems));
+    commentsItems = new Comments(`${commentsCounter}`, `avtor id-${id} N-${commentsCounter}`, `сomment id-${id} N-${commentsCounter}`, getRandomDateCommit(), getRandomArrayItem(EmojiItems));
     commentsCounter++;
-    comments.push(commentsFilmsItems[i]);
+    comments.push(commentsItems);
   }
-  commentsItems.push(commentsFilmsItems);
-  return commentsItems[id];
+  return commentsFilmsItems;
 };
 
 
@@ -113,7 +112,7 @@ let id = -1;
 const generateFilm = () => {
   id++;
   return {
-    "id": id,
+    "id": `${id}`,
     "film_info": {
       "title": getRandomArrayItem(TitleItems),
       "alternative_title": getRandomArrayItem(AlternativeTitleItems),
