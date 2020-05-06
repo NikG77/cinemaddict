@@ -13,9 +13,9 @@ const createCommmentsMarkup = (comments) => {
         <div>
           <p class="film-details__comment-text">${comment.сomment}</p>
           <p class="film-details__comment-info">
-            <span class="film-details__comment-author">${comment.avtor}</span>
+            <span class="film-details__comment-author">${comment.author}</span>
             <span class="film-details__comment-day">${commentTimeAgo}</span>
-            <button class="film-details__comment-delete">Delete</button>
+            <button class="film-details__comment-delete" data-id="${comment.id}">Delete</button>
           </p>
         </div>
       </li>`
@@ -74,16 +74,18 @@ const createCommentsTemplate = (comments, options = {}) => {
 };
 
 export default class Comments extends AbstractSmartComponent {
-  constructor(comments) {
+  constructor(film, comments) {
     super();
 
     this._comments = comments;
+    this._film = film;
 
     this._newElementImgEmojiSrc = ``;
     this._newElementImgEmojiAlt = ``;
     this._resetTextariaEmojValue = ``;
 
     this._subscribeOnEvents();
+
   }
 
   getTemplate() {
@@ -96,6 +98,7 @@ export default class Comments extends AbstractSmartComponent {
 
   recoveryListeners() {
     this._subscribeOnEvents();
+    this.setClickDeleteCommentHandler();
   }
 
   rerender() {
@@ -131,7 +134,12 @@ export default class Comments extends AbstractSmartComponent {
       this._resetTextariaEmojValue = evt.target.value;
     });
 
+  }
 
+  setClickDeleteCommentHandler(handler) {
+    this.getElement()
+      .querySelector(`.film-details__comments-list`)
+        .addEventListener(`click`, handler);
   }
 
 }
