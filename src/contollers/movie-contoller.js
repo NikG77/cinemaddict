@@ -133,9 +133,9 @@ export default class FilmController {
   _renderPopupComment() {
     const comments = this._commentsModel.getComments();
 
-    const filmsCommets = this._film.comments.map((item) =>
-      comments.find((comment) => comment.id === item));
-    this._filmCommentsComponent = new FilmCommentsComponent(this._film, filmsCommets);
+    const filmCommets = this._getFilmComment(comments);
+
+    this._filmCommentsComponent = new FilmCommentsComponent(this._film, filmCommets);
 
     render(this._container.querySelector(`.film-details__inner`), this._filmCommentsComponent, RenderPosition.BEFOREEND);
 
@@ -169,6 +169,12 @@ export default class FilmController {
         this.rerenderPopupComment();
       }
     }
+
+  }
+
+  _getFilmComment(comments) {
+    return this._film.comments.map((item) =>
+      comments.find((comment) => comment.id === item));
   }
 
 }
