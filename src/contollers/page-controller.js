@@ -81,7 +81,7 @@ export default class PageController {
     this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChange);
     this._filmsModel.setFilterChangeHandler(this._onFilterChange);
 
-    this._onCommentChange = this._onCommentChange.bind(this);
+    // this._onCommentChange = this._onCommentChange.bind(this);
   }
 
   render() {
@@ -108,10 +108,10 @@ export default class PageController {
     this._filmsListElement = filmsElement.querySelector(`.films-list`);
     this._filmListContainerElements = filmsElement.querySelectorAll(`.films-list__container`);
 
-    let newFilms = renderFilms(this._filmListContainerElements[FILMS_LIST_CONTAINER.TOP_RATED], this._searchTopRatedFilms(films), this._onDataChange, this._onViewChange, this._onCommentChange, this._commentsModel);
+    let newFilms = renderFilms(this._filmListContainerElements[FILMS_LIST_CONTAINER.TOP_RATED], this._searchTopRatedFilms(films), this._onDataChange, this._onViewChange, this._commentsModel);
     this._showedRaringFilmControllers = this._showedRaringFilmControllers.concat(newFilms);
 
-    newFilms = renderFilms(this._filmListContainerElements[FILMS_LIST_CONTAINER.MOST_COMMENTED], this._searchMostCommentedFilms(films), this._onDataChange, this._onViewChange, this._onCommentChange, this._commentsModel);
+    newFilms = renderFilms(this._filmListContainerElements[FILMS_LIST_CONTAINER.MOST_COMMENTED], this._searchMostCommentedFilms(films), this._onDataChange, this._onViewChange, this._commentsModel);
     this._showedRaringFilmControllers = this._showedRaringFilmControllers.concat(newFilms);
 
     this._renderFilms(films.slice(0, COUNT.FILM_SHOW));
@@ -119,7 +119,7 @@ export default class PageController {
   }
 
   _renderFilms(films) {
-    const newFilms = renderFilms(this._filmListContainerElements[FILMS_LIST_CONTAINER.FILM], films, this._onDataChange, this._onViewChange, this._onCommentChange, this._commentsModel);
+    const newFilms = renderFilms(this._filmListContainerElements[FILMS_LIST_CONTAINER.FILM], films, this._onDataChange, this._onViewChange, this._commentsModel);
     this._showedFilmControllers = this._showedFilmControllers.concat(newFilms);
     this._showedAllFilmControllers = this._showedRaringFilmControllers.concat(this._showedFilmControllers);
   }
@@ -168,16 +168,7 @@ export default class PageController {
     }
   }
 
-  _onCommentChange(filmController, oldData, newData) {
 
-
-    if (newData === null) {
-      const isSuccess = this._commentsModel.removeComments(oldData);
-      if (isSuccess) {
-        filmController.rerenderPopupComment();
-      }
-    }
-  }
 
   _onViewChange() {
     this._showedAllFilmControllers.forEach((it) => it.setDefaultView());

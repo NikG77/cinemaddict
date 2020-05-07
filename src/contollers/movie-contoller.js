@@ -14,13 +14,12 @@ export const Mode = {
 export const EmptyComment = {};
 
 export default class FilmController {
-  constructor(container, onDataChange, onViewChange, onCommentChange, commentsModel) {
+  constructor(container, onDataChange, onViewChange, commentsModel) {
     this._container = container;
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
-    this._onCommentChange = onCommentChange;
-    this._commentsModel = commentsModel;
 
+    this._commentsModel = commentsModel;
 
     this._mode = Mode.DEFAULT;
 
@@ -31,6 +30,7 @@ export default class FilmController {
     this._onPopupOpenClick = this._onPopupOpenClick.bind(this);
     this._onPopupCloseEscPress = this._onPopupCloseEscPress.bind(this);
     this._closePopup = this._closePopup.bind(this);
+    this._onCommentChange = this._onCommentChange.bind(this);
 
     this._film = null;
   }
@@ -157,8 +157,18 @@ export default class FilmController {
       this._film.comments = [].concat(this._film.comments.slice(0, index), this._film.comments.slice(index + 1));
 
       // Передаю id комментария для удаления из массива комментариев
-      this._onCommentChange(this, commentId, null);
+      this._onCommentChange(commentId, null);
     });
+  }
+
+  _onCommentChange(oldData, newData) {
+
+    if (newData === null) {
+      const isSuccess = this._commentsModel.removeComments(oldData);
+      if (isSuccess) {
+        this.rerenderPopupComment();
+      }
+    }
   }
 
 }
