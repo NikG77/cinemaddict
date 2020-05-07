@@ -53,30 +53,43 @@ export default class FilmController {
     this._filmCardComponent.setClickHandler(this._onPopupOpenClick);
 
     this._filmCardComponent.setWatchListButtonClickHandler((evt) => {
-      evt.preventDefault();
-      const newFilm = Object.assign({}, film);
-      newFilm[`user_details`][`watchlist`] = !film[`user_details`][`watchlist`];
-
-      this._onDataChange(this, film, newFilm);
+      this.onWatchListButtonClick(evt);
     });
 
     this._filmCardComponent.setHistoryButtonClickHandler((evt) => {
-      evt.preventDefault();
-      const newFilm = Object.assign({}, film);
-      newFilm[`user_details`][`already_watched`] = !film[`user_details`][`already_watched`];
-
-      this._onDataChange(this, film, newFilm);
+      this.onHistoryButtonClickHandler(evt);
     });
 
     this._filmCardComponent.setFavoriteButtonClickHandler((evt) => {
-      evt.preventDefault();
-      const newFilm = Object.assign({}, film);
-      newFilm[`user_details`][`favorite`] = !film[`user_details`][`favorite`];
-
-      this._onDataChange(this, film, newFilm);
+      this.onFavoriteButtonClick(evt);
     });
 
   }
+
+  onWatchListButtonClick(evt) {
+    evt.preventDefault();
+    const newFilm = Object.assign({}, this._film);
+    newFilm[`user_details`][`watchlist`] = !this._film[`user_details`][`watchlist`];
+
+    this._onDataChange(this, this._film, newFilm);
+  }
+
+  onHistoryButtonClickHandler(evt) {
+    evt.preventDefault();
+    const newFilm = Object.assign({}, this._film);
+    newFilm[`user_details`][`already_watched`] = !this._film[`user_details`][`already_watched`];
+
+    this._onDataChange(this, this._film, newFilm);
+  }
+
+  onFavoriteButtonClick(evt) {
+    evt.preventDefault();
+    const newFilm = Object.assign({}, this._film);
+    newFilm[`user_details`][`favorite`] = !this._film[`user_details`][`favorite`];
+
+    this._onDataChange(this, this._film, newFilm);
+  }
+
 
   setDefaultView() {
     if (this._mode !== Mode.DEFAULT) {
@@ -132,9 +145,7 @@ export default class FilmController {
 
   _renderPopupComment() {
     const comments = this._commentsModel.getComments();
-
     const filmCommets = this._getFilmComment(comments);
-
     this._filmCommentsComponent = new FilmCommentsComponent(this._film, filmCommets);
 
     render(this._container.querySelector(`.film-details__inner`), this._filmCommentsComponent, RenderPosition.BEFOREEND);

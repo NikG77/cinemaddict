@@ -8,7 +8,7 @@ import FilterController from "./filter-controller";
 import SortComponent, {SortType} from "../components/sort";
 import FilmsComponent from "../components/films";
 import NoFilmsComponent from "../components/no-films";
-import FilmController from "./movie-contoller";
+import FilmController from "./film-contoller";
 
 import CommentsModel from "../models/model-comments";
 
@@ -71,7 +71,6 @@ export default class PageController {
     this._filmsComponent = new FilmsComponent();
     this._showMoreButtonComponent = new ShowMoreButtonComponent();
 
-
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
     this._onDataChange = this._onDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
@@ -81,7 +80,6 @@ export default class PageController {
     this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChange);
     this._filmsModel.setFilterChangeHandler(this._onFilterChange);
 
-    // this._onCommentChange = this._onCommentChange.bind(this);
   }
 
   render() {
@@ -165,10 +163,9 @@ export default class PageController {
     const isSuccess = this._filmsModel.updateFilm(oldData.id, newData);
     if (isSuccess) {
       filmController.render(newData);
+
     }
   }
-
-
 
   _onViewChange() {
     this._showedAllFilmControllers.forEach((it) => it.setDefaultView());
