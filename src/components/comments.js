@@ -56,9 +56,7 @@ export default class Comments extends AbstractSmartComponent {
   }
 
   recoveryListeners() {
-    // this._subscribeOnEvents();
-    // this.setCommentDeleteClickHandler();
-    // this.setCommentAddClickHandler();
+    this.setCommentDeleteClickHandler();
   }
 
   rerender() {
@@ -66,15 +64,7 @@ export default class Comments extends AbstractSmartComponent {
   }
 
   reset() {
-    this._clear();
-
     this.rerender();
-  }
-
-  _clear() {
-    // this._newElementImgEmojiSrc = ``;
-    // this._newElementImgEmojiAlt = ``;
-    // this._resetTextariaEmojValue = ``;
   }
 
   setCommentDeleteClickHandler(handler) {
