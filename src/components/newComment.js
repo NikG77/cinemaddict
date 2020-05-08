@@ -27,7 +27,7 @@ const createEmojiListMarkup = ({name, isChecked}) => {
 };
 
 const createNewCommentTemplate = (options) => {
-  const {newElementImgEmojiSrc, newElementImgEmojiAlt, resetTextariaEmojValue} = options;
+  const {newElementImgEmojiSrc, newElementImgEmojiAlt, newTextariaEmojValue} = options;
 
   const emojiListMarkup = emojis.map((emoji) => {
     return createEmojiListMarkup(emoji);
@@ -40,7 +40,7 @@ const createNewCommentTemplate = (options) => {
       </div>
 
       <label class="film-details__comment-label">
-        <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${resetTextariaEmojValue}</textarea>
+        <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${newTextariaEmojValue}</textarea>
       </label>
 
       <div class="film-details__emoji-list">
@@ -57,23 +57,27 @@ export default class NeWComment extends AbstractSmartComponent {
 
     this._newElementImgEmojiSrc = ``;
     this._newElementImgEmojiAlt = ``;
-    this._resetTextariaEmojValue = ``;
+    this._newTextariaEmojValue = ``;
+    this._activeEmoji = ``;
 
     this._subscribeOnEvents();
+
+    // this._commentAddClickHandler = null;
+
   }
 
   getTemplate() {
     return createNewCommentTemplate({
       newElementImgEmojiSrc: this._newElementImgEmojiSrc,
       newElementImgEmojiAlt: this._newElementImgEmojiAlt,
-      resetTextariaEmojValue: this._resetTextariaEmojValue,
+      newTextariaEmojValue: this._newTextariaEmojValue,
     });
   }
 
   recoveryListeners() {
     this._subscribeOnEvents();
 
-    // this.setCommentAddClickHandler();
+    this.setCommentAddClickHandler(this._commentAddClickHandler);
   }
 
   rerender() {
@@ -81,33 +85,74 @@ export default class NeWComment extends AbstractSmartComponent {
   }
 
   reset() {
-    this._clear();
+    this.clear();
 
     this.rerender();
   }
 
-  _clear() {
+  clear() {
     this._newElementImgEmojiSrc = ``;
     this._newElementImgEmojiAlt = ``;
-    this._resetTextariaEmojValue = ``;
+    this._newTextariaEmojValue = ``;
+    this._activeEmoji = ``;
   }
+
+  getNewComment() {
+    const newComment = {
+      comment: this._newTextariaEmojValue,
+      date: new Date(),
+      emotion: this._activeEmoji,
+    };
+    console.log(`getNewComment`, newComment);
+
+    return newComment;
+  }
+
+  setCommentAddClickHandler(handler) {
+    this.getElement()
+      .querySelector(`.film-details__comment-input`)
+        .addEventListener(`keydown`, handler);
+
+    this._commentAddClickHandler = handler;
+
+  }
+
 
   _subscribeOnEvents() {
     const element = this.getElement();
 
-    element.querySelector(`.film-details__emoji-list`).addEventListener(`click`, (evt) => {
+    const emojisListElement = element.querySelector(`.film-details__emoji-list`);
+    const emojiLabelsElement = Array.from(emojisListElement.querySelectorAll(`.film-details__emoji-label`));
+
+    emojisListElement.addEventListener(`click`, (evt) => {
       if (evt.target.tagName !== `INPUT`) {
         return;
       }
-      const activeEmoji = evt.target.value;
-      this._newElementImgEmojiSrc = `images/emoji/${activeEmoji}.png`;
-      this._newElementImgEmojiAlt = `emoji-${activeEmoji}`;
+      // Находим индекс изображения по которому осуществлен клик
+      const clickedEmojiIndex = emojiLabelsElement.findIndex((it) => it === evt.target.parentElement);
+      // Проходим по всем смайликам, и если индекс смайлика по которому осуществлен клик
+      // совпадает с индексом текущего, меняем его свойство isChecked на !isChecked,
+      // остальным смайликам задаем свойство isChecked = false
+      emojis.map((emoji, index) => {
+        if (clickedEmojiIndex === index) {
+          emoji.isChecked = !emoji.isChecked;
+          return emoji;
+        } else {
+          emoji.isChecked = false;
+          return emoji;
+        }
+      });
+
+      this._activeEmoji = evt.target.value;
+      this._newElementImgEmojiSrc = `images/emoji/${this._activeEmoji}.png`;
+      this._newElementImgEmojiAlt = `emoji-${this._activeEmoji}`;
 
       this.rerender();
     });
 
-    element.querySelector(`.film-details__comment-input`).addEventListener(`change`, (evt) => {
-      this._resetTextariaEmojValue = evt.target.value;
+    element.querySelector(`.film-details__comment-input`).addEventListener(`input`, (evt) => {
+      this._newTextariaEmojValue = evt.target.value;
+      // console.log(this._newTextariaEmojValue);
     });
 
   }

@@ -108,8 +108,9 @@ export default class FilmController {
 
   _closePopup() {
     this._filmDetailsComponent.reset();
-    // можно не писать следующую строку так как сбрасывается пока из-за выше строки
     this._filmCommentsComponent.reset();
+    this._filmNewCommentComponent.reset();
+
     this._mode = Mode.DEFAULT;
 
     remove(this._filmDetailsComponent);
@@ -164,57 +165,34 @@ export default class FilmController {
       this._filmNewCommentComponent = new FilmNewCommentComponent();
     }
 
+
     render(this._container.querySelector(`.film-details__comments-wrap`), this._filmNewCommentComponent, RenderPosition.BEFOREEND);
 
     this._filmCommentsComponent.setCommentDeleteClickHandler((evt) => {
       this._onCommentDeleteClick(evt);
     });
 
-    // this._filmDetailsComponent.setCommentAddClickHandler((evt) => {
-    //   // isCtrlOrCommandAndEnterEvent(evt, this._onCommentAddClick);
-    //   this._onCommentAddClick(evt);
 
-    // });
+    this._filmNewCommentComponent.setCommentAddClickHandler((evt) => {
+      this._onCommentAddClick(evt);
+    });
+
   }
 
-  // getNewComment() {
-  //   const newComment = {
-  //     comment: this._newTextariaEmojValue,
-  //     // "date": new Data(),
-  //     emotion: this._newElementImgEmojiAlt,
-  //   };
-  //   console.log(newComment);
 
-  //   return newComment;
-  //   // return {
-  //   //   comment: this._newTextariaEmojValue,
-  //   //   // "date": new Data(),
-  //   //   emotion: this._newElementImgEmojiAlt,
-  //   // };
-  // }
+  _onCommentAddClick(evt) {
 
-  setCommentDeleteClickHandler(handler) {
-    this.getElement()
-      .querySelector(`.film-details__comments-list`)
-        .addEventListener(`click`, handler);
+    if (evt.ctrlKey && evt.keyCode === 13 || evt.metaKey && evt.keyCode === 13) {
+      console.log(`пошел за новым комментом`);
+
+      const newComment = this._filmNewCommentComponent.getNewComment();
+      console.log(`выдали новый коммент ${newComment}`);
+
+
+    //  this._onCommentChange(null, newComment);
+    }
+
   }
-
-  // setCommentAddClickHandler(handler) {
-  //   document.addEventListener(`keydown`, handler);
-  // }
-
-  // _onCommentAddClick(evt) {
-  //   evt.preventDefault();
-  //   if (evt.ctrlKey && evt.keyCode === 13 || evt.metaKey && evt.keyCode === 13) {
-
-  //     const newComment = this._filmCommentsComponent.getNewComment();
-  //     console.log(`Добавляем комменты ${newComment}`);
-
-
-  //     // this._onCommentChange(null, newComment);
-  //   }
-
-  // }
 
   _onCommentDeleteClick(evt) {
     evt.preventDefault();

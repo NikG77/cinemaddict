@@ -48,6 +48,7 @@ export default class Comments extends AbstractSmartComponent {
 
     this._comments = comments;
     this._film = film;
+    this._commentDeleteClickHandler = null;
 
   }
 
@@ -56,7 +57,7 @@ export default class Comments extends AbstractSmartComponent {
   }
 
   recoveryListeners() {
-    this.setCommentDeleteClickHandler();
+    this.setCommentDeleteClickHandler(this._commentDeleteClickHandler);
   }
 
   rerender() {
@@ -71,6 +72,9 @@ export default class Comments extends AbstractSmartComponent {
     this.getElement()
       .querySelector(`.film-details__comments-list`)
         .addEventListener(`click`, handler);
+
+    this._commentDeleteClickHandler = handler;
+
   }
 
 }
