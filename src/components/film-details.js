@@ -135,6 +135,7 @@ export default class FilmDetails extends AbstractSmartComponent {
     super();
 
     this._film = film;
+    this._popupCloseClickHandler = null;
     this._submitHandler = null;
 
     this._subscribeOnEvents();
@@ -145,8 +146,7 @@ export default class FilmDetails extends AbstractSmartComponent {
   }
 
   recoveryListeners() {
-    this.setPopupCloseClickHandler(this._submitHandler);
-    this.setCommentAddClickHandler();
+    this.setPopupCloseClickHandler(this._popupCloseClickHandler);
 
     this._subscribeOnEvents();
   }
@@ -163,12 +163,9 @@ export default class FilmDetails extends AbstractSmartComponent {
     this.getElement().querySelector(`.film-details__close-btn`)
       .addEventListener(`click`, handler);
 
-    this._submitHandler = handler;
+    this._popupCloseClickHandler = handler;
   }
 
-  setCommentAddClickHandler(handler) {
-    this.getElement().querySelector(`form`).addEventListener(`keydown`, handler);
-  }
 
   _subscribeOnEvents() {
     const element = this.getElement();
