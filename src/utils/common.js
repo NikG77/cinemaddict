@@ -12,11 +12,7 @@ export const isEscEvent = (evt, action) => {
   }
 };
 
-export const isCtrlOrCommandAndEnterEvent = (evt) => {
-  if (evt.ctrlKey && evt.keyCode === 13 || evt.metaKey && evt.keyCode === 13) {
-    return true;
-  }
-};
+export const isCtrlOrCommandAndEnterEvent = (evt) => evt.ctrlKey && evt.keyCode === 13 || evt.metaKey && evt.keyCode === 13;
 
 export const formatTimeMinute = (timeInMinute) => moment(timeInMinute * TIME.SECUNDS_IN_MINUTE * TIME.MILISECONDS_IN_SECOND).format(`m`);
 
@@ -25,5 +21,4 @@ export const formatTimeHour = (timeInMinute) => moment(timeInMinute * TIME.SECUN
 export const formatDate = (date) => moment(date).format(`DD MMMM YYYY`);
 
 export const formatDateComment = (date) => moment(date).fromNow();
-
 
