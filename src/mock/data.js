@@ -66,4 +66,18 @@ export const data = [{
 {"id": `18`, "film_info": {"title": `Country On Us`, "alternative_title": `Laziness Who The Darkness`, "total_rating": 4.6, "poster": `images/posters/santa-claus-conquers-the-martians.jpg`, "age_rating": 0, "director": `Tom Ford`, "writers": [`Robert Zemeckis`, `Martin Scorsese`], "actors": [`Morgan Freeman `, `Leonardo DiCaprio`, `Takeshi Kitano`, `Gary Oldman`, `Al Pacino`, `Harrison Ford`], "release": {"date": `1994-01-03T21:16:45.603Z`, "release_country": `Spain`}, "runtime": 153, "genre": [`Horror`], "description": `a war drama about two young people, true masterpiece where love and death are closer to heroes than their family, a film about a journey that heroes are about to make in finding themselves, with the best fight scenes since Bruce Lee.`}, "user_details": {"personal_rating": 6, "watchlist": false, "already_watched": false, "watching_date": null, "favorite": false}, "comments": [`84`, `85`, `86`, `87`]},
 {"id": `19`, "film_info": {"title": `Pioneers Of Himself`, "alternative_title": `A Tale Of A Little Bird Within The Room`, "total_rating": 5.9, "poster": `images/posters/santa-claus-conquers-the-martians.jpg`, "age_rating": 18, "director": `Clint Eastwood`, "writers": [`Robert Rodrigues`, `Hayao Miazaki`], "actors": [`Leonardo DiCaprio`, `Michael Caine`, `Robert De Niro`, `Takeshi Kitano`, `Al Pacino`, `Ralph Fiennes`], "release": {"date": `2009-01-21T04:12:09.450Z`, "release_country": `Russia`}, "runtime": 153, "genre": [`Animation`, `Action`, `Family`], "description": `Oscar-winning film, true masterpiece where love and death are closer to heroes than their family, with the best fight scenes since Bruce Lee.`}, "user_details": {"personal_rating": 7, "watchlist": false, "already_watched": true, "watching_date": `2020-03-07T08:28:00.930Z`, "favorite": false}, "comments": [`88`, `89`, `90`, `91`]}];
 
+// getNewComment() {
+//   const newComment = {
+//     comment: this._newTextariaEmojValue,
+//     // "date": new Data(),
+//     emotion: this._newElementImgEmojiAlt,
+//   };
+//   console.log(newComment);
 
+//   return newComment;
+//   // return {
+//   //   comment: this._newTextariaEmojValue,
+//   //   // "date": new Data(),
+//   //   emotion: this._newElementImgEmojiAlt,
+//   // };
+// }

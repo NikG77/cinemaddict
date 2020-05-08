@@ -4,7 +4,8 @@ import FilmDetailsComponent from "../components/film-details";
 import {isEscEvent} from "../utils/common";
 import {render, remove, RenderPosition, replace} from "../utils/render";
 import FilmCommentsComponent from "../components/comments";
-
+import FilmNewCommentComponent from "../components/newComment";
+import {isCtrlOrCommandAndEnterEvent} from "../utils/common";
 
 export const Mode = {
   DEFAULT: `default`,
@@ -26,11 +27,13 @@ export default class FilmController {
     this._filmCardComponent = null;
     this._filmDetailsComponent = null;
     this._filmCommentsComponent = null;
+    this._filmNewCommentComponent = null;
 
     this._onPopupOpenClick = this._onPopupOpenClick.bind(this);
     this._onPopupCloseEscPress = this._onPopupCloseEscPress.bind(this);
     this._closePopup = this._closePopup.bind(this);
     this._onCommentChange = this._onCommentChange.bind(this);
+
 
     this._film = null;
   }
@@ -124,12 +127,12 @@ export default class FilmController {
     const target = evt.target;
 
     if (target && target.className === `film-card__title` || target.className === `film-card__poster` || target.className === `film-card__comments`) {
-      this._onViewChange();
-      render(this._container, this._filmDetailsComponent, RenderPosition.BEFOREEND);
-
-      this._renderPopupComment();
-
       document.querySelector(`body`).classList.add(`hide-overflow`);
+
+      this._onViewChange();
+
+      this._renderPopup();
+
       this._mode = Mode.EDIT;
 
       document.addEventListener(`keydown`, this._onPopupCloseEscPress);
@@ -138,8 +141,15 @@ export default class FilmController {
     }
   }
 
-  rerenderPopupComment() {
+  _renderPopup() {
+    render(this._container, this._filmDetailsComponent, RenderPosition.BEFOREEND);
+    this._renderPopupComment();
+  }
+
+
+  _rerenderPopupComment() {
     remove(this._filmCommentsComponent);
+
     this._renderPopupComment();
   }
 
@@ -148,40 +158,98 @@ export default class FilmController {
     const filmCommets = this._getFilmComment(comments);
     this._filmCommentsComponent = new FilmCommentsComponent(this._film, filmCommets);
 
+
     render(this._container.querySelector(`.film-details__inner`), this._filmCommentsComponent, RenderPosition.BEFOREEND);
+    if (!this._filmNewCommentComponent) {
+      this._filmNewCommentComponent = new FilmNewCommentComponent();
+    }
 
+    render(this._container.querySelector(`.film-details__comments-wrap`), this._filmNewCommentComponent, RenderPosition.BEFOREEND);
 
-    this._filmCommentsComponent.setClickDeleteCommentHandler((evt) => {
-      evt.preventDefault();
-      const target = evt.target;
-
-      if (target && target.className !== `film-details__comment-delete`) {
-        return;
-      }
-      const commentId = target.dataset.id;
-
-      const index = this._film.comments.findIndex((it) => {
-        return it === commentId;
-      });
-
-      // Удаляю из фильма из массива комментариев комментарий
-      this._film.comments = [].concat(this._film.comments.slice(0, index), this._film.comments.slice(index + 1));
-
-      // Передаю id комментария для удаления из массива комментариев
-      this._onCommentChange(commentId, null);
+    this._filmCommentsComponent.setCommentDeleteClickHandler((evt) => {
+      this._onCommentDeleteClick(evt);
     });
+
+    // this._filmDetailsComponent.setCommentAddClickHandler((evt) => {
+    //   // isCtrlOrCommandAndEnterEvent(evt, this._onCommentAddClick);
+    //   this._onCommentAddClick(evt);
+
+    // });
+  }
+
+  // getNewComment() {
+  //   const newComment = {
+  //     comment: this._newTextariaEmojValue,
+  //     // "date": new Data(),
+  //     emotion: this._newElementImgEmojiAlt,
+  //   };
+  //   console.log(newComment);
+
+  //   return newComment;
+  //   // return {
+  //   //   comment: this._newTextariaEmojValue,
+  //   //   // "date": new Data(),
+  //   //   emotion: this._newElementImgEmojiAlt,
+  //   // };
+  // }
+
+  setCommentDeleteClickHandler(handler) {
+    this.getElement()
+      .querySelector(`.film-details__comments-list`)
+        .addEventListener(`click`, handler);
+  }
+
+  // setCommentAddClickHandler(handler) {
+  //   document.addEventListener(`keydown`, handler);
+  // }
+
+  // _onCommentAddClick(evt) {
+  //   evt.preventDefault();
+  //   if (evt.ctrlKey && evt.keyCode === 13 || evt.metaKey && evt.keyCode === 13) {
+
+  //     const newComment = this._filmCommentsComponent.getNewComment();
+  //     console.log(`Добавляем комменты ${newComment}`);
+
+
+  //     // this._onCommentChange(null, newComment);
+  //   }
+
+  // }
+
+  _onCommentDeleteClick(evt) {
+    evt.preventDefault();
+    const target = evt.target;
+
+    if (target && target.className !== `film-details__comment-delete`) {
+      return;
+    }
+    const commentId = target.dataset.id;
+
+    const index = this._film.comments.findIndex((it) => {
+      return it === commentId;
+    });
+
+    // Удаляю из фильма из массива комментариев комментарий
+    this._film.comments = [].concat(this._film.comments.slice(0, index), this._film.comments.slice(index + 1));
+
+    // Передаю id комментария для удаления из массива комментариев
+    this._onCommentChange(commentId, null);
   }
 
   _onCommentChange(oldData, newData) {
-
     if (newData === null) {
       const isSuccess = this._commentsModel.removeComments(oldData);
       if (isSuccess) {
-        this.rerenderPopupComment();
+        this._rerenderPopupComment();
       }
+    }
+    if (oldData === null) {
+      this._commentsModel.addComments(newData);
+      this._rerenderPopupComment();
     }
 
   }
+
 
   _getFilmComment(comments) {
     return this._film.comments.map((item) =>

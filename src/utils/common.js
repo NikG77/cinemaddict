@@ -1,11 +1,20 @@
 import moment from "moment";
 import {TIME} from "../const";
 
-const ESC_KEYCODE = 27;
+const KEYCODE = {
+  ESC: 27,
+  ENTER: 13,
+};
 
 export const isEscEvent = (evt, action) => {
-  if (evt.keyCode === ESC_KEYCODE) {
+  if (evt.keyCode === KEYCODE.ESC) {
     action();
+  }
+};
+
+export const isCtrlOrCommandAndEnterEvent = (evt) => {
+  if (evt.ctrlKey && evt.keyCode === 13 || evt.metaKey && evt.keyCode === 13) {
+    return true;
   }
 };
 
