@@ -1,6 +1,31 @@
 import AbstractSmartComponent from "./abstract-smart-component";
 import {formatDateComment} from "../utils/common";
 
+const emojis = [{
+  name: `smile`,
+  isChecked: true,
+},
+{
+  name: `sleeping`,
+  isChecked: false,
+},
+{
+  name: `puke`,
+  isChecked: false,
+},
+{
+  name: `angry`,
+  isChecked: false,
+}
+];
+
+const createEmojiListMarkup = ({name, isChecked}) => {
+  const inputChecked = isChecked ? `checked` : ``;
+  return (`<input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${name}" value="${name}" ${inputChecked}>
+  <label class="film-details__emoji-label" for="emoji-${name}">
+    <img src="./images/emoji/${name}.png" width="30" height="30" alt="emoji">
+  </label>`);
+};
 
 const createCommmentsMarkup = (comments) => {
   return comments.map((comment) => {
@@ -28,13 +53,16 @@ const createCommentsTemplate = (comments, options = {}) => {
   const commentsNumber = comments.length;
   const {newElementImgEmojiSrc, newElementImgEmojiAlt, resetTextariaEmojValue} = options;
   const CommmentsMarkup = createCommmentsMarkup(comments);
+  const emojiListMarkup = emojis.map((emoji) => {
+    return createEmojiListMarkup(emoji);
+  }).join(`\n`);
   return (
     `<div class="form-details__bottom-container">
       <section class="film-details__comments-wrap">
         <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${commentsNumber}</span></h3>
 
         <ul class="film-details__comments-list">
-        ${CommmentsMarkup}
+          ${CommmentsMarkup}
         </ul>
 
         <div class="film-details__new-comment">
@@ -47,25 +75,7 @@ const createCommentsTemplate = (comments, options = {}) => {
           </label>
 
           <div class="film-details__emoji-list">
-            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile" checked>
-            <label class="film-details__emoji-label" for="emoji-smile">
-              <img src="./images/emoji/smile.png" width="30" height="30" alt="emoji">
-            </label>
-
-            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping">
-            <label class="film-details__emoji-label" for="emoji-sleeping">
-              <img src="./images/emoji/sleeping.png" width="30" height="30" alt="emoji">
-            </label>
-
-            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="puke">
-            <label class="film-details__emoji-label" for="emoji-puke">
-              <img src="./images/emoji/puke.png" width="30" height="30" alt="emoji">
-            </label>
-
-            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry">
-            <label class="film-details__emoji-label" for="emoji-angry">
-              <img src="./images/emoji/angry.png" width="30" height="30" alt="emoji">
-            </label>
+            ${emojiListMarkup}
           </div>
         </div>
       </section>
@@ -98,7 +108,8 @@ export default class Comments extends AbstractSmartComponent {
 
   recoveryListeners() {
     this._subscribeOnEvents();
-    this.setClickDeleteCommentHandler();
+    // this.setCommentDeleteClickHandler();
+    // this.setCommentAddClickHandler();
   }
 
   rerender() {
@@ -121,12 +132,13 @@ export default class Comments extends AbstractSmartComponent {
     const element = this.getElement();
 
     element.querySelector(`.film-details__emoji-list`).addEventListener(`click`, (evt) => {
-      const target = evt.target;
-      const elementImgEmoji = target.closest(`img`);
-      if (target && elementImgEmoji) {
-        this._newElementImgEmojiSrc = elementImgEmoji.src;
-        this._newElementImgEmojiAlt = elementImgEmoji.alt;
+      if (evt.target.tagName !== `INPUT`) {
+        return;
       }
+      const activeEmoji = evt.target.value;
+      this._newElementImgEmojiSrc = `images/emoji/${activeEmoji}.png`;
+      this._newElementImgEmojiAlt = `emoji-${activeEmoji}`;
+
       this.rerender();
     });
 
@@ -136,12 +148,28 @@ export default class Comments extends AbstractSmartComponent {
 
   }
 
-  setClickDeleteCommentHandler(handler) {
+  // getNewComment() {
+  //   const newComment = {
+  //     comment: this._newTextariaEmojValue,
+  //     // "date": new Data(),
+  //     emotion: this._newElementImgEmojiAlt,
+  //   };
+  //   console.log(newComment);
+
+  //   return newComment;
+  //   // return {
+  //   //   comment: this._newTextariaEmojValue,
+  //   //   // "date": new Data(),
+  //   //   emotion: this._newElementImgEmojiAlt,
+  //   // };
+  // }
+
+
+  setCommentDeleteClickHandler(handler) {
     this.getElement()
       .querySelector(`.film-details__comments-list`)
         .addEventListener(`click`, handler);
   }
 
 }
-
 
