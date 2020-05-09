@@ -29,22 +29,9 @@ export default class Comments {
   }
 
 
-  // updateComments(id, comment) {
-  //   const index = this._comments.findIndex((it) => it.id === id);
+  addComment(newComment) {
+    this._comments.push(newComment);
 
-  //   if (index === -1) {
-  //     return false;
-  //   }
-
-  //   this._comments = [].concat(this._comments.slice(0, index), comment, this._comments.slice(index + 1));
-
-  //   // this._callHandlers(this._commentChangeHandlers);
-
-  //   return true;
-  // }
-
-  addComment(comment) {
-    this._comments = [].concat(comment, this._comments);
     // this._callHandlers(this._commentChangeHandlers);
   }
 

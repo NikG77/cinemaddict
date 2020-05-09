@@ -62,7 +62,7 @@ export default class NeWComment extends AbstractSmartComponent {
 
     this._subscribeOnEvents();
 
-    // this._commentAddClickHandler = null;
+    this._commentAddClickHandler = null;
 
   }
 
@@ -95,17 +95,16 @@ export default class NeWComment extends AbstractSmartComponent {
     this._newElementImgEmojiAlt = ``;
     this._newTextariaEmojValue = ``;
     this._activeEmoji = ``;
+
   }
 
   getNewComment() {
-    const newComment = {
-      comment: this._newTextariaEmojValue,
+
+    return ({
       date: new Date(),
       emotion: this._activeEmoji,
-    };
-    console.log(`getNewComment`, newComment);
-
-    return newComment;
+      comment: this._newTextariaEmojValue,
+    });
   }
 
   setCommentAddClickHandler(handler) {
@@ -152,7 +151,6 @@ export default class NeWComment extends AbstractSmartComponent {
 
     element.querySelector(`.film-details__comment-input`).addEventListener(`input`, (evt) => {
       this._newTextariaEmojValue = evt.target.value;
-      // console.log(this._newTextariaEmojValue);
     });
 
   }

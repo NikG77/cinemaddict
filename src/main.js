@@ -6,7 +6,7 @@ import ProfileComponent from "./components/profile";
 import FooterComponent from "./components/footer";
 import FilmsModel from "./models/movies";
 
-const COUNT_FILMS = 17;
+const COUNT_FILMS = 7;
 
 const films = generateFilms(COUNT_FILMS);
 

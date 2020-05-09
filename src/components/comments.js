@@ -3,19 +3,20 @@ import {formatDateComment} from "../utils/common";
 
 
 const createCommmentsMarkup = (comments) => {
-  return comments.map((comment) => {
-    const commentTimeAgo = formatDateComment(comment.data);
+  return comments.map((item) => {
+    const {date, emotion, id, author, comment} = item;
+    const commentTimeAgo = formatDateComment(date);
     return (
       `<li class="film-details__comment">
         <span class="film-details__comment-emoji">
-          <img src="${comment.emotion}" width="55" height="55" alt="emoji-smile">
+          <img src="./images/emoji/${emotion}.png" width="55" height="55" alt="emoji-${emotion}">
         </span>
         <div>
-          <p class="film-details__comment-text">${comment.сomment}</p>
+          <p class="film-details__comment-text">${comment}</p>
           <p class="film-details__comment-info">
-            <span class="film-details__comment-author">${comment.author}</span>
+            <span class="film-details__comment-author">${author}</span>
             <span class="film-details__comment-day">${commentTimeAgo}</span>
-            <button class="film-details__comment-delete" data-id="${comment.id}">Delete</button>
+            <button class="film-details__comment-delete" data-id="${id}">Delete</button>
           </p>
         </div>
       </li>`

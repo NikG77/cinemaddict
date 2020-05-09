@@ -34,6 +34,8 @@ export default class FilmController {
     this._closePopup = this._closePopup.bind(this);
     this._onCommentChange = this._onCommentChange.bind(this);
 
+    // this._getFilmComment = this._getFilmComment.bind(this);
+
 
     this._film = null;
   }
@@ -157,14 +159,13 @@ export default class FilmController {
   _renderPopupComment() {
     const comments = this._commentsModel.getComments();
     const filmCommets = this._getFilmComment(comments);
-    this._filmCommentsComponent = new FilmCommentsComponent(this._film, filmCommets);
 
+    this._filmCommentsComponent = new FilmCommentsComponent(this._film, filmCommets);
 
     render(this._container.querySelector(`.film-details__inner`), this._filmCommentsComponent, RenderPosition.BEFOREEND);
     if (!this._filmNewCommentComponent) {
       this._filmNewCommentComponent = new FilmNewCommentComponent();
     }
-
 
     render(this._container.querySelector(`.film-details__comments-wrap`), this._filmNewCommentComponent, RenderPosition.BEFOREEND);
 
@@ -183,13 +184,18 @@ export default class FilmController {
   _onCommentAddClick(evt) {
 
     if (evt.ctrlKey && evt.keyCode === 13 || evt.metaKey && evt.keyCode === 13) {
-      console.log(`пошел за новым комментом`);
 
       const newComment = this._filmNewCommentComponent.getNewComment();
-      console.log(`выдали новый коммент ${newComment}`);
 
+      const addComment = Object.assign({}, newComment);
+      addComment.id = new Date() + Math.floor(Math.random() * 100) + ``;
+      addComment.author = `new author`;
 
-    //  this._onCommentChange(null, newComment);
+      this._film.comments.push(addComment.id);
+
+      // this._closePopup();
+
+      this._onCommentChange(null, addComment);
     }
 
   }
@@ -222,8 +228,9 @@ export default class FilmController {
       }
     }
     if (oldData === null) {
-      this._commentsModel.addComments(newData);
+      this._commentsModel.addComment(newData);
       this._rerenderPopupComment();
+      this._filmNewCommentComponent.reset();
     }
 
   }
@@ -231,7 +238,7 @@ export default class FilmController {
 
   _getFilmComment(comments) {
     return this._film.comments.map((item) =>
-      comments.find((comment) => comment.id === item));
+      comments.find((commen) => commen.id === item));
   }
 
 }
