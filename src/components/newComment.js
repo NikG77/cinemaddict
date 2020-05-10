@@ -1,4 +1,5 @@
 import AbstractSmartComponent from "./abstract-smart-component";
+import {encode} from "he";
 
 const emojis = [{
   name: `smile`,
@@ -126,7 +127,7 @@ export default class NeWComment extends AbstractSmartComponent {
       });
 
       this._activeEmoji = evt.target.value;
-      this._newTextariaEmojValue = element.querySelector(`.film-details__comment-input`).value;
+      this._newTextariaEmojValue = encode(element.querySelector(`.film-details__comment-input`).value);
 
       this.rerender();
     });

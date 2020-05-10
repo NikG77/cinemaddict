@@ -5,7 +5,7 @@ import {isEscEvent} from "../utils/common";
 import {render, remove, RenderPosition, replace} from "../utils/render";
 import FilmCommentsComponent from "../components/comments";
 import FilmNewCommentComponent from "../components/newComment";
-import {isCtrlOrCommandAndEnterEvent} from "../utils/common";
+import {encode} from "he";
 
 export const Mode = {
   DEFAULT: `default`,
@@ -133,7 +133,6 @@ export default class FilmController {
       document.querySelector(`body`).classList.add(`hide-overflow`);
 
       this._onViewChange();
-
       this._renderPopup();
 
       this._mode = Mode.EDIT;
@@ -182,21 +181,19 @@ export default class FilmController {
 
 
   _onCommentAddClick(evt) {
-
     if (evt.ctrlKey && evt.keyCode === 13 || evt.metaKey && evt.keyCode === 13) {
       const commentEmotionElement = this._filmNewCommentComponent.getElement().querySelector(`.film-details__add-emoji-label img`);
-      const commentText = this._filmNewCommentComponent.getElement().querySelector(`.film-details__comment-input`).value;
+      const notSanitizedCommentText = this._filmNewCommentComponent.getElement().querySelector(`.film-details__comment-input`).value;
+      const commentText = encode(notSanitizedCommentText);
       if (!commentEmotionElement || commentText.length === 0) {
         return;
       }
 
       const emotion = commentEmotionElement.alt.split(`-`)[1];
-
       const newComment = {
         date: new Date(),
         emotion,
         comment: commentText,
-
       };
 
       const addComment = Object.assign({}, newComment);
@@ -204,8 +201,6 @@ export default class FilmController {
       addComment.author = `new author`;
 
       this._film.comments.push(addComment.id);
-
-      // this._closePopup();
 
       this._onCommentChange(null, addComment);
     }
@@ -246,7 +241,6 @@ export default class FilmController {
     }
 
   }
-
 
   _getFilmComment(comments) {
     return this._film.comments.map((item) =>
