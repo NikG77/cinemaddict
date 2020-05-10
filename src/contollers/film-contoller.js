@@ -184,8 +184,20 @@ export default class FilmController {
   _onCommentAddClick(evt) {
 
     if (evt.ctrlKey && evt.keyCode === 13 || evt.metaKey && evt.keyCode === 13) {
+      const commentEmotionElement = this._filmNewCommentComponent.getElement().querySelector(`.film-details__add-emoji-label img`);
+      const commentText = this._filmNewCommentComponent.getElement().querySelector(`.film-details__comment-input`).value;
+      if (!commentEmotionElement || commentText.length === 0) {
+        return;
+      }
 
-      const newComment = this._filmNewCommentComponent.getNewComment();
+      const emotion = commentEmotionElement.alt.split(`-`)[1];
+
+      const newComment = {
+        date: new Date(),
+        emotion,
+        comment: commentText,
+
+      };
 
       const addComment = Object.assign({}, newComment);
       addComment.id = new Date() + Math.floor(Math.random() * 100) + ``;

@@ -26,17 +26,19 @@ const createEmojiListMarkup = ({name, isChecked}) => {
   </label>`);
 };
 
-const createNewCommentTemplate = (options) => {
-  const {newElementImgEmojiSrc, newElementImgEmojiAlt, newTextariaEmojValue} = options;
+const createNewCommentTemplate = (activeEmoji, newTextariaEmojValue) => {
 
   const emojiListMarkup = emojis.map((emoji) => {
     return createEmojiListMarkup(emoji);
   }).join(`\n`);
 
+  const createEmojiImgMarkup = activeEmoji ? `<img src="images/emoji/${activeEmoji}.png" width="55" height="55" alt="emoji-${activeEmoji}">` : ``;
+
+
   return (
     `<div class="film-details__new-comment">
       <div for="add-emoji" class="film-details__add-emoji-label">
-        <img src="${newElementImgEmojiSrc}" width="55" height="55" alt="${newElementImgEmojiAlt}">
+        ${createEmojiImgMarkup}
       </div>
 
       <label class="film-details__comment-label">
@@ -55,23 +57,16 @@ export default class NeWComment extends AbstractSmartComponent {
   constructor() {
     super();
 
-    this._newElementImgEmojiSrc = ``;
-    this._newElementImgEmojiAlt = ``;
     this._newTextariaEmojValue = ``;
     this._activeEmoji = ``;
 
     this._subscribeOnEvents();
 
     this._commentAddClickHandler = null;
-
   }
 
   getTemplate() {
-    return createNewCommentTemplate({
-      newElementImgEmojiSrc: this._newElementImgEmojiSrc,
-      newElementImgEmojiAlt: this._newElementImgEmojiAlt,
-      newTextariaEmojValue: this._newTextariaEmojValue,
-    });
+    return createNewCommentTemplate(this._activeEmoji, this._newTextariaEmojValue);
   }
 
   recoveryListeners() {
@@ -91,31 +86,19 @@ export default class NeWComment extends AbstractSmartComponent {
   }
 
   clear() {
-    this._newElementImgEmojiSrc = ``;
-    this._newElementImgEmojiAlt = ``;
     this._newTextariaEmojValue = ``;
     this._activeEmoji = ``;
+    emojis[0].isChecked = true;
 
-  }
-
-  getNewComment() {
-
-    return ({
-      date: new Date(),
-      emotion: this._activeEmoji,
-      comment: this._newTextariaEmojValue,
-    });
   }
 
   setCommentAddClickHandler(handler) {
     this.getElement()
       .querySelector(`.film-details__comment-input`)
-        .addEventListener(`keydown`, handler);
+      .addEventListener(`keydown`, handler);
 
     this._commentAddClickHandler = handler;
-
   }
-
 
   _subscribeOnEvents() {
     const element = this.getElement();
@@ -143,17 +126,11 @@ export default class NeWComment extends AbstractSmartComponent {
       });
 
       this._activeEmoji = evt.target.value;
-      this._newElementImgEmojiSrc = `images/emoji/${this._activeEmoji}.png`;
-      this._newElementImgEmojiAlt = `emoji-${this._activeEmoji}`;
+      this._newTextariaEmojValue = element.querySelector(`.film-details__comment-input`).value;
 
       this.rerender();
     });
-
-    element.querySelector(`.film-details__comment-input`).addEventListener(`input`, (evt) => {
-      this._newTextariaEmojValue = evt.target.value;
-    });
-
   }
 
-
 }
+
