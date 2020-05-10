@@ -7,10 +7,11 @@ export const SortType = {
 };
 
 const createSortMarkup = (sortType, isActive) => {
+  const sortActive = isActive ? `sort__button--active` : ``;
   return (
     `<li>
       <a href="#" data-sort-type="${sortType}"
-      class="sort__button ${isActive ? `sort__button--active` : ``}">Sort by ${sortType}</a>
+      class="sort__button ${sortActive}">Sort by ${sortType}</a>
     </li>`
   );
 };
@@ -25,10 +26,10 @@ const createSortTemplate = (currentSortType) => {
   );
 };
 export default class Sort extends AbstractComponent {
-  constructor() {
+  constructor(sortType) {
     super();
 
-    this._currentSortType = SortType.DEFAULT;
+    this._currentSortType = sortType;
   }
 
   getTemplate() {
