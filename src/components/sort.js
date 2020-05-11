@@ -1,28 +1,43 @@
 import AbstractComponent from "./abstract-component";
 
 export const SortType = {
-  DATE_DOWN: `date-down`,
-  RATING_DOWN: `rating-down`,
   DEFAULT: `default`,
+  DATE_DOWN: `date`,
+  RATING_DOWN: `rating`,
 };
 
-const createSortTemplate = () => {
+const createSortMarkup = (sortType, isActive) => {
+  const sortActive = isActive ? `sort__button--active` : ``;
+  return (
+    `<li>
+      <a href="#" data-sort-type="${sortType}"
+      class="sort__button ${sortActive}">Sort by ${sortType}</a>
+    </li>`
+  );
+};
+
+const createSortTemplate = (currentSortType) => {
+  const sortMarkup = Object.values(SortType).map((sortType) => createSortMarkup(sortType, sortType === currentSortType)).join(`\n`);
+
   return (
     `<ul class="sort">
-      <li><a href="#" data-sort-type="${SortType.DEFAULT}" class="sort__button sort__button--active">Sort by default</a></li>
-      <li><a href="#" data-sort-type="${SortType.DATE_DOWN}" class="sort__button">Sort by date</a></li>
-      <li><a href="#" data-sort-type="${SortType.RATING_DOWN}" class="sort__button">Sort by rating</a></li>
+        ${sortMarkup}
     </ul>`
   );
 };
 export default class Sort extends AbstractComponent {
-  constructor() {
+  constructor(sortType) {
     super();
 
-    this._currenSortType = SortType.DEFAULT;
+    this._currentSortType = sortType;
   }
+
   getTemplate() {
-    return createSortTemplate();
+    return createSortTemplate(this._currentSortType);
+  }
+
+  getSortType() {
+    return this._currentSortType;
   }
 
   setSortTypeChangeHandler(handler) {
@@ -35,13 +50,13 @@ export default class Sort extends AbstractComponent {
 
       const sortType = evt.target.dataset.sortType;
 
-      if (this._currenSortType === sortType) {
+      if (this._currentSortType === sortType) {
         return;
       }
 
-      this._currenSortType = sortType;
+      this._currentSortType = sortType;
 
-      handler(this._currenSortType);
+      handler(this._currentSortType);
     });
   }
 }

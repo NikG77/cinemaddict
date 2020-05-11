@@ -30,16 +30,8 @@ const WritersItems = [`Brad Bird`, `Robert Rodrigues`, `Takeshi Kitano`, `Hayao 
 
 const ActorsItems = [`Robert De Niro`, `Matt Damon`, `Tom Hanks`, `Takeshi Kitano`, `Christian Bale`, `Gary Oldman`, `Harrison Ford`, `Ralph Fiennes`, `Morgan Freeman `, `Michael Caine`, `Brad Pitt`, `Leonardo DiCaprio`, `Edward Norton`, `Al Pacino`, `Cillian Murphy`];
 
-const EmojiItems = [`./images/emoji/angry.png`, `./images/emoji/puke.png`, `./images/emoji/sleeping.png`, `./images/emoji/smile.png`];
-
-class Comments {
-  constructor(emotion, data, avtor, message) {
-    this.emotion = emotion;
-    this.data = data;
-    this.avtor = avtor;
-    this.message = message;
-  }
-}
+// const EmojiItems = [`./images/emoji/angry.png`, `./images/emoji/puke.png`, `./images/emoji/sleeping.png`, `./images/emoji/smile.png`];
+const EmojiItems = [`angry`, `puke`, `sleeping`, `smile`];
 
 const DescriptionItems = [`Lorem ipsum dolor sit amet, consectetur adipiscing elit.`, ` Cras aliquet varius magna, non porta ligula feugiat eget.`, ` Fusce tristique felis at fermentum pharetra.`, ` Aliquam id orci ut lectus varius viverra.`, ` Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante.`, ` Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum.`, ` Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui.`, ` Sed sed nisi sed augue convallis suscipit in sed felis.`, ` Aliquam erat volutpat.`, ` Nunc fermentum tortor ac porta dapibus.`, ` In rutrum ac purus sit amet tempus.`];
 
@@ -88,8 +80,19 @@ const getRandomDateCommit = () => {
   return targetDate;
 };
 
-let commentsItems = [];
+class OldComment {
+  constructor(id, author, comment, date, emotion) {
+    this.id = id;
+    this.author = author;
+    this.comment = comment;
+    this.date = date;
+    this.emotion = emotion;
+  }
+}
+
+let commentsItems = {};
 let commentsCounter = 0;
+const comments = [];
 
 const getComments = (id) => {
   const commentsNumber = getRandomIntegerNumber(1, 5);
@@ -97,12 +100,11 @@ const getComments = (id) => {
   for (let i = 0; i < commentsNumber; i++) {
     commentsFilmsItems.push(String(commentsCounter));
 
-    commentsFilmsItems[i] = new Comments(getRandomArrayItem(EmojiItems), getRandomDateCommit(), `avtor id-${id} N-${commentsCounter}`, `message id-${id} N-${commentsCounter}`);
+    commentsItems = new OldComment(`${commentsCounter}`, `avtor id-${id} N-${commentsCounter}`, `сomment id-${id} N-${commentsCounter}`, getRandomDateCommit(), getRandomArrayItem(EmojiItems));
     commentsCounter++;
+    comments.push(commentsItems);
   }
-  commentsItems.push(commentsFilmsItems);
-
-  return commentsItems[id];
+  return commentsFilmsItems;
 };
 
 
@@ -110,7 +112,7 @@ let id = -1;
 const generateFilm = () => {
   id++;
   return {
-    "id": id,
+    "id": `${id}`,
     "film_info": {
       "title": getRandomArrayItem(TitleItems),
       "alternative_title": getRandomArrayItem(AlternativeTitleItems),
@@ -146,4 +148,4 @@ const generateFilms = (count) => {
 };
 
 
-export {generateFilms};
+export {generateFilms, comments};
