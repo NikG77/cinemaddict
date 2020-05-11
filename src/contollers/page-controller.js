@@ -78,6 +78,14 @@ export default class PageController {
     this._filmsModel.setFilterChangeHandler(this._onFilterChange);
   }
 
+  hide() {
+    this._container.hide();
+  }
+
+  show() {
+    this._container.show();
+  }
+
   render() {
     const films = this._filmsModel.getFilms();
     this._commentsModel = new CommentsModel();
