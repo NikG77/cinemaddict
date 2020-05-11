@@ -41,13 +41,6 @@ export default class Navigation extends AbstractComponent {
       }
 
       const filterName = evt.target.dataset.filter;
-      // if (this._currentFilterName === filterName) {
-      //   console.log(`совпали фильтры`, this._currentFilterName, filterName);
-      //   return;
-      // }
-      // console.log(`не совпали фильтры`, this._currentFilterName, filterName);
-      // this._currentFilterName = filterName;
-
       handler(filterName);
     });
   }

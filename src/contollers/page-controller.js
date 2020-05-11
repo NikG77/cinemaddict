@@ -10,7 +10,7 @@ import FilmsComponent from "../components/films";
 import NoFilmsComponent from "../components/no-films";
 import FilmController from "./film-contoller";
 
-import CommentsModel from "../models/model-comments";
+import CommentsModel from "../models/comments";
 
 const COUNT = {
   FILM_SHOW: 5,
