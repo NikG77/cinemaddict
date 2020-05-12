@@ -3,14 +3,14 @@ import {comments} from "../mock/films";
 import ShowMoreButtonComponent from "../components/show-more-button";
 import TopRatedComponent from "../components/top-rated";
 import MostCommentedComponent from "../components/most-commented";
-import FilterController from "./filter-controller";
 
 import SortComponent, {SortType} from "../components/sort";
-import FilmsComponent from "../components/films";
+import FilmsListComponent from "../components/films-list";
 import NoFilmsComponent from "../components/no-films";
 import FilmController from "./film-contoller";
 
 import CommentsModel from "../models/comments";
+
 
 const COUNT = {
   FILM_SHOW: 5,
@@ -66,7 +66,7 @@ export default class PageController {
     this._showingFilmCount = COUNT.FILM_SHOW;
 
     this._noFilmsComponent = new NoFilmsComponent();
-    this._filmsComponent = new FilmsComponent();
+    this._filmsListComponent = new FilmsListComponent();
     this._showMoreButtonComponent = new ShowMoreButtonComponent();
 
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
@@ -87,29 +87,29 @@ export default class PageController {
   }
 
   render() {
+    const container = this._container.getElement();
     const films = this._filmsModel.getFilms();
     this._commentsModel = new CommentsModel();
     this._commentsModel.setComments(comments);
 
-    const filterController = new FilterController(this._container, this._filmsModel);
-    filterController.render();
-
     this._renderSort(SortType.DEFAULT);
 
     if (films.length === 0) {
-      render(this._container, this._noFilmsComponent, RenderPosition.BEFOREEND);
+      render(container, this._noFilmsComponent, RenderPosition.BEFOREEND);
       return;
     }
 
-    render(this._container, this._filmsComponent, RenderPosition.BEFOREEND);
+    render(container, this._filmsListComponent, RenderPosition.BEFOREEND);
 
-    const filmsElement = this._filmsComponent.getElement();
-    render(filmsElement, new TopRatedComponent(), RenderPosition.BEFOREEND);
-    render(filmsElement, new MostCommentedComponent(), RenderPosition.BEFOREEND);
 
-    this._filmsListElement = filmsElement.querySelector(`.films-list`);
-    this._filmListContainerElements = filmsElement.querySelectorAll(`.films-list__container`);
+    render(container, new TopRatedComponent(), RenderPosition.BEFOREEND);
+    render(container, new MostCommentedComponent(), RenderPosition.BEFOREEND);
 
+    // const filmsListElement = this._filmsListComponent.getElement();
+    // this._filmsListElement = filmsListElement.querySelector(`.films-list`);
+    this._filmListContainerElements = container.querySelectorAll(`.films-list__container`);
+
+    // console.log(filmsListElement, this._filmListContainerElements);
     let newFilms = renderFilms(this._filmListContainerElements[FILMS_LIST_CONTAINER.TOP_RATED], this._searchTopRatedFilms(films), this._onDataChange, this._onViewChange, this._commentsModel);
     this._showedRaringFilmControllers = this._showedRaringFilmControllers.concat(newFilms);
 
@@ -121,6 +121,7 @@ export default class PageController {
   }
 
   _renderSort(sortType) {
+    const container = this._container.getElement();
     const oldComponent = this._sortComponent;
 
     this._sortComponent = new SortComponent(sortType);
@@ -128,7 +129,7 @@ export default class PageController {
     if (oldComponent) {
       replace(this._sortComponent, oldComponent);
     } else {
-      render(this._container, this._sortComponent, RenderPosition.BEFOREEND);
+      render(container, this._sortComponent, RenderPosition.BEFOREEND);
     }
     this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChange);
   }
@@ -150,7 +151,7 @@ export default class PageController {
     if (this._showingFilmCount >= this._filmsModel.getFilms().length) {
       return;
     }
-    render(this._filmsListElement, this._showMoreButtonComponent, RenderPosition.BEFOREEND);
+    render(this._filmsListComponent.getElement(), this._showMoreButtonComponent, RenderPosition.BEFOREEND);
 
     this._showMoreButtonComponent.setClickHandler(this._onShowMoreButtonClick);
   }
