@@ -6,10 +6,11 @@ import ProfileComponent from "./components/profile";
 import FooterComponent from "./components/footer";
 import FilmsModel from "./models/movies";
 import FilterController from "./contollers/filter-controller";
+import SortController from "./contollers/sort";
 import StatisticsComponent from "./components/statistics";
 import FilmsComponent from "./components/films";
 
-const COUNT_FILMS = 7;
+const COUNT_FILMS = 27;
 
 const films = generateFilms(COUNT_FILMS);
 
@@ -24,18 +25,21 @@ const siteMainElement = document.querySelector(`.main`);
 const filterController = new FilterController(siteMainElement, filmsModel);
 filterController.render();
 
+const sortController = new SortController(siteMainElement, filmsModel);
+sortController.render();
+
 const filmsComponent = new FilmsComponent();
 render(siteMainElement, filmsComponent, RenderPosition.BEFOREEND);
 
 
 const pageController = new PageController(filmsComponent, filmsModel);
 pageController.render();
-pageController.hide();
+// pageController.hide();
 
 
 const statisticsComponent = new StatisticsComponent({films: filmsModel});
 render(siteMainElement, statisticsComponent, RenderPosition.BEFOREEND);
-
+// statisticsComponent.hide();
 
 const footerElement = document.querySelector(`.footer`);
 const footerStatisticsElement = footerElement.querySelector(`.footer__statistics`);

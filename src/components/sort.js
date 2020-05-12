@@ -29,16 +29,16 @@ export default class Sort extends AbstractComponent {
   constructor(sortType) {
     super();
 
-    this._currentSortType = sortType;
+    this._activeSortType = sortType;
   }
 
   getTemplate() {
-    return createSortTemplate(this._currentSortType);
+    return createSortTemplate(this._activeSortType);
   }
 
-  getSortType() {
-    return this._currentSortType;
-  }
+  // getSortType() {
+  //   return this._activeSortType;
+  // }
 
   setSortTypeChangeHandler(handler) {
     this.getElement().addEventListener(`click`, (evt) => {
@@ -50,13 +50,14 @@ export default class Sort extends AbstractComponent {
 
       const sortType = evt.target.dataset.sortType;
 
-      if (this._currentSortType === sortType) {
+
+      if (this._activeSortType === sortType) {
         return;
       }
 
-      this._currentSortType = sortType;
+      this._activeSortType = sortType;
 
-      handler(this._currentSortType);
+      handler(this._activeSortType);
     });
   }
 }

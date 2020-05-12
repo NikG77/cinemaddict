@@ -1,14 +1,17 @@
 import {getFilmsByFilter} from "../utils/filter";
 import {FilterType} from "../const";
+import {SortType} from "../components/sort";
 
 export default class Movies {
   constructor() {
     this._films = [];
 
     this._activeFilterType = FilterType.ALL;
+    this._activeSortType = SortType.DEFAULT;
 
     this._dataChangeHandlers = [];
     this._filterChangeHandlers = [];
+    this._sortTypeChangeHandlers = [];
   }
 
   getFilms() {
@@ -23,6 +26,15 @@ export default class Movies {
     this._films = Array.from(films);
     // Здесь не нужно запускать этот обработчик
     // this._callHandlers(this._dataChangeHandlers);
+  }
+
+  getSortType() {
+    return this._activeSortType;
+  }
+
+  setSortType(sortType) {
+    this._activeSortType = sortType;
+    this._callHandlers(this._sortTypeChangeHandlers);
   }
 
   setFilter(filterType) {
@@ -50,6 +62,10 @@ export default class Movies {
 
   setDataChangeHandler(handler) {
     this._dataChangeHandlers.push(handler);
+  }
+
+  setSortTypeChangeHandler(handler) {
+    this._sortTypeChangeHandlers.push(handler);
   }
 
   _callHandlers(handlers) {

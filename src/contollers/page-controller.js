@@ -1,10 +1,10 @@
-import {render, remove, replace, RenderPosition} from "../utils/render";
+import {render, remove, RenderPosition} from "../utils/render";
 import {comments} from "../mock/films";
 import ShowMoreButtonComponent from "../components/show-more-button";
 import TopRatedComponent from "../components/top-rated";
 import MostCommentedComponent from "../components/most-commented";
 
-import SortComponent, {SortType} from "../components/sort";
+import {SortType} from "../components/sort";
 import FilmsListComponent from "../components/films-list";
 import NoFilmsComponent from "../components/no-films";
 import FilmController from "./film-contoller";
@@ -76,6 +76,7 @@ export default class PageController {
     this._onShowMoreButtonClick = this._onShowMoreButtonClick.bind(this);
 
     this._filmsModel.setFilterChangeHandler(this._onFilterChange);
+    this._filmsModel.setSortTypeChangeHandler(this._onSortTypeChange);
   }
 
   hide() {
@@ -92,24 +93,17 @@ export default class PageController {
     this._commentsModel = new CommentsModel();
     this._commentsModel.setComments(comments);
 
-    this._renderSort(SortType.DEFAULT);
-
     if (films.length === 0) {
       render(container, this._noFilmsComponent, RenderPosition.BEFOREEND);
       return;
     }
 
     render(container, this._filmsListComponent, RenderPosition.BEFOREEND);
-
-
     render(container, new TopRatedComponent(), RenderPosition.BEFOREEND);
     render(container, new MostCommentedComponent(), RenderPosition.BEFOREEND);
 
-    // const filmsListElement = this._filmsListComponent.getElement();
-    // this._filmsListElement = filmsListElement.querySelector(`.films-list`);
     this._filmListContainerElements = container.querySelectorAll(`.films-list__container`);
 
-    // console.log(filmsListElement, this._filmListContainerElements);
     let newFilms = renderFilms(this._filmListContainerElements[FILMS_LIST_CONTAINER.TOP_RATED], this._searchTopRatedFilms(films), this._onDataChange, this._onViewChange, this._commentsModel);
     this._showedRaringFilmControllers = this._showedRaringFilmControllers.concat(newFilms);
 
@@ -118,20 +112,6 @@ export default class PageController {
 
     this._renderFilms(films.slice(0, COUNT.FILM_SHOW));
     this._renderShowMoreButton();
-  }
-
-  _renderSort(sortType) {
-    const container = this._container.getElement();
-    const oldComponent = this._sortComponent;
-
-    this._sortComponent = new SortComponent(sortType);
-
-    if (oldComponent) {
-      replace(this._sortComponent, oldComponent);
-    } else {
-      render(container, this._sortComponent, RenderPosition.BEFOREEND);
-    }
-    this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChange);
   }
 
   _renderFilms(films) {
@@ -160,7 +140,7 @@ export default class PageController {
     const prevFilmCount = this._showingFilmCount;
     this._showingFilmCount = prevFilmCount + COUNT.FILM_SHOW;
     const films = this._filmsModel.getFilms();
-    const sortedFilms = getSortedFilms(films, this._sortComponent.getSortType(), prevFilmCount, this._showingFilmCount);
+    const sortedFilms = getSortedFilms(films, this._filmsModel.getSortType(), prevFilmCount, this._showingFilmCount);
 
     this._renderFilms(sortedFilms);
 
@@ -186,12 +166,13 @@ export default class PageController {
     this._showedAllFilmControllers.forEach((it) => it.setDefaultView());
   }
 
-  _onSortTypeChange(sortType) {
+  _onSortTypeChange() {
     this._showingFilmCount = COUNT.FILM_SHOW;
     const films = this._filmsModel.getFilms();
+    const sortType = this._filmsModel.getSortType();
+
     const sortedFilms = getSortedFilms(films, sortType, 0, this._showingFilmCount);
 
-    this._renderSort(sortType);
     this._removeFilms();
     this._renderFilms(sortedFilms);
     this._renderShowMoreButton();
@@ -199,6 +180,7 @@ export default class PageController {
 
   _onFilterChange() {
     this._updateFilms(this._showingFilmCount);
+    this._filmsModel.setSortType(SortType.DEFAULT);
   }
 
   _searchTopRatedFilms(films) {
