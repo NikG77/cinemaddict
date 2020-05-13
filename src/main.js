@@ -13,7 +13,7 @@ import Navigation from "./components/navigation";
 import {MenuItem} from "./const";
 
 
-const COUNT_FILMS = 27;
+const COUNT_FILMS = 7;
 
 const films = generateFilms(COUNT_FILMS);
 

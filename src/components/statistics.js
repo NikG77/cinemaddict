@@ -2,85 +2,50 @@ import AbstractSmartComponent from "./abstract-component";
 import Chart from "chart.js";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import moment from "moment";
+import {FilterType} from "../const.js";
+import {getFilmsByFilter} from "../utils/filter.js";
+import {transformDuration} from "../utils/common";
 
 
-// const colorToHex = {
-//   black: `#000000`,
-//   blue: `#0c5cdd`,
-//   green: `#31b55c`,
-//   pink: `#ff3cb9`,
-//   yellow: `#ffe125`,
-// };
+const StaticticsTimeInterval = {
+  ALL: `All time`,
+  TODAY: `Today`,
+  WEEK: `Week`,
+  MONTH: `Month`,
+  YEAR: `Year`,
+};
 
-// const getUniqItems = (item, index, array) => {
-//   return array.indexOf(item) === index;
-// };
+// const GenreItems = [`Sci-Fi`, `Animation`, `Fantasy`, `Comedy`, `TV Series`];
+const GenreItems = [`Action`, `Sci-Fi`, `Adventure`, `Comedy`, `Animation`, `Thriller`, `Horror`, `Drama`, `Family`];
 
-// const getTasksByDateRange = (tasks, dateFrom, dateTo) => {
-//   return tasks.filter((task) => {
-//     const dueDate = task.dueDate;
+const rankMovies = (watchedMovies) => Object.values(GenreItems).map((genreItem) => {
+  return {
+    genreName: genreItem,
+    count: getCountGenre(watchedMovies, genreItem),
+  };
+});
 
-//     return dueDate >= dateFrom && dueDate <= dateTo;
-//   });
-// };
-
-// const createPlaceholder = (dateFrom, dateTo) => {
-//   const format = (date) => {
-//     return moment(date).format(`DD MMM`);
-//   };
-
-//   return `${format(dateFrom)} - ${format(dateTo)}`;
-// };
-
-// const calcUniqCountColor = (tasks, color) => {
-//   return tasks.filter((it) => it.color === color).length;
-// };
-
-// const calculateBetweenDates = (from, to) => {
-//   const result = [];
-//   let date = new Date(from);
-
-//   while (date <= to) {
-//     result.push(date);
-
-//     date = new Date(date);
-//     date.setDate(date.getDate() + 1);
-//   }
-
-//   return result;
-// };
+const sortMovies = (rankedMovies) => rankedMovies.sort((a, b) => b.count - a.count);
 
 
 const renderDaysChart = (statisticCtx, films) => {
+  const BAR_HEIGHT = 50;
 
+  const watchedMovies = getFilmsByFilter(films, FilterType.HISTORY);
+  const rankedMovies = rankMovies(watchedMovies);
+  const sortedRankedMovies = sortMovies(rankedMovies);
+  const nameSortedRankedMovies = sortedRankedMovies.map((sortedRankedMovie) => sortedRankedMovie.genreName);
+  const countSortedRankedMovies = sortedRankedMovies.map((sortedRankedMovie) => sortedRankedMovie.count);
 
-  // const renderDaysChart = (daysCtx, tasks, dateFrom, dateTo) => {
-  //   const days = calculateBetweenDates(dateFrom, dateTo);
-
-  //   const taskCountOnDay = days.map((date) => {
-  //     return tasks.filter((task) => {
-  //       return isOneDay(task.dueDate, date);
-  //     }).length;
-  //   });
-
-  //   const formattedDates = days.map((it) => moment(it).format(`DD MMM`));
-
-  // return new Chart(daysCtx, {
-  //   plugins: [ChartDataLabels],
-  //   type: `line`,
-  //   data: {
-  //     labels: formattedDates,
-  //     datasets: [{
-  //       data: taskCountOnDay,
-
+  statisticCtx.height = BAR_HEIGHT * sortedRankedMovies.length;
 
   return new Chart(statisticCtx, {
     plugins: [ChartDataLabels],
     type: `horizontalBar`,
     data: {
-      labels: [`Sci-Fi`, `Animation`, `Fantasy`, `Comedy`, `TV Series`],
+      labels: nameSortedRankedMovies,
       datasets: [{
-        data: [11, 8, 7, 4, 3],
+        data: countSortedRankedMovies,
         backgroundColor: `#ffe800`,
         hoverBackgroundColor: `#ffe800`,
         anchor: `start`
@@ -131,14 +96,44 @@ const renderDaysChart = (statisticCtx, films) => {
     }
   });
 };
+const createStatisticsMarkup = (timeInterval, isChecked) => {
 
-// ok
-const createStatisticsTemplate = ({films}) => {
+  return (
+    `<input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-${timeInterval.toLowerCase().replace(/ /g, `-`)}" value="${timeInterval.toLowerCase()}" ${isChecked ? `checked` : ``}>
+        <label for="statistic-today" class="statistic__filters-label">${timeInterval}</label>`
+  );
+
+};
+
+const getTimeWatchedMovies = (films) => {
+  return films.reduce((accumulator, current) => {
+    accumulator = +accumulator + +current.film_info.runtime;
+    return accumulator;
+  }, 0);
+};
+
+const getCountGenre = (films, genreItem) => {
+  return films.reduce((accumulator, current) => {
+    accumulator = accumulator + current.film_info.genre.some((genreFilm) => genreFilm === genreItem);
+    return accumulator;
+  }, 0);
+
+};
+
+const createStatisticsTemplate = ({films}, activeIntervalType) => {
+  const statisticsMarkup = Object.values(StaticticsTimeInterval).map((timeInterval) => createStatisticsMarkup(timeInterval, timeInterval === activeIntervalType)).join(`\n`);
+  const watchedMovies = getFilmsByFilter(films, FilterType.HISTORY);
+  const timeWatchedMovies = getTimeWatchedMovies(watchedMovies);
+  const [hours, minutes] = transformDuration(timeWatchedMovies);
+  const rankedMovies = rankMovies(watchedMovies);
+  const sortedRankedMovies = sortMovies(rankedMovies);
+  const topGenreName = sortedRankedMovies[0].genreName;
 
   // const createStatisticsTemplate = ({tasks, dateFrom, dateTo}) => {
   //   const placeholder = createPlaceholder(dateFrom, dateTo);
   //   const tasksCount = getTasksByDateRange(tasks, dateFrom, dateTo).length;
   // поменял
+
   return (
     `<section class="statistic">
       <p class="statistic__rank">
@@ -149,35 +144,21 @@ const createStatisticsTemplate = ({films}) => {
 
       <form action="https://echo.htmlacademy.ru/" method="get" class="statistic__filters">
         <p class="statistic__filters-description">Show stats:</p>
-
-        <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-all-time" value="all-time" checked>
-        <label for="statistic-all-time" class="statistic__filters-label">All time</label>
-
-        <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-today" value="today">
-        <label for="statistic-today" class="statistic__filters-label">Today</label>
-
-        <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-week" value="week">
-        <label for="statistic-week" class="statistic__filters-label">Week</label>
-
-        <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-month" value="month">
-        <label for="statistic-month" class="statistic__filters-label">Month</label>
-
-        <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-year" value="year">
-        <label for="statistic-year" class="statistic__filters-label">Year</label>
+        ${statisticsMarkup}
       </form>
 
       <ul class="statistic__text-list">
         <li class="statistic__text-item">
           <h4 class="statistic__item-title">You watched</h4>
-          <p class="statistic__item-text">22 <span class="statistic__item-description">movies</span></p>
+          <p class="statistic__item-text">${watchedMovies.length} <span class="statistic__item-description">movies</span></p>
         </li>
         <li class="statistic__text-item">
           <h4 class="statistic__item-title">Total duration</h4>
-          <p class="statistic__item-text">130 <span class="statistic__item-description">h</span> 22 <span class="statistic__item-description">m</span></p>
+          <p class="statistic__item-text">${hours} <span class="statistic__item-description">h</span> ${minutes} <span class="statistic__item-description">m</span></p>
         </li>
         <li class="statistic__text-item">
           <h4 class="statistic__item-title">Top genre</h4>
-          <p class="statistic__item-text">Sci-Fi</p>
+          <p class="statistic__item-text">${topGenreName}</p>
         </li>
       </ul>
 
@@ -199,6 +180,9 @@ export default class Statistics extends AbstractSmartComponent {
 
     this._statisticChart = null;
     // this._colorsChart = null;
+
+
+    this._activeIntervalType = StaticticsTimeInterval.ALL;
 
 
     this._renderCharts();
@@ -225,7 +209,7 @@ export default class Statistics extends AbstractSmartComponent {
   // ok
   show() {
     super.show();
-
+     
     // this.rerender(this._tasks, this._dateFrom, this._dateTo);
     this.rerender(this._films);
   }
@@ -235,6 +219,7 @@ export default class Statistics extends AbstractSmartComponent {
   // ok
   rerender(films) {
     // super.rerender();
+
 
     this._films = films;
 
