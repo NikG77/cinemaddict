@@ -1,4 +1,4 @@
-import FilterComponent from "../components/navigation";
+import FilterComponent from "../components/filter";
 import {FilterType, FilterTypeOutput} from "../const.js";
 import {render, replace, RenderPosition} from "../utils/render.js";
 import {getFilmsByFilter} from "../utils/filter.js";
@@ -36,7 +36,7 @@ export default class FilterController {
     if (oldComponent) {
       replace(this._filterComponent, oldComponent);
     } else {
-      render(container, this._filterComponent, RenderPosition.BEFOREEND);
+      render(container, this._filterComponent, RenderPosition.AFTERBEGIN);
     }
   }
 
@@ -51,4 +51,6 @@ export default class FilterController {
   _onDataChange() {
     this.render();
   }
+
 }
+
