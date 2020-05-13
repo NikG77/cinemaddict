@@ -130,7 +130,7 @@ const renderDaysChart = (statisticCtx, films) => {
       }
     }
   });
-}
+};
 
 // ok
 const createStatisticsTemplate = ({films}) => {
