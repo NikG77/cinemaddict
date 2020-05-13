@@ -234,6 +234,8 @@ export default class Statistics extends AbstractSmartComponent {
 
   // ok
   rerender(films) {
+    // super.rerender();
+
     this._films = films;
 
 
@@ -241,8 +243,6 @@ export default class Statistics extends AbstractSmartComponent {
     //   this._tasks = tasks;
     //   this._dateFrom = dateFrom;
     //   this._dateTo = dateTo;
-
-    super.rerender();
 
     this._renderCharts();
   }

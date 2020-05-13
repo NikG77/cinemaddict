@@ -1,10 +1,11 @@
 import AbstractComponent from "./abstract-component";
+import {MenuItem} from "../const";
 
 const createFilterMarkup = (filter, isMain) => {
   const {name, count, isActive} = filter;
 
   return (
-    `<a href="#${name.toLowerCase().split(` `, 1)}" data-filter="${name.toLowerCase().split(` `, 1)}" data-navigation="filter" class="main-navigation__item
+    `<a href="#${name.toLowerCase().split(` `, 1)}" data-filter="${name.toLowerCase().split(` `, 1)}" data-navigation="${MenuItem.FILMS}" class="main-navigation__item
     ${isActive ? `main-navigation__item--active` : ``}">
     ${name} ${isMain ? `` : `<span class="main-navigation__item-count">${count}</span>`}</a>`
   );

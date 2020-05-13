@@ -1,4 +1,5 @@
 import AbstractComponent from "./abstract-component";
+import {MenuItem} from "../const";
 
 const createNavigationTemplate = () => {
 
@@ -6,7 +7,7 @@ const createNavigationTemplate = () => {
   return (
     `<nav class="main-navigation">
 
-      <a href="#stats" data-navigation="stats" class="main-navigation__additional">Stats</a>
+      <a href="#stats" data-navigation="${MenuItem.STATISTICS}" class="main-navigation__additional">Stats</a>
     </nav>`
   );
 };

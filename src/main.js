@@ -10,6 +10,8 @@ import SortController from "./contollers/sort";
 import StatisticsComponent from "./components/statistics";
 import FilmsComponent from "./components/films";
 import Navigation from "./components/navigation";
+import {MenuItem} from "./const";
+
 
 const COUNT_FILMS = 27;
 
@@ -29,9 +31,7 @@ render(siteMainElement, navigationComponent, RenderPosition.BEFOREEND);
 const siteNavigationElements = siteMainElement.querySelector(`nav`);
 const filterController = new FilterController(siteNavigationElements, filmsModel);
 filterController.render();
-navigationComponent.setNavigationChangeHandler((menuItem) => {
 
-});
 
 const sortController = new SortController(siteMainElement, filmsModel);
 sortController.render();
@@ -47,10 +47,28 @@ pageController.render();
 
 const statisticsComponent = new StatisticsComponent({films: filmsModel});
 render(siteMainElement, statisticsComponent, RenderPosition.BEFOREEND);
-// statisticsComponent.hide();
+statisticsComponent.hide();
 
 
 const footerElement = document.querySelector(`.footer`);
 const footerStatisticsElement = footerElement.querySelector(`.footer__statistics`);
 render(footerStatisticsElement, new FooterComponent(films.length), RenderPosition.BEFOREEND);
+
+navigationComponent.setNavigationChangeHandler((menuItem) => {
+  switch (menuItem) {
+    case MenuItem.STATISTICS:
+      pageController.hide();
+      sortController.hide();
+      statisticsComponent.show();
+      break;
+    case MenuItem.FILMS:
+      statisticsComponent.hide();
+      sortController.reset();
+      sortController.show();
+      pageController.show();
+
+      break;
+  }
+
+});
 
