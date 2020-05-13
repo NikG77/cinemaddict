@@ -1,5 +1,5 @@
 import AbstractSmartComponent from "./abstract-smart-component";
-import {formatTimeHour, formatTimeMinute, formatDate} from "../utils/common";
+import {formatTimeHour, formatTimeMinute, formatDate, transformDuration} from "../utils/common";
 
 const createGenreMarkup = (genres) => {
   return genres.map((genre) => {
@@ -41,8 +41,7 @@ const createFilmDetailsTemplate = (film) => {
 
   const dateRelease = formatDate(date);
 
-  const durationMinute = formatTimeMinute(runtime);
-  const durationHour = formatTimeHour(runtime);
+  const [hours, minutes] = transformDuration(runtime);
 
   const genreDeyails = genre.length > 1 ? `Genres` : `Genre`;
   const genreMarkup = createGenreMarkup(genre);
@@ -92,7 +91,7 @@ const createFilmDetailsTemplate = (film) => {
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Runtime</td>
-                  <td class="film-details__cell">${durationHour}h ${durationMinute}m</td>
+                  <td class="film-details__cell">${hours}h ${minutes}m</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Country</td>

@@ -14,11 +14,14 @@ export const isEscEvent = (evt, action) => {
 
 export const isCtrlOrCommandAndEnterEvent = (evt) => evt.ctrlKey && evt.keyCode === 13 || evt.metaKey && evt.keyCode === 13;
 
-export const formatTimeMinute = (timeInMinute) => moment(timeInMinute * TIME.SECUNDS_IN_MINUTE * TIME.MILISECONDS_IN_SECOND).format(`m`);
-
-export const formatTimeHour = (timeInMinute) => moment(timeInMinute * TIME.SECUNDS_IN_MINUTE * TIME.MILISECONDS_IN_SECOND).format(`h`);
-
 export const formatDate = (date) => moment(date).format(`DD MMMM YYYY`);
 
 export const formatDateComment = (date) => moment(date).fromNow();
+
+export const transformDuration = (minutes) => {
+  const MINUTES_IN_HOUR = 60;
+  const h = Math.floor(minutes / MINUTES_IN_HOUR);
+  const m = minutes - MINUTES_IN_HOUR * h;
+  return [h, m];
+};
 
