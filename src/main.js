@@ -13,7 +13,7 @@ import Navigation from "./components/navigation";
 import {MenuItem} from "./const";
 
 
-const COUNT_FILMS = 7;
+const COUNT_FILMS = 17;
 
 const films = generateFilms(COUNT_FILMS);
 
@@ -42,12 +42,12 @@ render(siteMainElement, filmsComponent, RenderPosition.BEFOREEND);
 
 const pageController = new PageController(filmsComponent, filmsModel);
 pageController.render();
-// pageController.hide();
+pageController.hide();
 
 
-const statisticsComponent = new StatisticsComponent({films: filmsModel});
+const statisticsComponent = new StatisticsComponent(filmsModel);
 render(siteMainElement, statisticsComponent, RenderPosition.BEFOREEND);
-statisticsComponent.hide();
+// statisticsComponent.hide();
 
 
 const footerElement = document.querySelector(`.footer`);
@@ -63,6 +63,7 @@ navigationComponent.setNavigationChangeHandler((menuItem) => {
       break;
     case MenuItem.FILMS:
       statisticsComponent.hide();
+      pageController.reset();
       sortController.reset();
       sortController.show();
       pageController.show();
