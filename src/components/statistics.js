@@ -1,4 +1,4 @@
-import AbstractSmartComponent from "./abstract-component";
+import AbstractSmartComponent from "./abstract-smart-component";
 import Chart from "chart.js";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import {FilterType} from "../const.js";
@@ -198,7 +198,7 @@ export default class Statistics extends AbstractSmartComponent {
     this._dateFrom = new Date(0);
 
     this._statisticChart = null;
-    this._topGenreName = null;
+    this._topGenreName = ``;
     this._activeIntervalType = StaticticsTimeInterval.ALL;
 
     this._renderCharts();
@@ -216,11 +216,11 @@ export default class Statistics extends AbstractSmartComponent {
   }
 
   recoveryListeners() {
-    // this._subscribeOnEvents();
+    this._subscribeOnEvents();
   }
 
   rerender() {
-    // super.rerender();
+    super.rerender();
 
     this._renderCharts();
   }
@@ -231,7 +231,7 @@ export default class Statistics extends AbstractSmartComponent {
     this._films = getFilmByTime(this._films, this._dateFrom);
 
     if (this._films.length === 0) {
-      this._topGenreName = null;
+      this._topGenreName = ``;
       this._resetCharts();
     } else {
       const rankedMovies = rankMovies(this._films);
