@@ -1,7 +1,6 @@
 import AbstractSmartComponent from "./abstract-component";
 import Chart from "chart.js";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import moment from "moment";
 import {FilterType} from "../const.js";
 import {getFilmsByFilter} from "../utils/filter.js";
 import {transformDuration} from "../utils/common";
@@ -14,6 +13,8 @@ const StaticticsTimeInterval = {
   MONTH: `month`,
   YEAR: `year`,
 };
+
+const NUMBER_BEST_GENRE = 0;
 
 // const GenreItems = [`Sci-Fi`, `Animation`, `Fantasy`, `Comedy`, `TV Series`];
 const GenreItems = [`Action`, `Sci-Fi`, `Adventure`, `Comedy`, `Animation`, `Thriller`, `Horror`, `Drama`, `Family`];
@@ -200,7 +201,6 @@ export default class Statistics extends AbstractSmartComponent {
     this._topGenreName = null;
     this._activeIntervalType = StaticticsTimeInterval.ALL;
 
-
     this._renderCharts();
     this._subscribeOnEvents();
   }
@@ -212,18 +212,16 @@ export default class Statistics extends AbstractSmartComponent {
   show() {
     super.show();
 
-
-    this.rerender(this._filmsModel, this._dateFrom);
+    this.rerender();
   }
 
   recoveryListeners() {
     // this._subscribeOnEvents();
   }
 
-  rerender(filmsModel, dateFrom) {
-    this._filmsModel = filmsModel;
-    this._dateFrom = dateFrom;
-     
+  rerender() {
+    // super.rerender();
+
     this._renderCharts();
   }
 
@@ -231,19 +229,22 @@ export default class Statistics extends AbstractSmartComponent {
     this._films = this._filmsModel.getFilmsAll();
     this._films = getFilmsByFilter(this._films, FilterType.HISTORY);
     this._films = getFilmByTime(this._films, this._dateFrom);
-    const rankedMovies = rankMovies(this._films);
-    const sortedRankedMovies = sortMovies(rankedMovies);
-    this._topGenreName = sortedRankedMovies[0].genreName;
 
-    const element = this.getElement();
+    if (this._films.length === 0) {
+      this._topGenreName = null;
+      this._resetCharts();
+    } else {
+      const rankedMovies = rankMovies(this._films);
+      const sortedRankedMovies = sortMovies(rankedMovies);
+      const sortedRankedMoviesExisting = sortedRankedMovies.filter((sortedRankedMovie) => sortedRankedMovie.count > 0);
+      this._topGenreName = sortedRankedMovies[NUMBER_BEST_GENRE].genreName;
+      const element = this.getElement();
+      const statisticCtx = element.querySelector(`.statistic__chart`);
+      this._statisticChart = renderDaysChart(statisticCtx, sortedRankedMoviesExisting);
+    }
 
-    const statisticCtx = element.querySelector(`.statistic__chart`);
-
-    this._resetCharts();
-
-    this._statisticChart = renderDaysChart(statisticCtx, sortedRankedMovies);
   }
- 
+
   _resetCharts() {
     if (this._statisticChart) {
       this._statisticChart.destroy();

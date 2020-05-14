@@ -1,5 +1,5 @@
 import AbstractSmartComponent from "./abstract-smart-component";
-import {formatTimeHour, formatTimeMinute, formatDate, transformDuration} from "../utils/common";
+import {formatDate, transformDuration} from "../utils/common";
 
 const createGenreMarkup = (genres) => {
   return genres.map((genre) => {
