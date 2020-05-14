@@ -87,6 +87,11 @@ export default class PageController {
     this._container.show();
   }
 
+  reset() {
+    this._showingFilmCount = COUNT.FILM_SHOW;
+    this._updateFilms(this._showingFilmCount);
+  }
+
   render() {
     const container = this._container.getElement();
     const films = this._filmsModel.getFilms();

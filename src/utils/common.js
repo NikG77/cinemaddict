@@ -19,9 +19,8 @@ export const formatDate = (date) => moment(date).format(`DD MMMM YYYY`);
 export const formatDateComment = (date) => moment(date).fromNow();
 
 export const transformDuration = (minutes) => {
-  const MINUTES_IN_HOUR = 60;
-  const h = Math.floor(minutes / MINUTES_IN_HOUR);
-  const m = minutes - MINUTES_IN_HOUR * h;
-  return [h, m];
+  const hour = Math.floor(minutes / TIME.MINUTES_IN_HOUR);
+  const minute = minutes - TIME.MINUTES_IN_HOUR * hour;
+  return [hour, minute];
 };
 

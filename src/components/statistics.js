@@ -8,15 +8,55 @@ import {transformDuration} from "../utils/common";
 
 
 const StaticticsTimeInterval = {
-  ALL: `All time`,
-  TODAY: `Today`,
-  WEEK: `Week`,
-  MONTH: `Month`,
-  YEAR: `Year`,
+  ALL: `all-time`,
+  TODAY: `today`,
+  WEEK: `week`,
+  MONTH: `month`,
+  YEAR: `year`,
 };
 
 // const GenreItems = [`Sci-Fi`, `Animation`, `Fantasy`, `Comedy`, `TV Series`];
 const GenreItems = [`Action`, `Sci-Fi`, `Adventure`, `Comedy`, `Animation`, `Thriller`, `Horror`, `Drama`, `Family`];
+
+
+const getDateFrom = (activeIntervalType) => {
+  let dateFrom = new Date(0);
+  const dateTo = new Date();
+
+  switch (activeIntervalType) {
+    case StaticticsTimeInterval.ALL:
+      dateFrom = new Date(0);
+      break;
+    case StaticticsTimeInterval.MONTH:
+      dateFrom = dateTo.setMonth(dateTo.getMonth() - 1);
+      break;
+    case StaticticsTimeInterval.TODAY:
+      dateFrom = dateTo.setDate(dateTo.getDate() - 1);
+      break;
+    case StaticticsTimeInterval.WEEK:
+      dateFrom = dateTo.setDate(dateTo.getDate() - 7);
+      break;
+    case StaticticsTimeInterval.YEAR:
+      dateFrom = dateTo.setFullYear(dateTo.getFullYear() - 1);
+      break;
+  }
+  return dateFrom;
+};
+
+const getTimeWatchedMovies = (films) => {
+  return films.reduce((accumulator, current) => {
+    accumulator = accumulator + current.film_info.runtime;
+    return accumulator;
+  }, 0);
+};
+
+const getCountGenre = (films, genreItem) => {
+  return films.reduce((accumulator, current) => {
+    accumulator = accumulator + current.film_info.genre.some((genreFilm) => genreFilm === genreItem);
+    return accumulator;
+  }, 0);
+
+};
 
 const rankMovies = (watchedMovies) => Object.values(GenreItems).map((genreItem) => {
   return {
@@ -27,17 +67,18 @@ const rankMovies = (watchedMovies) => Object.values(GenreItems).map((genreItem) 
 
 const sortMovies = (rankedMovies) => rankedMovies.sort((a, b) => b.count - a.count);
 
+const getFilmByTime = (films, dateFrom) => {
+  return films.filter((film) => film.user_details.watching_date >= new Date(dateFrom));
+};
 
-const renderDaysChart = (statisticCtx, films) => {
+
+const renderDaysChart = (statisticCtx, sortedFilms) => {
   const BAR_HEIGHT = 50;
 
-  const watchedMovies = getFilmsByFilter(films, FilterType.HISTORY);
-  const rankedMovies = rankMovies(watchedMovies);
-  const sortedRankedMovies = sortMovies(rankedMovies);
-  const nameSortedRankedMovies = sortedRankedMovies.map((sortedRankedMovie) => sortedRankedMovie.genreName);
-  const countSortedRankedMovies = sortedRankedMovies.map((sortedRankedMovie) => sortedRankedMovie.count);
+  const nameSortedRankedMovies = sortedFilms.map((sortedRankedMovie) => sortedRankedMovie.genreName);
+  const countSortedRankedMovies = sortedFilms.map((sortedRankedMovie) => sortedRankedMovie.count);
 
-  statisticCtx.height = BAR_HEIGHT * sortedRankedMovies.length;
+  statisticCtx.height = BAR_HEIGHT * sortedFilms.length;
 
   return new Chart(statisticCtx, {
     plugins: [ChartDataLabels],
@@ -96,43 +137,21 @@ const renderDaysChart = (statisticCtx, films) => {
     }
   });
 };
+
 const createStatisticsMarkup = (timeInterval, isChecked) => {
+  const timeIntervalMarkup = timeInterval.toLowerCase().replace(/-/g, ` `);
+  const timeIntervalLabel = timeIntervalMarkup[0].toUpperCase() + timeInterval.slice(1);
 
   return (
-    `<input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-${timeInterval.toLowerCase().replace(/ /g, `-`)}" value="${timeInterval.toLowerCase()}" ${isChecked ? `checked` : ``}>
-        <label for="statistic-today" class="statistic__filters-label">${timeInterval}</label>`
+    `<input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-${timeInterval}" value="${timeInterval}" ${isChecked ? `checked` : ``}>
+        <label for="statistic-${timeInterval}" class="statistic__filters-label">${timeIntervalLabel}</label>`
   );
-
 };
 
-const getTimeWatchedMovies = (films) => {
-  return films.reduce((accumulator, current) => {
-    accumulator = +accumulator + +current.film_info.runtime;
-    return accumulator;
-  }, 0);
-};
-
-const getCountGenre = (films, genreItem) => {
-  return films.reduce((accumulator, current) => {
-    accumulator = accumulator + current.film_info.genre.some((genreFilm) => genreFilm === genreItem);
-    return accumulator;
-  }, 0);
-
-};
-
-const createStatisticsTemplate = ({films}, activeIntervalType) => {
+const createStatisticsTemplate = (films, activeIntervalType, topGenreName) => {
   const statisticsMarkup = Object.values(StaticticsTimeInterval).map((timeInterval) => createStatisticsMarkup(timeInterval, timeInterval === activeIntervalType)).join(`\n`);
-  const watchedMovies = getFilmsByFilter(films, FilterType.HISTORY);
-  const timeWatchedMovies = getTimeWatchedMovies(watchedMovies);
+  const timeWatchedMovies = getTimeWatchedMovies(films);
   const [hours, minutes] = transformDuration(timeWatchedMovies);
-  const rankedMovies = rankMovies(watchedMovies);
-  const sortedRankedMovies = sortMovies(rankedMovies);
-  const topGenreName = sortedRankedMovies[0].genreName;
-
-  // const createStatisticsTemplate = ({tasks, dateFrom, dateTo}) => {
-  //   const placeholder = createPlaceholder(dateFrom, dateTo);
-  //   const tasksCount = getTasksByDateRange(tasks, dateFrom, dateTo).length;
-  // поменял
 
   return (
     `<section class="statistic">
@@ -150,7 +169,7 @@ const createStatisticsTemplate = ({films}, activeIntervalType) => {
       <ul class="statistic__text-list">
         <li class="statistic__text-item">
           <h4 class="statistic__item-title">You watched</h4>
-          <p class="statistic__item-text">${watchedMovies.length} <span class="statistic__item-description">movies</span></p>
+          <p class="statistic__item-text">${films.length} <span class="statistic__item-description">movies</span></p>
         </li>
         <li class="statistic__text-item">
           <h4 class="statistic__item-title">Total duration</h4>
@@ -171,91 +190,85 @@ const createStatisticsTemplate = ({films}, activeIntervalType) => {
 };
 
 export default class Statistics extends AbstractSmartComponent {
-  constructor({films}) {
+  constructor(filmsModel) {
     super();
 
-    this._films = films;
-    // this._dateFrom = dateFrom;
-    // this._dateTo = dateTo;
+    this._filmsModel = filmsModel;
+    this._dateFrom = new Date(0);
 
     this._statisticChart = null;
-    // this._colorsChart = null;
-
-
+    this._topGenreName = null;
     this._activeIntervalType = StaticticsTimeInterval.ALL;
 
 
     this._renderCharts();
+    this._subscribeOnEvents();
   }
-  // constructor({tasks, dateFrom, dateTo}) {
-  //   super();
-
-  //   this._tasks = tasks;
-  //   this._dateFrom = dateFrom;
-  //   this._dateTo = dateTo;
-
-  //   this._daysChart = null;
-  //   // this._colorsChart = null;
-
-
-  //   this._renderCharts();
-  // }
 
   getTemplate() {
-    // return createStatisticsTemplate({tasks: this._tasks.getTasks(), dateFrom: this._dateFrom, dateTo: this._dateTo});
-    return createStatisticsTemplate({films: this._films.getFilms()});
+    return createStatisticsTemplate(this._films, this._activeIntervalType, this._topGenreName);
   }
 
-  // ok
   show() {
     super.show();
-     
-    // this.rerender(this._tasks, this._dateFrom, this._dateTo);
-    this.rerender(this._films);
+
+
+    this.rerender(this._filmsModel, this._dateFrom);
   }
 
-  recoveryListeners() {}
+  recoveryListeners() {
+    // this._subscribeOnEvents();
+  }
 
-  // ok
-  rerender(films) {
-    // super.rerender();
-
-
-    this._films = films;
-
-
-    // rerender(tasks, dateFrom, dateTo) {
-    //   this._tasks = tasks;
-    //   this._dateFrom = dateFrom;
-    //   this._dateTo = dateTo;
-
+  rerender(filmsModel, dateFrom) {
+    this._filmsModel = filmsModel;
+    this._dateFrom = dateFrom;
+     
     this._renderCharts();
   }
-  // ok
+
   _renderCharts() {
+    this._films = this._filmsModel.getFilmsAll();
+    this._films = getFilmsByFilter(this._films, FilterType.HISTORY);
+    this._films = getFilmByTime(this._films, this._dateFrom);
+    const rankedMovies = rankMovies(this._films);
+    const sortedRankedMovies = sortMovies(rankedMovies);
+    this._topGenreName = sortedRankedMovies[0].genreName;
+
     const element = this.getElement();
 
-
-    // const daysCtx = element.querySelector(`.statistic__days`);
     const statisticCtx = element.querySelector(`.statistic__chart`);
 
     this._resetCharts();
 
-    // this._daysChart = renderDaysChart(daysCtx, this._tasks.getTasks(), this._dateFrom, this._dateTo);
-    this._statisticChart = renderDaysChart(statisticCtx, this._films.getFilms());
+    this._statisticChart = renderDaysChart(statisticCtx, sortedRankedMovies);
   }
-  // ok
+ 
   _resetCharts() {
-    // if (this._daysChart) {
-    //   this._daysChart.destroy();
-    //   this._daysChart = null;
-    // }
-
     if (this._statisticChart) {
       this._statisticChart.destroy();
       this._statisticChart = null;
     }
   }
+
+  _subscribeOnEvents() {
+    const element = this.getElement();
+    const STATISTISTIC_ID_PREFIX = `statistic-`;
+
+    const getFilterNameById = (id) => {
+      return id.substring(STATISTISTIC_ID_PREFIX.length);
+    };
+
+    element.querySelector(`.statistic__filters`).addEventListener(`click`, (evt) => {
+      const target = evt.target;
+      if (target && target.id) {
+        this._activeIntervalType = getFilterNameById(target.id);
+        this._dateFrom = getDateFrom(this._activeIntervalType);
+        this.show();
+      }
+    });
+  }
+
 
 }
 

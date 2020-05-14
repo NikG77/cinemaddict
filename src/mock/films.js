@@ -134,7 +134,7 @@ const generateFilm = () => {
       "personal_rating": 5,
       "watchlist": Math.random() > 0.5,
       "already_watched": Math.random() > 0.5,
-      "watching_date": `2020-04-08T08:28:00.929Z`,
+      "watching_date": new Date().setDate(new Date().getDate() - getRandomIntegerNumber(0, 365)),
       "favorite": Math.random() > 0.5
     },
     "comments": getComments(id),
