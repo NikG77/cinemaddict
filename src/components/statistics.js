@@ -202,7 +202,8 @@ export default class Statistics extends AbstractSmartComponent {
     this._topGenreName = ``;
     this._activeIntervalType = StaticticsTimeInterval.ALL;
 
-    this._renderCharts();
+    this.show();
+
     this._subscribeOnEvents();
   }
 
@@ -218,7 +219,13 @@ export default class Statistics extends AbstractSmartComponent {
     this._films = getFilmByTime(this._films, this._dateFrom);
     if (this._films.length === 0) {
       this._topGenreName = ``;
+      this._sortedRankedMoviesExisting = null;
       this._resetCharts();
+    } else {
+      const rankedMovies = rankMovies(this._films);
+      const sortedRankedMovies = sortMovies(rankedMovies);
+      this._sortedRankedMoviesExisting = sortedRankedMovies.filter((sortedRankedMovie) => sortedRankedMovie.count > 0);
+      this._topGenreName = sortedRankedMovies[NUMBER_BEST_GENRE].genreName;
     }
 
     this.rerender();
@@ -235,13 +242,11 @@ export default class Statistics extends AbstractSmartComponent {
   }
 
   _renderCharts() {
-    const rankedMovies = rankMovies(this._films);
-    const sortedRankedMovies = sortMovies(rankedMovies);
-    const sortedRankedMoviesExisting = sortedRankedMovies.filter((sortedRankedMovie) => sortedRankedMovie.count > 0);
-    this._topGenreName = sortedRankedMovies[NUMBER_BEST_GENRE].genreName;
-    const element = this.getElement();
-    const statisticCtx = element.querySelector(`.statistic__chart`);
-    this._statisticChart = renderDaysChart(statisticCtx, sortedRankedMoviesExisting);
+    if (this._sortedRankedMoviesExisting) {
+      const element = this.getElement();
+      const statisticCtx = element.querySelector(`.statistic__chart`);
+      this._statisticChart = renderDaysChart(statisticCtx, this._sortedRankedMoviesExisting);
+    }
   }
 
   _resetCharts() {
@@ -264,6 +269,7 @@ export default class Statistics extends AbstractSmartComponent {
       if (target && target.id) {
         this._activeIntervalType = getFilterNameById(target.id);
         this._dateFrom = getDateFrom(this._activeIntervalType);
+
         this.show();
       }
     });
