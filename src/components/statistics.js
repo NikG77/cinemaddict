@@ -196,6 +196,7 @@ export default class Statistics extends AbstractSmartComponent {
 
     this._filmsModel = filmsModel;
     this._dateFrom = new Date(0);
+    this._films = this._filmsModel.getFilmsAll();
 
     this._statisticChart = null;
     this._topGenreName = ``;
@@ -212,6 +213,14 @@ export default class Statistics extends AbstractSmartComponent {
   show() {
     super.show();
 
+    this._films = this._filmsModel.getFilmsAll();
+    this._films = getFilmsByFilter(this._films, FilterType.HISTORY);
+    this._films = getFilmByTime(this._films, this._dateFrom);
+    if (this._films.length === 0) {
+      this._topGenreName = ``;
+      this._resetCharts();
+    }
+
     this.rerender();
   }
 
@@ -226,23 +235,13 @@ export default class Statistics extends AbstractSmartComponent {
   }
 
   _renderCharts() {
-    this._films = this._filmsModel.getFilmsAll();
-    this._films = getFilmsByFilter(this._films, FilterType.HISTORY);
-    this._films = getFilmByTime(this._films, this._dateFrom);
-
-    if (this._films.length === 0) {
-      this._topGenreName = ``;
-      this._resetCharts();
-    } else {
-      const rankedMovies = rankMovies(this._films);
-      const sortedRankedMovies = sortMovies(rankedMovies);
-      const sortedRankedMoviesExisting = sortedRankedMovies.filter((sortedRankedMovie) => sortedRankedMovie.count > 0);
-      this._topGenreName = sortedRankedMovies[NUMBER_BEST_GENRE].genreName;
-      const element = this.getElement();
-      const statisticCtx = element.querySelector(`.statistic__chart`);
-      this._statisticChart = renderDaysChart(statisticCtx, sortedRankedMoviesExisting);
-    }
-
+    const rankedMovies = rankMovies(this._films);
+    const sortedRankedMovies = sortMovies(rankedMovies);
+    const sortedRankedMoviesExisting = sortedRankedMovies.filter((sortedRankedMovie) => sortedRankedMovie.count > 0);
+    this._topGenreName = sortedRankedMovies[NUMBER_BEST_GENRE].genreName;
+    const element = this.getElement();
+    const statisticCtx = element.querySelector(`.statistic__chart`);
+    this._statisticChart = renderDaysChart(statisticCtx, sortedRankedMoviesExisting);
   }
 
   _resetCharts() {
