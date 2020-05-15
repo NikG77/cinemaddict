@@ -1,3 +1,5 @@
+import Movie from "./models/movie";
+
 const API = class {
   constructor(authorization) {
     this._authorization = authorization;
@@ -8,7 +10,8 @@ const API = class {
     headers.append(`Authorization`, this._authorization);
 
     return fetch(`https://11.ecmascript.pages.academy/cinemaddict/movies`, {headers})
-      .then((response) => response.json());
+      .then((response) => response.json())
+      .then(Movie.parseMovies);
   }
 };
 
