@@ -1,3 +1,4 @@
+import API from "./api.js";
 import FilmsComponent from "./components/films";
 import FilmsModel from "./models/movies";
 import FilterController from "./contollers/filter-controller";
@@ -7,17 +8,20 @@ import PageController from "./contollers/page-controller";
 import ProfileComponent from "./components/profile";
 import SortController from "./contollers/sort";
 import StatisticsComponent from "./components/statistics";
-import {generateFilms} from "./mock/films";
+// import {generateFilms} from "./mock/films";
 import {MenuItem} from "./const";
 import {render, RenderPosition} from "./utils/render";
 
+const AUTHORIZATION = `Basic gitDGfhjk$d29yZAo=`;
 
-const COUNT_FILMS = 17;
 
-const films = generateFilms(COUNT_FILMS);
+// const COUNT_FILMS = 17;
 
+// const films = generateFilms(COUNT_FILMS);
+
+const api = new API(AUTHORIZATION);
 const filmsModel = new FilmsModel();
-filmsModel.setFilms(films);
+// filmsModel.setFilms(films);
 
 const siteHeaderElement = document.querySelector(`.header`);
 const siteMainElement = document.querySelector(`.main`);
@@ -40,7 +44,7 @@ const filmsComponent = new FilmsComponent();
 render(siteMainElement, filmsComponent, RenderPosition.BEFOREEND);
 
 const pageController = new PageController(filmsComponent, filmsModel);
-pageController.render();
+// pageController.render();
 
 const statisticsComponent = new StatisticsComponent(filmsModel, profileComponent.getRating());
 render(siteMainElement, statisticsComponent, RenderPosition.BEFOREEND);
@@ -65,4 +69,10 @@ navigationComponent.setNavigationChangeHandler((menuItem) => {
   }
 
 });
+
+api.getFilms()
+  .then((films) => {
+    filmsModel.setFilms(films);
+    pageController.render();
+  });
 
