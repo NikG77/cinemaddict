@@ -32,4 +32,9 @@ export const FilterType = {
   FAVORITES: `favorites`,
 };
 
+export const MenuItem = {
+  STATISTICS: `statistics`,
+  FILMS: `films`,
+};
+
 

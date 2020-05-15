@@ -1,5 +1,5 @@
 import AbstractComponent from "./abstract-component";
-import {formatTimeHour, formatTimeMinute} from "../utils/common";
+import {transformDuration} from "../utils/common";
 
 const DECRIPTION = {
   START: 0,
@@ -34,8 +34,12 @@ const createFilmCardTemplate = (film) => {
 
   const fullYearDate = date.getFullYear();
 
-  const durationMinute = formatTimeMinute(runtime);
-  const durationHour = formatTimeHour(runtime);
+  const [hours, minutes] = transformDuration(runtime);
+
+  // const durationMinute = formatTimeMinute(runtime);
+  // console.log(runtime, `минуты`, durationMinute);
+  // const durationHour = formatTimeHour(runtime);
+  // console.log(runtime, `часы`, durationHour);
 
   const genreFilm = genre.join(` `);
   const descriptionFilm = description.join(``).slice(DECRIPTION.START, DECRIPTION.END) + description.join(`.`).slice(DECRIPTION.END, DECRIPTION.END + DECRIPTION.POINT_CONTINUATION).replace(/./g, `.`);
@@ -47,7 +51,7 @@ const createFilmCardTemplate = (film) => {
       <p class="film-card__rating">${totalRating}</p>
       <p class="film-card__info">
         <span class="film-card__year">${fullYearDate}</span>
-        <span class="film-card__duration">${durationHour}h ${durationMinute}m</span>
+        <span class="film-card__duration">${hours}h ${minutes}m</span>
         <span class="film-card__genre">${genreFilm}</span>
       </p>
       <img src="${poster}" alt="" class="film-card__poster">
