@@ -21,7 +21,8 @@ const filmsModel = new FilmsModel();
 filmsModel.setFilms(films);
 
 const siteHeaderElement = document.querySelector(`.header`);
-render(siteHeaderElement, new ProfileComponent(films), RenderPosition.BEFOREEND);
+const profileComponent = new ProfileComponent(films);
+render(siteHeaderElement, profileComponent, RenderPosition.BEFOREEND);
 
 const siteMainElement = document.querySelector(`.main`);
 
@@ -45,7 +46,7 @@ pageController.render();
 pageController.hide();
 
 
-const statisticsComponent = new StatisticsComponent(filmsModel);
+const statisticsComponent = new StatisticsComponent(filmsModel, profileComponent.getRating());
 render(siteMainElement, statisticsComponent, RenderPosition.BEFOREEND);
 // statisticsComponent.hide();
 

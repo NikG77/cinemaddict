@@ -149,7 +149,7 @@ const createStatisticsMarkup = (timeInterval, isChecked) => {
   );
 };
 
-const createStatisticsTemplate = (films, activeIntervalType, topGenreName) => {
+const createStatisticsTemplate = (films, activeIntervalType, topGenreName, profileRating) => {
   const statisticsMarkup = Object.values(StaticticsTimeInterval).map((timeInterval) => createStatisticsMarkup(timeInterval, timeInterval === activeIntervalType)).join(`\n`);
   const timeWatchedMovies = getTimeWatchedMovies(films);
   const [hours, minutes] = transformDuration(timeWatchedMovies);
@@ -159,7 +159,7 @@ const createStatisticsTemplate = (films, activeIntervalType, topGenreName) => {
       <p class="statistic__rank">
         Your rank
         <img class="statistic__img" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
-        <span class="statistic__rank-label">Sci-Fighter</span>
+        <span class="statistic__rank-label">${profileRating}</span>
       </p>
 
       <form action="https://echo.htmlacademy.ru/" method="get" class="statistic__filters">
@@ -191,10 +191,12 @@ const createStatisticsTemplate = (films, activeIntervalType, topGenreName) => {
 };
 
 export default class Statistics extends AbstractSmartComponent {
-  constructor(filmsModel) {
+  constructor(filmsModel, profileRating) {
     super();
 
     this._filmsModel = filmsModel;
+    this._profileRating = profileRating;
+
     this._dateFrom = new Date(0);
     this._films = this._filmsModel.getFilmsAll();
 
@@ -208,7 +210,7 @@ export default class Statistics extends AbstractSmartComponent {
   }
 
   getTemplate() {
-    return createStatisticsTemplate(this._films, this._activeIntervalType, this._topGenreName);
+    return createStatisticsTemplate(this._films, this._activeIntervalType, this._topGenreName, this._profileRating);
   }
 
   show() {
