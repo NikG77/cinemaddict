@@ -13,13 +13,13 @@ import {MenuItem} from "./const";
 import {render, RenderPosition} from "./utils/render";
 
 const AUTHORIZATION = `Basic gitDGfhjk$d29yZAo=`;
-
+const END_POINT = `https://11.ecmascript.pages.academy/cinemaddict`;
 
 // const COUNT_FILMS = 17;
 
 // const films = generateFilms(COUNT_FILMS);
 
-const api = new API(AUTHORIZATION);
+const api = new API(END_POINT, AUTHORIZATION);
 const filmsModel = new FilmsModel();
 // filmsModel.setFilms(films);
 
