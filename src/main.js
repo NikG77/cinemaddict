@@ -8,6 +8,7 @@ import PageController from "./contollers/page-controller";
 import ProfileComponent from "./components/profile";
 import SortController from "./contollers/sort";
 import StatisticsComponent from "./components/statistics";
+import LoadingFilmsComponent from "./components/loading-films";
 
 import {MenuItem} from "./const";
 import {render, RenderPosition} from "./utils/render";
@@ -31,9 +32,13 @@ render(siteMainElement, navigationComponent, RenderPosition.BEFOREEND);
 
 const siteNavigationElements = siteMainElement.querySelector(`nav`);
 const filterController = new FilterController(siteNavigationElements, filmsModel);
+filterController.render();
 
 const sortController = new SortController(siteMainElement, filmsModel);
 sortController.render();
+
+const loadingFilmsComponent = new LoadingFilmsComponent();
+render(siteMainElement, loadingFilmsComponent, RenderPosition.BEFOREEND);
 
 
 const filmsComponent = new FilmsComponent();
@@ -63,9 +68,8 @@ navigationComponent.setNavigationChangeHandler((menuItem) => {
 
 api.getFilms()
   .then((films) => {
+    loadingFilmsComponent.getElement().remove();
     filmsModel.setFilms(films);
-    console.log(`с сервера нач загрузка для простоты первый фильма`, films[0]);
-
 
     render(footerStatisticsElement, new FooterComponent(films.length), RenderPosition.BEFOREEND);
     render(siteMainElement, statisticsComponent, RenderPosition.BEFOREEND);
