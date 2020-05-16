@@ -1,11 +1,10 @@
-  
 export default class Movie {
   constructor(data) {
     this.id = data[`id`];
     this.title = data.film_info[`title`];
     this.originalTitle = data.film_info[`alternative_title`];
     this.poster = data.film_info[`poster`];
-    this.description = data.film_info[`description`];
+    this.description = data.film_info[`description`] || ``;
     this.rating = data.film_info[`total_rating`];
     this.releaseDate = new Date(data.film_info.release[`date`]);
     this.duration = data.film_info[`runtime`];
@@ -19,7 +18,7 @@ export default class Movie {
     this.alreadyWatched = Boolean(data.user_details[`already_watched`]);
     this.favorite = Boolean(data.user_details[`favorite`]);
     this.comments = data[`comments`];
-    this.watchingDate = data.user_details[`watching_date`];
+    this.watchingDate = new Date(data.user_details[`watching_date`]);
   }
 
   toRAW() {
@@ -46,7 +45,7 @@ export default class Movie {
       "user_details": {
         "already_watched": this.alreadyWatched,
         "favorite": this.favorite,
-        "watching_date": this.watchingDate,
+        "watching_date": this.watchingDate.toISOString(),
         "watchlist": this.watchlist,
       }
     };

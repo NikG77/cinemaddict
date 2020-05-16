@@ -54,9 +54,11 @@ const getSortedFilms = (films, sortType, from, to) => {
 
 
 export default class PageController {
-  constructor(container, filmsModel) {
+  constructor(container, filmsModel, api) {
     this._container = container;
     this._filmsModel = filmsModel;
+    this._api = api;
+
     this._commentsModel = null;
 
     this._showedFilmControllers = [];
@@ -161,10 +163,20 @@ export default class PageController {
   }
 
   _onDataChange(filmController, oldData, newData) {
-    const isSuccess = this._filmsModel.updateFilm(oldData.id, newData);
-    if (isSuccess) {
-      filmController.render(newData);
-    }
+    // const isSuccess = this._filmsModel.updateFilm(oldData.id, newData);
+    // if (isSuccess) {
+    //   filmController.render(newData);
+    // }
+
+    this._api.updateFilm(oldData.id, newData)
+      .then((filmModel) => {
+        const isSuccess = this._filmsModel.updateFilm(oldData.id, filmModel);
+
+        if (isSuccess) {
+          filmController.render(filmModel);
+          this._updateFilms(this._showingFilmCount);
+        }
+      });
   }
 
   _onViewChange() {

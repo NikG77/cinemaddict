@@ -43,7 +43,7 @@ sortController.render();
 const filmsComponent = new FilmsComponent();
 render(siteMainElement, filmsComponent, RenderPosition.BEFOREEND);
 
-const pageController = new PageController(filmsComponent, filmsModel);
+const pageController = new PageController(filmsComponent, filmsModel, api);
 // pageController.render();
 
 const statisticsComponent = new StatisticsComponent(filmsModel, profileComponent.getRating());
@@ -73,6 +73,7 @@ navigationComponent.setNavigationChangeHandler((menuItem) => {
 api.getFilms()
   .then((films) => {
     filmsModel.setFilms(films);
+    console.log(`с сервера нач загрузка для простоты первый фильма`, films[0]);
     pageController.render();
   });
 

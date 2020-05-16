@@ -30,7 +30,7 @@ const createFilmCardTemplate = (film) => {
   const [hours, minutes] = transformDuration(duration);
 
   const genreFilm = genre.join(` `);
-  const descriptionFilm = description.join(``).slice(DECRIPTION.START, DECRIPTION.END) + description.join(`.`).slice(DECRIPTION.END, DECRIPTION.END + DECRIPTION.POINT_CONTINUATION).replace(/./g, `.`);
+  const descriptionFilm = description.slice(DECRIPTION.START, DECRIPTION.END) + description.slice(DECRIPTION.END, DECRIPTION.END + DECRIPTION.POINT_CONTINUATION).replace(/./g, `.`);
   const commentsNumber = comments.length;
 
   return (

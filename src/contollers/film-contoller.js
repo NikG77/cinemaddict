@@ -6,6 +6,7 @@ import {render, remove, RenderPosition, replace} from "../utils/render";
 import FilmCommentsComponent from "../components/comments";
 import FilmNewCommentComponent from "../components/newComment";
 import {encode} from "he";
+import MovieModel from "../models/movie";
 
 export const Mode = {
   DEFAULT: `default`,
@@ -33,8 +34,6 @@ export default class FilmController {
     this._onPopupCloseEscPress = this._onPopupCloseEscPress.bind(this);
     this._closePopup = this._closePopup.bind(this);
     this._onCommentChange = this._onCommentChange.bind(this);
-
-    // this._getFilmComment = this._getFilmComment.bind(this);
 
 
     this._film = null;
@@ -73,7 +72,9 @@ export default class FilmController {
 
   onWatchListButtonClick(evt) {
     evt.preventDefault();
-    const newFilm = Object.assign({}, this._film);
+    // const newFilm = Object.assign({}, this._film);
+    // newFilm.watchlist = !this._film.watchlist;
+    const newFilm = MovieModel.clone(this._film);
     newFilm.watchlist = !this._film.watchlist;
 
     this._onDataChange(this, this._film, newFilm);
@@ -81,7 +82,9 @@ export default class FilmController {
 
   onHistoryButtonClickHandler(evt) {
     evt.preventDefault();
-    const newFilm = Object.assign({}, this._film);
+    // const newFilm = Object.assign({}, this._film);
+    // newFilm.alreadyWatched = !this._film.alreadyWatched;
+    const newFilm = MovieModel.clone(this._film);
     newFilm.alreadyWatched = !this._film.alreadyWatched;
 
     this._onDataChange(this, this._film, newFilm);
@@ -89,7 +92,9 @@ export default class FilmController {
 
   onFavoriteButtonClick(evt) {
     evt.preventDefault();
-    const newFilm = Object.assign({}, this._film);
+    // const newFilm = Object.assign({}, this._film);
+    // newFilm.favorite = !this._film.favorite;
+    const newFilm = MovieModel.clone(this._film);
     newFilm.favorite = !this._film.favorite;
 
     this._onDataChange(this, this._film, newFilm);
