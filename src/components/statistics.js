@@ -46,14 +46,14 @@ const getDateFrom = (activeIntervalType) => {
 
 const getTimeWatchedMovies = (films) => {
   return films.reduce((accumulator, current) => {
-    accumulator = accumulator + current.film_info.runtime;
+    accumulator = accumulator + current.duration;
     return accumulator;
   }, 0);
 };
 
 const getCountGenre = (films, genreItem) => {
   return films.reduce((accumulator, current) => {
-    accumulator = accumulator + current.film_info.genre.some((genreFilm) => genreFilm === genreItem);
+    accumulator = accumulator + current.genre.some((genreFilm) => genreFilm === genreItem);
     return accumulator;
   }, 0);
 
@@ -69,7 +69,7 @@ const rankMovies = (watchedMovies) => Object.values(GenreItems).map((genreItem) 
 const sortMovies = (rankedMovies) => rankedMovies.sort((a, b) => b.count - a.count);
 
 const getFilmByTime = (films, dateFrom) => {
-  return films.filter((film) => film.user_details.watching_date >= new Date(dateFrom));
+  return films.filter((film) => film.watchingDate >= new Date(dateFrom));
 };
 
 

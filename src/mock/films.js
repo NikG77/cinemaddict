@@ -112,31 +112,25 @@ let id = -1;
 const generateFilm = () => {
   id++;
   return {
-    "id": `${id}`,
-    "film_info": {
-      "title": getRandomArrayItem(TitleItems),
-      "alternative_title": getRandomArrayItem(AlternativeTitleItems),
-      "total_rating": getRandomReiting(),
-      "poster": `./images/posters/the-great-flamarion.jpg`,
-      "age_rating": 6,
-      "director": getRandomArrayItem(DirectorItems),
-      "writers": getRandomArray(WritersItems, WRITERS_FILM.MIN, WRITERS_FILM.MAX),
-      "actors": getRandomArray(ActorsItems, ACTORS_FILM.MIN, ACTORS_FILM.MAX),
-      "release": {
-        "date": getRandomDate(),
-        "release_country": `Italy`
-      },
-      "runtime": getRandomIntegerNumber(80, 130),
-      "genre": getRandomArray(GenreItems, GENRE_FILM.MIN, GENRE_FILM.MAX),
-      "description": getRandomArray(DescriptionItems, DECRIPTION_FILM.MIN, DECRIPTION_FILM.MAX),
-    },
-    "user_details": {
-      "personal_rating": 5,
-      "watchlist": Math.random() > 0.5,
-      "already_watched": Math.random() > 0.5,
-      "watching_date": new Date().setDate(new Date().getDate() - getRandomIntegerNumber(0, 365)),
-      "favorite": Math.random() > 0.5
-    },
+    "id": `${id}`,   
+    "title": getRandomArrayItem(TitleItems),
+    "originalTitle": getRandomArrayItem(AlternativeTitleItems),
+    "rating": getRandomReiting(),
+    "poster": `./images/posters/the-great-flamarion.jpg`,
+    "ageRating": 6,
+    "director": getRandomArrayItem(DirectorItems),
+    "writers": getRandomArray(WritersItems, WRITERS_FILM.MIN, WRITERS_FILM.MAX),
+    "actors": getRandomArray(ActorsItems, ACTORS_FILM.MIN, ACTORS_FILM.MAX),
+    "releaseDate": getRandomDate(),
+    "country": `Italy`,
+    "duration": getRandomIntegerNumber(80, 130),
+    "genre": getRandomArray(GenreItems, GENRE_FILM.MIN, GENRE_FILM.MAX),
+    "description": getRandomArray(DescriptionItems, DECRIPTION_FILM.MIN, DECRIPTION_FILM.MAX),
+    "personalRating": getRandomIntegerNumber(0, 10),
+    "watchlist": Math.random() > 0.5,
+    "alreadyWatched": Math.random() > 0.5,
+    "watchingDate": new Date().setDate(new Date().getDate() - getRandomIntegerNumber(0, 365)),
+    "favorite": Math.random() > 0.5,
     "comments": getComments(id),
   };
 };

@@ -27,7 +27,7 @@ const siteHeaderElement = document.querySelector(`.header`);
 const siteMainElement = document.querySelector(`.main`);
 const footerStatisticsElement = document.querySelector(`.footer__statistics`);
 
-const profileComponent = new ProfileComponent(films);
+const profileComponent = new ProfileComponent(filmsModel);
 render(siteHeaderElement, profileComponent, RenderPosition.BEFOREEND);
 
 const navigationComponent = new Navigation();
@@ -50,7 +50,7 @@ const statisticsComponent = new StatisticsComponent(filmsModel, profileComponent
 render(siteMainElement, statisticsComponent, RenderPosition.BEFOREEND);
 statisticsComponent.hide();
 
-render(footerStatisticsElement, new FooterComponent(films.length), RenderPosition.BEFOREEND);
+// render(footerStatisticsElement, new FooterComponent(films.length), RenderPosition.BEFOREEND);
 
 navigationComponent.setNavigationChangeHandler((menuItem) => {
   switch (menuItem) {

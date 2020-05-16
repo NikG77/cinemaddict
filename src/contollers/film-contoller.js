@@ -74,7 +74,7 @@ export default class FilmController {
   onWatchListButtonClick(evt) {
     evt.preventDefault();
     const newFilm = Object.assign({}, this._film);
-    newFilm[`user_details`][`watchlist`] = !this._film[`user_details`][`watchlist`];
+    newFilm.watchlist = !this._film.watchlist;
 
     this._onDataChange(this, this._film, newFilm);
   }
@@ -82,7 +82,7 @@ export default class FilmController {
   onHistoryButtonClickHandler(evt) {
     evt.preventDefault();
     const newFilm = Object.assign({}, this._film);
-    newFilm[`user_details`][`already_watched`] = !this._film[`user_details`][`already_watched`];
+    newFilm.alreadyWatched = !this._film.alreadyWatched;
 
     this._onDataChange(this, this._film, newFilm);
   }
@@ -90,7 +90,7 @@ export default class FilmController {
   onFavoriteButtonClick(evt) {
     evt.preventDefault();
     const newFilm = Object.assign({}, this._film);
-    newFilm[`user_details`][`favorite`] = !this._film[`user_details`][`favorite`];
+    newFilm.favorite = !this._film.favorite;
 
     this._onDataChange(this, this._film, newFilm);
   }

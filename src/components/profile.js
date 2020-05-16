@@ -9,7 +9,7 @@ const PROFILE_LEVEL = {
 
 const getFilmsWatched = (films) => {
   return films.reduce((accumulator, current) => {
-    return accumulator + current.user_details.already_watched;
+    return accumulator + current.alreadyWatched;
   }, 0);
 };
 
@@ -23,9 +23,10 @@ const createProfileTemplate = (profileRating) => {
 };
 
 export default class Profile extends AbstractComponent {
-  constructor(films) {
+  constructor(filmsModel) {
     super();
-    this._films = films;
+    this._filmsModel = filmsModel;
+    this._films = this._filmsModel.getFilmsAll();
   }
 
   getTemplate() {

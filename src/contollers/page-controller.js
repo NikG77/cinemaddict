@@ -39,10 +39,10 @@ const getSortedFilms = (films, sortType, from, to) => {
 
   switch (sortType) {
     case SortType.RATING_DOWN:
-      sortedFilms = showingFilms.sort((a, b) => b.film_info.total_rating - a.film_info.total_rating);
+      sortedFilms = showingFilms.sort((a, b) => b.rating - a.rating);
       break;
     case SortType.DATE_DOWN:
-      sortedFilms = showingFilms.sort((a, b) => b.film_info.release.date - a.film_info.release.date);
+      sortedFilms = showingFilms.sort((a, b) => b.releaseDate - a.releaseDate);
       break;
     case SortType.DEFAULT:
       sortedFilms = showingFilms;
@@ -191,7 +191,7 @@ export default class PageController {
   _searchTopRatedFilms(films) {
     const topRatedFilms = films.slice();
     return topRatedFilms.sort(function (a, b) {
-      return b.film_info.total_rating - a.film_info.total_rating;
+      return b.rating - a.rating;
     }).slice(0, COUNT.TOP_RATED);
   }
 
