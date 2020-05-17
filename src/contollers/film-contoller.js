@@ -1,12 +1,11 @@
-
 import FilmCardComponent from "../components/film-card";
+import FilmCommentsComponent from "../components/comments";
 import FilmDetailsComponent from "../components/film-details";
+import FilmNewCommentComponent from "../components/newComment";
+import MovieModel from "../models/movie";
+import {encode} from "he";
 import {isEscEvent} from "../utils/common";
 import {render, remove, RenderPosition, replace} from "../utils/render";
-import FilmCommentsComponent from "../components/comments";
-import FilmNewCommentComponent from "../components/newComment";
-import {encode} from "he";
-import MovieModel from "../models/movie";
 
 export const Mode = {
   DEFAULT: `default`,
@@ -16,10 +15,11 @@ export const Mode = {
 export const EmptyComment = {};
 
 export default class FilmController {
-  constructor(container, onDataChange, onViewChange, commentsModel) {
+  constructor(container, onDataChange, onViewChange, commentsModel, api) {
     this._container = container;
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
+    this._api = api;
 
     this._commentsModel = commentsModel;
 
@@ -34,7 +34,6 @@ export default class FilmController {
     this._onPopupCloseEscPress = this._onPopupCloseEscPress.bind(this);
     this._closePopup = this._closePopup.bind(this);
     this._onCommentChange = this._onCommentChange.bind(this);
-
 
     this._film = null;
   }
@@ -72,8 +71,6 @@ export default class FilmController {
 
   onWatchListButtonClick(evt) {
     evt.preventDefault();
-    // const newFilm = Object.assign({}, this._film);
-    // newFilm.watchlist = !this._film.watchlist;
     const newFilm = MovieModel.clone(this._film);
     newFilm.watchlist = !this._film.watchlist;
 
@@ -82,8 +79,6 @@ export default class FilmController {
 
   onHistoryButtonClickHandler(evt) {
     evt.preventDefault();
-    // const newFilm = Object.assign({}, this._film);
-    // newFilm.alreadyWatched = !this._film.alreadyWatched;
     const newFilm = MovieModel.clone(this._film);
     newFilm.alreadyWatched = !this._film.alreadyWatched;
 
@@ -92,8 +87,6 @@ export default class FilmController {
 
   onFavoriteButtonClick(evt) {
     evt.preventDefault();
-    // const newFilm = Object.assign({}, this._film);
-    // newFilm.favorite = !this._film.favorite;
     const newFilm = MovieModel.clone(this._film);
     newFilm.favorite = !this._film.favorite;
 
@@ -153,7 +146,6 @@ export default class FilmController {
     this._renderPopupComment();
   }
 
-
   _rerenderPopupComment() {
     remove(this._filmCommentsComponent);
 
@@ -181,7 +173,6 @@ export default class FilmController {
     this._filmNewCommentComponent.setCommentAddClickHandler((evt) => {
       this._onCommentAddClick(evt);
     });
-
   }
 
 
@@ -202,7 +193,7 @@ export default class FilmController {
       };
 
       const addComment = Object.assign({}, newComment);
-      addComment.id = new Date() + Math.floor(Math.random() * 100) + ``;
+      addComment.id = new Date() + Math.floor(Math.random() * 1000) + ``;
       addComment.author = `new author`;
 
       this._film.comments.push(addComment.id);

@@ -52,25 +52,6 @@ render(footerStatisticsElement, footerComponent, RenderPosition.BEFOREEND);
 const pageController = new PageController(filmsComponent, filmsModel, api);
 const statisticsComponent = new StatisticsComponent(filmsModel, profileComponent.getRating());
 
-
-api.getFilms().then((films) => {
-  loadingFilmsComponent.getElement().remove();
-  filmsModel.setFilms(films);
-
-  render(siteMainElement, new StatisticsComponent(filmsModel, profileComponent.getRating()), RenderPosition.BEFOREEND);
-  statisticsComponent.hide();
-
-  profileComponent.rerender();
-  filterController.render();
-  pageController.render();
-  footerComponent.rerender();
-})
-.catch(() => {
-  loadingFilmsComponent.getElement().remove();
-  pageController.render();
-
-});
-
 navigationComponent.setNavigationChangeHandler((menuItem) => {
   switch (menuItem) {
     case MenuItem.STATISTICS:
@@ -88,3 +69,22 @@ navigationComponent.setNavigationChangeHandler((menuItem) => {
   }
 
 });
+
+api.getFilms().then((films) => {
+  loadingFilmsComponent.getElement().remove();
+  filmsModel.setFilms(films);
+
+  render(siteMainElement, statisticsComponent, RenderPosition.BEFOREEND);
+  statisticsComponent.hide();
+
+  profileComponent.rerender();
+  filterController.render();
+  pageController.render();
+  footerComponent.rerender();
+})
+.catch(() => {
+  loadingFilmsComponent.getElement().remove();
+  pageController.render();
+
+});
+

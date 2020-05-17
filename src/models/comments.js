@@ -10,7 +10,7 @@ export default class Comments {
   }
 
   setComments(comments) {
-    this._comments = Array.from(comments);
+    this._comments = this._comments.concat(Array.from(comments));
     // this._callHandlers(this._commentChangeHandlers);
   }
 
@@ -33,6 +33,10 @@ export default class Comments {
     this._comments.push(newComment);
 
     // this._callHandlers(this._commentChangeHandlers);
+  }
+
+  removeAllComments() {
+    this._comments = [];
   }
 
   // setCommentChangeHandler(handler) {
