@@ -1,4 +1,3 @@
-
 import AbstractSmartComponent from "./abstract-smart-component";
 
 const createFooterTemplate = (numberFilms) => {
@@ -21,8 +20,7 @@ export default class Footer extends AbstractSmartComponent {
     return createFooterTemplate(this._filmModel.getFilmsAll().length);
   }
 
-  recoveryListeners() {
-  }
+  recoveryListeners() {}
 
   rerender() {
     super.rerender();

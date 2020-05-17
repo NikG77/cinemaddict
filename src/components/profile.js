@@ -1,4 +1,4 @@
-import AbstractComponent from "./abstract-component";
+import AbstractSmartComponent from "./abstract-smart-component";
 
 const PROFILE_LEVEL = {
   NOTHING_MAX: 0,
@@ -22,19 +22,24 @@ const createProfileTemplate = (profileRating) => {
   );
 };
 
-export default class Profile extends AbstractComponent {
+export default class Profile extends AbstractSmartComponent {
   constructor(filmsModel) {
     super();
     this._filmsModel = filmsModel;
-    this._films = this._filmsModel.getFilmsAll();
   }
 
   getTemplate() {
     return createProfileTemplate(this.getRating());
   }
 
+  recoveryListeners() {}
+
+  rerender() {
+    super.rerender();
+  }
+
   getRating() {
-    const numberWatched = getFilmsWatched(this._films);
+    const numberWatched = getFilmsWatched(this._filmsModel.getFilmsAll());
     let profileRating;
 
     switch (true) {
