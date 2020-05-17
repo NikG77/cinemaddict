@@ -26,22 +26,27 @@ const footerStatisticsElement = document.querySelector(`.footer__statistics`);
 const profileComponent = new ProfileComponent(filmsModel);
 render(siteHeaderElement, profileComponent, RenderPosition.BEFOREEND);
 
-
 const navigationComponent = new Navigation();
 render(siteMainElement, navigationComponent, RenderPosition.BEFOREEND);
 
 const siteNavigationElements = siteMainElement.querySelector(`nav`);
 const filterController = new FilterController(siteNavigationElements, filmsModel);
-filterController.render();
+
 
 const sortController = new SortController(siteMainElement, filmsModel);
+const loadingFilmsComponent = new LoadingFilmsComponent();
+
+filterController.render();
 sortController.render();
 
-const loadingFilmsComponent = new LoadingFilmsComponent();
+
 render(siteMainElement, loadingFilmsComponent, RenderPosition.BEFOREEND);
 
 
 const filmsComponent = new FilmsComponent();
+render(siteMainElement, filmsComponent, RenderPosition.BEFOREEND);
+const footerComponent = new FooterComponent(filmsModel);
+render(footerStatisticsElement, footerComponent, RenderPosition.BEFOREEND);
 
 
 const pageController = new PageController(filmsComponent, filmsModel, api);
@@ -71,13 +76,17 @@ api.getFilms()
     loadingFilmsComponent.getElement().remove();
     filmsModel.setFilms(films);
 
-    render(footerStatisticsElement, new FooterComponent(films.length), RenderPosition.BEFOREEND);
+
     render(siteMainElement, statisticsComponent, RenderPosition.BEFOREEND);
-    render(siteMainElement, filmsComponent, RenderPosition.BEFOREEND);
 
     filterController.render();
     pageController.render();
+    footerComponent.rerender();
     statisticsComponent.hide();
+  })
+  .catch(() => {
+    loadingFilmsComponent.getElement().remove();
+    pageController.render();
 
   });
 
