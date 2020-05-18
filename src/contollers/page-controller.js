@@ -178,8 +178,10 @@ export default class PageController {
 
         if (isSuccess) {
           filmController.render(filmModel);
-          this._updateFilms(this._showingFilmCount);
         }
+      })
+      .catch(() => {
+        console.log(`что то пошло не так`);
       });
   }
 

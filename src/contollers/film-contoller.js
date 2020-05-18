@@ -112,7 +112,9 @@ export default class FilmController {
     this._filmNewCommentComponent.reset();
 
     this._mode = Mode.DEFAULT;
-
+    
+    remove(this._filmCommentsComponent);
+    remove(this._filmNewCommentComponent);
     remove(this._filmDetailsComponent);
     document.querySelector(`body`).classList.remove(`hide-overflow`);
     document.removeEventListener(`keydown`, this._onPopupCloseEscPress);
