@@ -1,4 +1,4 @@
-import AbstractComponent from "./abstract-component";
+import AbstractSmartComponent from "./abstract-smart-component";
 
 const createFooterTemplate = (numberFilms) => {
   return (
@@ -7,14 +7,24 @@ const createFooterTemplate = (numberFilms) => {
 };
 
 
-export default class Footer extends AbstractComponent {
-  constructor(numberFilms) {
+export default class Footer extends AbstractSmartComponent {
+  constructor(filmModel) {
     super();
-    this._numberFilms = numberFilms;
+    this._filmModel = filmModel;
   }
 
   getTemplate() {
-    return createFooterTemplate(this._numberFilms);
+    if (!this._filmModel) {
+      this._filmModel = 0;
+    }
+    return createFooterTemplate(this._filmModel.getFilmsAll().length);
   }
+
+  recoveryListeners() {}
+
+  rerender() {
+    super.rerender();
+  }
+
 }
 

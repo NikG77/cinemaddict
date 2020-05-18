@@ -16,9 +16,9 @@ const getFilter = (films) => {
       accumulator.Favorities = 0;
     }
 
-    accumulator.Watchlist = accumulator.Watchlist + current.user_details.watchlist;
-    accumulator.History = accumulator.History + current.user_details.already_watched;
-    accumulator.Favorities = accumulator.Favorities + current.user_details.favorite;
+    accumulator.Watchlist = accumulator.Watchlist + current.watchlist;
+    accumulator.History = accumulator.History + current.alreadyWatched;
+    accumulator.Favorities = accumulator.Favorities + current.favorite;
 
     return accumulator;
   }, {});

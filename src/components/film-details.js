@@ -11,37 +11,32 @@ const createGenreMarkup = (genres) => {
 };
 
 const createFilmDetailsTemplate = (film) => {
+
   const {
-    film_info: {
-      title,
-      alternative_title: alternativeTitle,
-      total_rating: totalRating,
-      poster,
-      age_rating: ageRating,
-      director,
-      writers,
-      actors,
-      release: {
-        date,
-        release_country: releaseCountry,
-      },
-      runtime,
-      genre,
-      description,
-    },
-    user_details: {
-      watchlist,
-      already_watched: alreadyWatched,
-      favorite,
-    },
+    title,
+    rating,
+    poster,
+    originalTitle,
+    releaseDate,
+    duration,
+    genre,
+    description,
+    director,
+    writers,
+    actors,
+    country,
+    ageRating,
+    watchlist,
+    alreadyWatched,
+    favorite,
   } = film;
 
   const writersDetails = writers.join(`, `);
   const actorsDetails = actors.join(`, `);
 
-  const dateRelease = formatDate(date);
+  const dateRelease = formatDate(releaseDate);
 
-  const [hours, minutes] = transformDuration(runtime);
+  const [hours, minutes] = transformDuration(duration);
 
   const genreDeyails = genre.length > 1 ? `Genres` : `Genre`;
   const genreMarkup = createGenreMarkup(genre);
@@ -64,11 +59,11 @@ const createFilmDetailsTemplate = (film) => {
               <div class="film-details__info-head">
                 <div class="film-details__title-wrap">
                   <h3 class="film-details__title">${title}</h3>
-                  <p class="film-details__title-original">Original: ${alternativeTitle}</p>
+                  <p class="film-details__title-original">Original: ${originalTitle}</p>
                 </div>
 
                 <div class="film-details__rating">
-                  <p class="film-details__total-rating">${totalRating}</p>
+                  <p class="film-details__total-rating">${rating}</p>
                 </div>
               </div>
 
@@ -95,7 +90,7 @@ const createFilmDetailsTemplate = (film) => {
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Country</td>
-                  <td class="film-details__cell">${releaseCountry}</td>
+                  <td class="film-details__cell">${country}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">${genreDeyails}</td>
@@ -170,18 +165,18 @@ export default class FilmDetails extends AbstractSmartComponent {
     const element = this.getElement();
 
     element.querySelector(`#watchlist`).addEventListener(`click`, () => {
-      this._film[`user_details`][`watchlist`] = !this._film[`user_details`][`watchlist`];
+      this._film.watchlist = !this._film.watchlist;
 
       // this.rerender();
     });
 
     element.querySelector(`#watched`).addEventListener(`click`, () => {
-      this._film[`user_details`][`already_watched`] = !this._film[`user_details`][`already_watched`];
+      this._film.alreadyWatched = !this._film.alreadyWatched;
       // this.rerender();
     });
 
     element.querySelector(`#favorite`).addEventListener(`click`, () => {
-      this._film[`user_details`][`favorite`] = !this._film[`user_details`][`favorite`];
+      this._film.favorite = !this._film.favorite;
       // this.rerender();
     });
 

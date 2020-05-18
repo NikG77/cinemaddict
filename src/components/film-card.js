@@ -12,43 +12,31 @@ const createFilmCardTemplate = (film) => {
 
   const {
     id,
-    film_info: {
-      title,
-      total_rating: totalRating,
-      poster,
-      release: {
-        date,
-
-      },
-      runtime,
-      genre,
-      description,
-    },
-    user_details: {
-      watchlist,
-      already_watched: alreadyWatched,
-      favorite,
-    },
+    title,
+    rating,
+    poster,
+    releaseDate,
+    duration,
+    genre,
+    description,
+    watchlist,
+    alreadyWatched,
+    favorite,
     comments,
   } = film;
 
-  const fullYearDate = date.getFullYear();
+  const fullYearDate = releaseDate.getFullYear();
 
-  const [hours, minutes] = transformDuration(runtime);
-
-  // const durationMinute = formatTimeMinute(runtime);
-  // console.log(runtime, `минуты`, durationMinute);
-  // const durationHour = formatTimeHour(runtime);
-  // console.log(runtime, `часы`, durationHour);
+  const [hours, minutes] = transformDuration(duration);
 
   const genreFilm = genre.join(` `);
-  const descriptionFilm = description.join(``).slice(DECRIPTION.START, DECRIPTION.END) + description.join(`.`).slice(DECRIPTION.END, DECRIPTION.END + DECRIPTION.POINT_CONTINUATION).replace(/./g, `.`);
+  const descriptionFilm = description.slice(DECRIPTION.START, DECRIPTION.END) + description.slice(DECRIPTION.END, DECRIPTION.END + DECRIPTION.POINT_CONTINUATION).replace(/./g, `.`);
   const commentsNumber = comments.length;
 
   return (
     `<article class="film-card" data-index="${id}">
       <h3 class="film-card__title">${title}</h3>
-      <p class="film-card__rating">${totalRating}</p>
+      <p class="film-card__rating">${rating}</p>
       <p class="film-card__info">
         <span class="film-card__year">${fullYearDate}</span>
         <span class="film-card__duration">${hours}h ${minutes}m</span>
