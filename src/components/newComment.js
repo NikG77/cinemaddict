@@ -93,6 +93,10 @@ export default class NeWComment extends AbstractSmartComponent {
 
   }
 
+  showErrorBorder() {
+    this.getElement().querySelector(`.film-details__comment-input`).style.border = `2px solid red`;
+  }
+
   setCommentAddClickHandler(handler) {
     this.getElement()
       .querySelector(`.film-details__comment-input`)

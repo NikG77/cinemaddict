@@ -12,6 +12,8 @@ export const Mode = {
   EDIT: `edit`,
 };
 
+const SHAKE_ANIMATION_TIMEOUT = 600;
+
 export const EmptyComment = {};
 
 export default class FilmController {
@@ -105,6 +107,15 @@ export default class FilmController {
     remove(this._filmCardComponent);
     remove(this._filmDetailsComponent);
     document.removeEventListener(`keydown`, this._onPopupCloseEscPress);
+  }
+
+  shake() {
+    // console.log(`сейчас потресу`);
+    this._filmDetailsComponent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+
+    setTimeout(() => {
+      this._filmDetailsComponent.getElement().style.animation = ``;
+    }, SHAKE_ANIMATION_TIMEOUT);
   }
 
   _closePopup() {
@@ -205,6 +216,10 @@ export default class FilmController {
           const newComments = data.comments;
           this._filmsModel.updateFilm(this._film.id, data.movie);
           this._onCommentChange(null, newComments);
+        })
+        .catch(() => {
+          this._filmNewCommentComponent.showErrorBorder();
+          this.shake();
         });
     }
 
@@ -226,13 +241,19 @@ export default class FilmController {
     this._api.deleteComment(commentId)
       .then(() => {
         this._film.comments = [].concat(this._film.comments.slice(0, index), this._film.comments.slice(index + 1));
+
         const newFilm = MovieModel.clone(this._film);
         newFilm.comments = this._film.comments;
         this._filmsModel.updateFilm(this._film.id, newFilm);
 
         this._onCommentChange(commentId, null);
 
+      })
+
+      .catch(() => {
+        this.shake();
       });
+
   }
 
   _onCommentChange(oldData, newData) {
