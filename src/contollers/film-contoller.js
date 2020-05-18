@@ -223,11 +223,16 @@ export default class FilmController {
       return it === commentId;
     });
 
-    // Удаляю из фильма из массива комментариев комментарий
-    this._film.comments = [].concat(this._film.comments.slice(0, index), this._film.comments.slice(index + 1));
+    this._api.deleteComment(commentId)
+      .then(() => {
+        this._film.comments = [].concat(this._film.comments.slice(0, index), this._film.comments.slice(index + 1));
+        const newFilm = MovieModel.clone(this._film);
+        newFilm.comments = this._film.comments;
+        this._filmsModel.updateFilm(this._film.id, newFilm);
 
-    // Передаю id комментария для удаления из массива комментариев
-    this._onCommentChange(commentId, null);
+        this._onCommentChange(commentId, null);
+
+      });
   }
 
   _onCommentChange(oldData, newData) {
