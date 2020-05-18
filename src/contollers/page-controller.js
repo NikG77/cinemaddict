@@ -181,7 +181,7 @@ export default class PageController {
         }
       })
       .catch(() => {
-        console.log(`что то пошло не так`);
+
       });
   }
 

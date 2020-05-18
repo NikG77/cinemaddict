@@ -112,7 +112,7 @@ export default class FilmController {
     this._filmNewCommentComponent.reset();
 
     this._mode = Mode.DEFAULT;
-    
+
     remove(this._filmCommentsComponent);
     remove(this._filmNewCommentComponent);
     remove(this._filmDetailsComponent);
