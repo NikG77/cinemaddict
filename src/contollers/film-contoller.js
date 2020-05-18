@@ -15,11 +15,12 @@ export const Mode = {
 export const EmptyComment = {};
 
 export default class FilmController {
-  constructor(container, onDataChange, onViewChange, commentsModel, api) {
+  constructor(container, onDataChange, onViewChange, commentsModel, api, filmsModel) {
     this._container = container;
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
     this._api = api;
+    this._filmsModel = filmsModel;
 
     this._commentsModel = commentsModel;
 
@@ -156,6 +157,7 @@ export default class FilmController {
 
   _renderPopupComment() {
     const comments = this._commentsModel.getComments();
+
     const filmCommets = this._getFilmComment(comments);
 
     this._filmCommentsComponent = new FilmCommentsComponent(this._film, filmCommets);
@@ -189,18 +191,21 @@ export default class FilmController {
 
       const emotion = commentEmotionElement.alt.split(`-`)[1];
       const newComment = {
+        id: new Date() + Math.floor(Math.random() * 1000),
         date: new Date(),
         emotion,
         comment: commentText,
       };
 
-      const addComment = Object.assign({}, newComment);
-      addComment.id = new Date() + Math.floor(Math.random() * 1000) + ``;
-      addComment.author = `new author`;
+      this._api.createComment(newComment, this._film.id)
+        .then((data) => {
+          this._film.comments = [];
+          this._film.comments = data.movie.comments;
 
-      this._film.comments.push(addComment.id);
-
-      this._onCommentChange(null, addComment);
+          const newComments = data.comments;
+          this._filmsModel.updateFilm(this._film.id, data.movie);
+          this._onCommentChange(null, newComments);
+        });
     }
 
   }
@@ -242,7 +247,7 @@ export default class FilmController {
 
   _getFilmComment(comments) {
     return this._film.comments.map((item) =>
-      comments.find((commen) => commen.id === item));
+      comments.find((comment) => comment.id === item));
   }
 
 }

@@ -60,7 +60,7 @@ const API = class {
     })
     .then((response) => response.json())
     .then((data) => {
-      return data.comments;
+      return data;
     });
   }
 

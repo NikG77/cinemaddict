@@ -22,9 +22,9 @@ const FILMS_LIST_CONTAINER = {
 };
 
 
-const renderFilms = (container, films, onDataChange, onViewChange, onCommentChange, commentsModel, api) => {
+const renderFilms = (container, films, onDataChange, onViewChange, onCommentChange, commentsModel, api, filmsModel) => {
   return films.map((film) => {
-    const filmController = new FilmController(container, onDataChange, onViewChange, onCommentChange, commentsModel, api);
+    const filmController = new FilmController(container, onDataChange, onViewChange, onCommentChange, commentsModel, api, filmsModel);
     filmController.render(film);
     return filmController;
   });
@@ -119,10 +119,10 @@ export default class PageController {
 
     this._filmListContainerElements = container.querySelectorAll(`.films-list__container`);
 
-    let newFilms = renderFilms(this._filmListContainerElements[FILMS_LIST_CONTAINER.TOP_RATED], this._searchTopRatedFilms(films), this._onDataChange, this._onViewChange, this._commentsModel, this._api);
+    let newFilms = renderFilms(this._filmListContainerElements[FILMS_LIST_CONTAINER.TOP_RATED], this._searchTopRatedFilms(films), this._onDataChange, this._onViewChange, this._commentsModel, this._api, this._filmsModel);
     this._showedRaringFilmControllers = this._showedRaringFilmControllers.concat(newFilms);
 
-    newFilms = renderFilms(this._filmListContainerElements[FILMS_LIST_CONTAINER.MOST_COMMENTED], this._searchMostCommentedFilms(films), this._onDataChange, this._onViewChange, this._commentsModel, this._api);
+    newFilms = renderFilms(this._filmListContainerElements[FILMS_LIST_CONTAINER.MOST_COMMENTED], this._searchMostCommentedFilms(films), this._onDataChange, this._onViewChange, this._commentsModel, this._api, this._filmsModel);
     this._showedRaringFilmControllers = this._showedRaringFilmControllers.concat(newFilms);
 
     this._renderFilms(films.slice(0, COUNT.FILM_SHOW));
@@ -131,7 +131,7 @@ export default class PageController {
   }
 
   _renderFilms(films) {
-    const newFilms = renderFilms(this._filmListContainerElements[FILMS_LIST_CONTAINER.FILM], films, this._onDataChange, this._onViewChange, this._commentsModel, this._api);
+    const newFilms = renderFilms(this._filmListContainerElements[FILMS_LIST_CONTAINER.FILM], films, this._onDataChange, this._onViewChange, this._commentsModel, this._api, this._filmsModel);
     this._showedFilmControllers = this._showedFilmControllers.concat(newFilms);
     this._showedAllFilmControllers = this._showedRaringFilmControllers.concat(this._showedFilmControllers);
   }
