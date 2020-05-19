@@ -12,8 +12,6 @@ export const Mode = {
   EDIT: `edit`,
 };
 
-const SHAKE_ANIMATION_TIMEOUT = 600;
-
 export const EmptyComment = {};
 
 export default class FilmController {
@@ -107,16 +105,6 @@ export default class FilmController {
     remove(this._filmCardComponent);
     remove(this._filmDetailsComponent);
     document.removeEventListener(`keydown`, this._onPopupCloseEscPress);
-  }
-
-  shake() {
-    console.log(`сейчас потресу`);
-    // debugger;
-    this._filmDetailsComponent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
-
-    setTimeout(() => {
-      this._filmDetailsComponent.getElement().style.animation = ``;
-    }, SHAKE_ANIMATION_TIMEOUT);
   }
 
   _closePopup() {
@@ -214,13 +202,13 @@ export default class FilmController {
           this._film.comments = [];
           this._film.comments = data.movie.comments;
 
-          const newComments = data.comments;
+          const newComments = data.comments;@
           this._filmsModel.updateFilm(this._film.id, data.movie);
           this._onCommentChange(null, newComments);
         })
         .catch(() => {
           this._filmNewCommentComponent.showErrorBorder();
-          this.shake();
+          this._filmDetailsComponent.shake();
         });
     }
 
