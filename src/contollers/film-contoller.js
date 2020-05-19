@@ -110,7 +110,8 @@ export default class FilmController {
   }
 
   shake() {
-    // console.log(`сейчас потресу`);
+    console.log(`сейчас потресу`);
+    // debugger;
     this._filmDetailsComponent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
 
     setTimeout(() => {
