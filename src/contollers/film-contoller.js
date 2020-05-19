@@ -7,6 +7,8 @@ import {encode} from "he";
 import {isEscEvent} from "../utils/common";
 import {render, remove, RenderPosition, replace} from "../utils/render";
 
+const SHAKE_ANIMATION_TIMEOUT = 2000;
+
 export const Mode = {
   DEFAULT: `default`,
   EDIT: `edit`,
@@ -179,6 +181,14 @@ export default class FilmController {
     });
   }
 
+  shake(element) {
+    element.style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+
+    setTimeout(() => {
+      element.style.animation = ``;
+    }, SHAKE_ANIMATION_TIMEOUT);
+  }
+
 
   _onCommentAddClick(evt) {
     if (evt.ctrlKey && evt.keyCode === 13 || evt.metaKey && evt.keyCode === 13) {
@@ -202,13 +212,13 @@ export default class FilmController {
           this._film.comments = [];
           this._film.comments = data.movie.comments;
 
-          const newComments = data.comments;@
+          const newComments = data.comments;
           this._filmsModel.updateFilm(this._film.id, data.movie);
           this._onCommentChange(null, newComments);
         })
         .catch(() => {
           this._filmNewCommentComponent.showErrorBorder();
-          this._filmDetailsComponent.shake();
+          this.shake(this._filmDetailsComponent.getElement());
         });
     }
 
@@ -240,7 +250,7 @@ export default class FilmController {
       })
 
       .catch(() => {
-        this.shake();
+        this.shake(this._filmCommentsComponent.getElement().querySelectorAll(`li`)[index]);
       });
 
   }
