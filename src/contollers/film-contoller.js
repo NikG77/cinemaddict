@@ -207,6 +207,9 @@ export default class FilmController {
         comment: commentText,
       };
 
+      const textareaElement = evt.target;
+      textareaElement.disabled = true;
+
       this._api.createComment(newComment, this._film.id)
         .then((data) => {
           this._film.comments = [];
@@ -217,6 +220,7 @@ export default class FilmController {
           this._onCommentChange(null, newComments);
         })
         .catch(() => {
+          textareaElement.disabled = false;
           this._filmNewCommentComponent.showErrorBorder();
           this.shake(this._filmDetailsComponent.getElement());
         });
@@ -231,11 +235,15 @@ export default class FilmController {
     if (target && target.className !== `film-details__comment-delete`) {
       return;
     }
-    const commentId = target.dataset.id;
 
+    const commentId = target.dataset.id;
+    const deleteButtonElement = target;
     const index = this._film.comments.findIndex((it) => {
       return it === commentId;
     });
+
+    deleteButtonElement.innerHTML = `Deleting...`;
+    deleteButtonElement.disabled = true;
 
     this._api.deleteComment(commentId)
       .then(() => {
@@ -246,13 +254,13 @@ export default class FilmController {
         this._filmsModel.updateFilm(this._film.id, newFilm);
 
         this._onCommentChange(commentId, null);
-
       })
-
       .catch(() => {
+        deleteButtonElement.innerHTML = `Delete`;
+        deleteButtonElement.disabled = false;
+        this._filmCommentsComponent.recoveryListeners();
         this.shake(this._filmCommentsComponent.getElement().querySelectorAll(`li`)[index]);
       });
-
   }
 
   _onCommentChange(oldData, newData) {
@@ -267,7 +275,6 @@ export default class FilmController {
       this._rerenderPopupComment();
       this._filmNewCommentComponent.reset();
     }
-
   }
 
   _getFilmComment(comments) {
