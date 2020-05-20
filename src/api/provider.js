@@ -1,37 +1,56 @@
+const isOnline = () => {
+  return window.navigator.onLine;
+};
+
 export default class Provider {
   constructor(api) {
     this._api = api;
   }
 
   getFilms() {
-    return this._api.getFilms();
+    if (isOnline()) {
+      return this._api.getFilms();
+    }
+    // TODO: Реализовать логику при отсутствии интернета
+    return Promise.reject(`offline logic is not implemented`);
   }
 
   getComments(filmId) {
-    return this._api.getComments(filmId);
+    if (isOnline()) {
+      return this._api.getComments(filmId);
+    }
+
+    // TODO: Реализовать логику при отсутствии интернета
+    return Promise.reject(`offline logic is not implemented`);
   }
 
   updateFilm(id, data) {
-    return this._api.updateFilm(id, data);
+    if (isOnline()) {
+      return this._api.updateFilm(id, data);
+    }
+
+    // TODO: Реализовать логику при отсутствии интернета
+    return Promise.reject(`offline logic is not implemented`);
   }
 
   deleteComment(id) {
-    return this._api.deleteComment(id);
+    if (isOnline()) {
+      return this._api.deleteComment(id);
+    }
+
+    // TODO: Реализовать логику при отсутствии интернета
+    return Promise.reject(`offline logic is not implemented`);
   }
 
   createComment(comment, filmId) {
-    return this._api.createComment(comment, filmId);
+    if (isOnline()) {
+      return this._api.createComment(comment, filmId);
+    }
+
+    // TODO: Реализовать логику при отсутствии интернета
+    return Promise.reject(`offline logic is not implemented`);
   }
 
-  // _load({url, method = Method.GET, body = null, headers = new Headers()}) {
-  //   headers.append(`Authorization`, this._authorization);
-
-  //   return fetch(`${this._endPoint}/${url}`, {method, body, headers})
-  //     .then(checkStatus)
-  //     .catch((err) => {
-  //       throw err;
-  //     });
-  // }
 
 };
 
