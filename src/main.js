@@ -1,4 +1,4 @@
-import API from "./api.js";
+import API from "./api/index";
 import FilmsComponent from "./components/films";
 import FilmsModel from "./models/movies";
 import FilterController from "./contollers/filter-controller";
