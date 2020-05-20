@@ -5,6 +5,7 @@ import FilterController from "./contollers/filter-controller";
 import FooterComponent from "./components/footer";
 import Navigation from "./components/navigation";
 import PageController from "./contollers/page-controller";
+import Provider from "./api/provider";
 import ProfileComponent from "./components/profile";
 import SortController from "./contollers/sort";
 import StatisticsComponent from "./components/statistics";
@@ -17,6 +18,7 @@ const AUTHORIZATION = `Basic gitDGfhjk$d29yZAo=`;
 const END_POINT = `https://11.ecmascript.pages.academy/cinemaddict`;
 
 const api = new API(END_POINT, AUTHORIZATION);
+const apiWithProvider = new Provider(api);
 const filmsModel = new FilmsModel();
 
 const siteHeaderElement = document.querySelector(`.header`);
@@ -49,7 +51,7 @@ const footerComponent = new FooterComponent(filmsModel);
 render(footerStatisticsElement, footerComponent, RenderPosition.BEFOREEND);
 
 
-const pageController = new PageController(filmsComponent, filmsModel, api);
+const pageController = new PageController(filmsComponent, filmsModel, apiWithProvider);
 let statisticsComponent = new StatisticsComponent(filmsModel, profileComponent.getRating());
 
 navigationComponent.setNavigationChangeHandler((menuItem) => {
@@ -70,7 +72,7 @@ navigationComponent.setNavigationChangeHandler((menuItem) => {
 
 });
 
-api.getFilms().then((films) => {
+apiWithProvider.getFilms().then((films) => {
   loadingFilmsComponent.getElement().remove();
   filmsModel.setFilms(films);
 
