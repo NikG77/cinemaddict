@@ -35,13 +35,21 @@ export default class Provider {
     return Promise.reject(`offline logic is not implemented`);
   }
 
-  updateFilm(id, data) {
+  updateFilm(id, film) {
     if (isOnline()) {
-      return this._api.updateFilm(id, data);
+      return this._api.updateFilm(id, film)
+        .then((newFilm) => {
+          this._store.setItem(newFilm.id, newFilm.toRAW());
+
+          return newFilm;
+        });
     }
 
-    // TODO: Реализовать логику при отсутствии интернета
-    return Promise.reject(`offline logic is not implemented`);
+    const localMovie = Movie.clone(Object.assign(film, {id}));
+
+    this._store.setItem(id, localMovie.toRAW());
+
+    return Promise.resolve(localMovie);
   }
 
   deleteComment(id) {

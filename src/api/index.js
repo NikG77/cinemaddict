@@ -33,11 +33,11 @@ const API = class {
     .then((response) => response.json());
   }
 
-  updateFilm(id, data) {
+  updateFilm(id, film) {
     return this._load({
       url: `movies/${id}`,
       method: Method.PUT,
-      body: JSON.stringify(data.toRAW()),
+      body: JSON.stringify(film.toRAW()),
       headers: new Headers({"Content-Type": `application/json`})
     })
       .then((response) => response.json())
@@ -59,8 +59,8 @@ const API = class {
       headers: new Headers({"Content-type": `application/json`})
     })
     .then((response) => response.json())
-    .then((data) => {
-      return data;
+    .then((movieWithComments) => {
+      return movieWithComments;
     });
   }
 
