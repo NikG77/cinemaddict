@@ -1,6 +1,8 @@
 import AbstractSmartComponent from "./abstract-smart-component";
 import {encode} from "he";
 
+const BORDER_ERROR_TIMEOUT = 3000;
+
 const emojis = [{
   name: `smile`,
   isChecked: true,
@@ -93,6 +95,13 @@ export default class NeWComment extends AbstractSmartComponent {
 
   }
 
+  showErrorBorder() {
+    this.getElement().querySelector(`.film-details__comment-input`).style.border = `2px solid red`;
+    setTimeout(() => {
+      this.getElement().querySelector(`.film-details__comment-input`).style.border = 0;
+    }, BORDER_ERROR_TIMEOUT);
+  }
+
   setCommentAddClickHandler(handler) {
     this.getElement()
       .querySelector(`.film-details__comment-input`)
@@ -103,19 +112,15 @@ export default class NeWComment extends AbstractSmartComponent {
 
   _subscribeOnEvents() {
     const element = this.getElement();
-
     const emojisListElement = element.querySelector(`.film-details__emoji-list`);
-    const emojiLabelsElement = Array.from(emojisListElement.querySelectorAll(`.film-details__emoji-label`));
 
     emojisListElement.addEventListener(`click`, (evt) => {
       if (evt.target.tagName !== `INPUT`) {
         return;
       }
-      // Находим индекс изображения по которому осуществлен клик
-      const clickedEmojiIndex = emojiLabelsElement.findIndex((it) => it === evt.target.parentElement);
-      // Проходим по всем смайликам, и если индекс смайлика по которому осуществлен клик
-      // совпадает с индексом текущего, меняем его свойство isChecked на !isChecked,
-      // остальным смайликам задаем свойство isChecked = false
+
+      const clickedEmojiIndex = emojis.findIndex((emoji) => emoji.name === evt.target.value);
+
       emojis.map((emoji, index) => {
         if (clickedEmojiIndex === index) {
           emoji.isChecked = !emoji.isChecked;

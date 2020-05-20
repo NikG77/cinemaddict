@@ -1,5 +1,6 @@
 import AbstractSmartComponent from "./abstract-smart-component";
 import {formatDate, transformDuration} from "../utils/common";
+// const SHAKE_ANIMATION_TIMEOUT = 2000;
 
 const createGenreMarkup = (genres) => {
   return genres.map((genre) => {
@@ -152,6 +153,14 @@ export default class FilmDetails extends AbstractSmartComponent {
   reset() {
     this.rerender();
   }
+
+  // shake() {
+  //   this.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+
+  //   setTimeout(() => {
+  //     this.getElement().style.animation = ``;
+  //   }, SHAKE_ANIMATION_TIMEOUT);
+  // }
 
   setPopupCloseClickHandler(handler) {
     this.getElement().querySelector(`.film-details__close-btn`)

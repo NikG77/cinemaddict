@@ -7,6 +7,8 @@ import {encode} from "he";
 import {isEscEvent} from "../utils/common";
 import {render, remove, RenderPosition, replace} from "../utils/render";
 
+const SHAKE_ANIMATION_TIMEOUT = 2000;
+
 export const Mode = {
   DEFAULT: `default`,
   EDIT: `edit`,
@@ -15,11 +17,12 @@ export const Mode = {
 export const EmptyComment = {};
 
 export default class FilmController {
-  constructor(container, onDataChange, onViewChange, commentsModel, api) {
+  constructor(container, onDataChange, onViewChange, commentsModel, api, filmsModel) {
     this._container = container;
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
     this._api = api;
+    this._filmsModel = filmsModel;
 
     this._commentsModel = commentsModel;
 
@@ -156,6 +159,7 @@ export default class FilmController {
 
   _renderPopupComment() {
     const comments = this._commentsModel.getComments();
+
     const filmCommets = this._getFilmComment(comments);
 
     this._filmCommentsComponent = new FilmCommentsComponent(this._film, filmCommets);
@@ -177,6 +181,14 @@ export default class FilmController {
     });
   }
 
+  shake(element) {
+    element.style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+
+    setTimeout(() => {
+      element.style.animation = ``;
+    }, SHAKE_ANIMATION_TIMEOUT);
+  }
+
 
   _onCommentAddClick(evt) {
     if (evt.ctrlKey && evt.keyCode === 13 || evt.metaKey && evt.keyCode === 13) {
@@ -189,18 +201,29 @@ export default class FilmController {
 
       const emotion = commentEmotionElement.alt.split(`-`)[1];
       const newComment = {
+        id: new Date() + Math.floor(Math.random() * 1000),
         date: new Date(),
         emotion,
         comment: commentText,
       };
 
-      const addComment = Object.assign({}, newComment);
-      addComment.id = new Date() + Math.floor(Math.random() * 1000) + ``;
-      addComment.author = `new author`;
+      const textareaElement = evt.target;
+      textareaElement.disabled = true;
 
-      this._film.comments.push(addComment.id);
+      this._api.createComment(newComment, this._film.id)
+        .then((data) => {
+          this._film.comments = [];
+          this._film.comments = data.movie.comments;
 
-      this._onCommentChange(null, addComment);
+          const newComments = data.comments;
+          this._filmsModel.updateFilm(this._film.id, data.movie);
+          this._onCommentChange(null, newComments);
+        })
+        .catch(() => {
+          textareaElement.disabled = false;
+          this._filmNewCommentComponent.showErrorBorder();
+          this.shake(this._filmDetailsComponent.getElement());
+        });
     }
 
   }
@@ -212,17 +235,32 @@ export default class FilmController {
     if (target && target.className !== `film-details__comment-delete`) {
       return;
     }
-    const commentId = target.dataset.id;
 
+    const commentId = target.dataset.id;
+    const deleteButtonElement = target;
     const index = this._film.comments.findIndex((it) => {
       return it === commentId;
     });
 
-    // Удаляю из фильма из массива комментариев комментарий
-    this._film.comments = [].concat(this._film.comments.slice(0, index), this._film.comments.slice(index + 1));
+    deleteButtonElement.innerHTML = `Deleting...`;
+    deleteButtonElement.disabled = true;
 
-    // Передаю id комментария для удаления из массива комментариев
-    this._onCommentChange(commentId, null);
+    this._api.deleteComment(commentId)
+      .then(() => {
+        this._film.comments = [].concat(this._film.comments.slice(0, index), this._film.comments.slice(index + 1));
+
+        const newFilm = MovieModel.clone(this._film);
+        newFilm.comments = this._film.comments;
+        this._filmsModel.updateFilm(this._film.id, newFilm);
+
+        this._onCommentChange(commentId, null);
+      })
+      .catch(() => {
+        deleteButtonElement.innerHTML = `Delete`;
+        deleteButtonElement.disabled = false;
+        this._filmCommentsComponent.recoveryListeners();
+        this.shake(this._filmCommentsComponent.getElement().querySelectorAll(`li`)[index]);
+      });
   }
 
   _onCommentChange(oldData, newData) {
@@ -237,12 +275,11 @@ export default class FilmController {
       this._rerenderPopupComment();
       this._filmNewCommentComponent.reset();
     }
-
   }
 
   _getFilmComment(comments) {
     return this._film.comments.map((item) =>
-      comments.find((commen) => commen.id === item));
+      comments.find((comment) => comment.id === item));
   }
 
 }

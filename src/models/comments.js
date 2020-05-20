@@ -29,8 +29,8 @@ export default class Comments {
   }
 
 
-  addComment(newComment) {
-    this._comments.push(newComment);
+  addComment(newComments) {
+    this._comments = this._comments.concat(newComments.filter((item) => this._comments.indexOf(item) < 0));
 
     // this._callHandlers(this._commentChangeHandlers);
   }
