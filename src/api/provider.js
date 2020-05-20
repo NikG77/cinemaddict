@@ -1,18 +1,29 @@
+import Movie from "../models/movie";
+
 const isOnline = () => {
   return window.navigator.onLine;
 };
 
 export default class Provider {
-  constructor(api) {
+  constructor(api, store) {
     this._api = api;
+    this._store = store;
+
   }
 
   getFilms() {
     if (isOnline()) {
-      return this._api.getFilms();
+      return this._api.getFilms()
+        .then((films) => {
+          films.forEach((film) => this._store.setItem(film.id, film.toRAW()));
+
+          return films;
+        });
     }
-    // TODO: Реализовать логику при отсутствии интернета
-    return Promise.reject(`offline logic is not implemented`);
+
+    const storeTasks = Object.values(this._store.getItems());
+
+    return Promise.resolve(Movie.parseTasks(storeTasks));
   }
 
   getComments(filmId) {
@@ -51,6 +62,5 @@ export default class Provider {
     return Promise.reject(`offline logic is not implemented`);
   }
 
-
-};
+}
 

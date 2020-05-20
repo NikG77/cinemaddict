@@ -9,6 +9,7 @@ import Provider from "./api/provider";
 import ProfileComponent from "./components/profile";
 import SortController from "./contollers/sort";
 import StatisticsComponent from "./components/statistics";
+import Store from "./api/store";
 import LoadingFilmsComponent from "./components/loading-films";
 
 import {MenuItem} from "./const";
@@ -16,9 +17,13 @@ import {render, RenderPosition} from "./utils/render";
 
 const AUTHORIZATION = `Basic gitDGfhjk$d29yZAo=`;
 const END_POINT = `https://11.ecmascript.pages.academy/cinemaddict`;
+const STORE_PREFIX = `cinemaddict-localstorage`;
+const STORE_VER = `v1`;
+const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
 
 const api = new API(END_POINT, AUTHORIZATION);
-const apiWithProvider = new Provider(api);
+const store = new Store(STORE_NAME, window.localStorage);
+const apiWithProvider = new Provider(api, store);
 const filmsModel = new FilmsModel();
 
 const siteHeaderElement = document.querySelector(`.header`);
