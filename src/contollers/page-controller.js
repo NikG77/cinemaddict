@@ -7,6 +7,7 @@ import FilmsListComponent from "../components/films-list";
 import NoFilmsComponent from "../components/no-films";
 import FilmController from "./film-contoller";
 import CommentsModel from "../models/comments";
+import ErrorComponent from "../components/error";
 
 
 const COUNT = {
@@ -107,6 +108,8 @@ export default class PageController {
           this._commentsModel.setComments(comments);
         })
         .catch(() => {
+          const errorMessage = `К сожалению комментарии не доступны`;
+          this._onError(errorMessage);
 
 
         });
@@ -124,6 +127,16 @@ export default class PageController {
 
     this._renderTopRatedFilms(films);
     this._renderMostCommentedFilms(films);
+  }
+
+  _onError(errorMessage) {
+    const errorComponent = new ErrorComponent(errorMessage);
+    render(this._container.getElement(), errorComponent, RenderPosition.AFTERBEGIN);
+
+    setTimeout(() => {
+      remove(errorComponent);
+    }, 4000);
+
   }
 
   _renderFilms(films) {
