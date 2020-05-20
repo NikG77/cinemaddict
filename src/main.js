@@ -50,7 +50,7 @@ render(footerStatisticsElement, footerComponent, RenderPosition.BEFOREEND);
 
 
 const pageController = new PageController(filmsComponent, filmsModel, api);
-const statisticsComponent = new StatisticsComponent(filmsModel, profileComponent.getRating());
+let statisticsComponent = new StatisticsComponent(filmsModel, profileComponent.getRating());
 
 navigationComponent.setNavigationChangeHandler((menuItem) => {
   switch (menuItem) {
@@ -74,13 +74,15 @@ api.getFilms().then((films) => {
   loadingFilmsComponent.getElement().remove();
   filmsModel.setFilms(films);
 
-  render(siteMainElement, statisticsComponent, RenderPosition.BEFOREEND);
-  statisticsComponent.hide();
-
   profileComponent.rerender();
   filterController.render();
   pageController.render();
   footerComponent.rerender();
+
+  statisticsComponent = new StatisticsComponent(filmsModel, profileComponent.getRating());
+  render(siteMainElement, statisticsComponent, RenderPosition.BEFOREEND);
+  statisticsComponent.hide();
+
 })
 .catch(() => {
   loadingFilmsComponent.getElement().remove();
