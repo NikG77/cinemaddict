@@ -15,7 +15,7 @@ import LoadingFilmsComponent from "./components/loading-films";
 import {MenuItem} from "./const";
 import {render, RenderPosition} from "./utils/render";
 
-const AUTHORIZATION = `Basic gitDGfhjk$d29yZAo=`;
+const AUTHORIZATION = `Basic gitDGfhjk$k29yZAo=`;
 const END_POINT = `https://11.ecmascript.pages.academy/cinemaddict`;
 const STORE_PREFIX = `cinemaddict-localstorage`;
 const STORE_VER = `v1`;
@@ -96,4 +96,15 @@ apiWithProvider.getFilms().then((films) => {
   pageController.render();
 
 });
+
+window.addEventListener(`online`, () => {
+  document.title = document.title.replace(` [offline]`, ``);
+
+  apiWithProvider.sync();
+});
+
+window.addEventListener(`offline`, () => {
+  document.title += ` [offline]`;
+});
+
 

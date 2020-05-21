@@ -4,26 +4,35 @@ const isOnline = () => {
   return window.navigator.onLine;
 };
 
+const createStoreStructure = (items) => {
+  return items.reduce((acc, current) => {
+    return Object.assign({}, acc, {
+      [current.id]: current,
+    });
+  }, {});
+};
+
 export default class Provider {
   constructor(api, store) {
     this._api = api;
     this._store = store;
-
   }
 
   getFilms() {
     if (isOnline()) {
       return this._api.getFilms()
         .then((films) => {
-          films.forEach((film) => this._store.setItem(film.id, film.toRAW()));
+          const items = createStoreStructure(films.map((film) => film.toRAW()));
+
+          this._store.setItems(items);
 
           return films;
         });
     }
 
-    const storeTasks = Object.values(this._store.getItems());
+    const storeFilms = Object.values(this._store.getItems());
 
-    return Promise.resolve(Movie.parseTasks(storeTasks));
+    return Promise.resolve(Movie.parseMovies(storeFilms));
   }
 
   getComments(filmId) {
@@ -70,5 +79,20 @@ export default class Provider {
     return Promise.reject(`offline logic is not implemented`);
   }
 
-}
 
+  sync() {
+    if (isOnline()) {
+      const storeFilms = Object.values(this._store.getItems());
+
+      return this._api.sync(storeFilms)
+        .then((response) => {
+          const syncFilms = response.updated;
+
+          this._store.setItems(syncFilms);
+        });
+    }
+
+    return Promise.reject(new Error(`Sync data failed`));
+  }
+
+}
