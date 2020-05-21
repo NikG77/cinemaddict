@@ -1,5 +1,6 @@
 import moment from "moment";
-import {TIME} from "../const";
+
+const MINUTES_IN_HOUR = 60;
 
 const KEYCODE = {
   ESC: 27,
@@ -19,8 +20,8 @@ export const formatDate = (date) => moment(date).format(`DD MMMM YYYY`);
 export const formatDateComment = (date) => moment(date).fromNow();
 
 export const transformDuration = (minutes) => {
-  const hour = Math.floor(minutes / TIME.MINUTES_IN_HOUR);
-  const minute = minutes - TIME.MINUTES_IN_HOUR * hour;
+  const hour = Math.floor(minutes / MINUTES_IN_HOUR);
+  const minute = minutes - MINUTES_IN_HOUR * hour;
   return [hour, minute];
 };
 

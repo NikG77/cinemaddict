@@ -1,7 +1,7 @@
 import AbstractComponent from "./abstract-component";
 import {transformDuration} from "../utils/common";
 
-const DECRIPTION = {
+const Description = {
   START: 0,
   END: 140,
   POINT_CONTINUATION: 3,
@@ -9,7 +9,6 @@ const DECRIPTION = {
 
 
 const createFilmCardTemplate = (film) => {
-
   const {
     id,
     title,
@@ -30,7 +29,7 @@ const createFilmCardTemplate = (film) => {
   const [hours, minutes] = transformDuration(duration);
 
   const genreFilm = genre.join(` `);
-  const descriptionFilm = description.slice(DECRIPTION.START, DECRIPTION.END) + description.slice(DECRIPTION.END, DECRIPTION.END + DECRIPTION.POINT_CONTINUATION).replace(/./g, `.`);
+  const descriptionFilm = description.slice(Description.START, Description.END) + description.slice(Description.END, Description.END + Description.POINT_CONTINUATION).replace(/./g, `.`);
   const commentsNumber = comments.length;
 
   return (

@@ -7,16 +7,15 @@ import MovieModel from "../models/movie";
 import {encode} from "he";
 import {isEscEvent} from "../utils/common";
 import {render, remove, RenderPosition, replace} from "../utils/render";
+import {Timeout} from "../const";
 
-const SHAKE_ANIMATION_TIMEOUT = 2000;
-const SHOW_ERROR_TIMEOUT = 6000;
 
 const shake = (element) => {
-  element.style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+  element.style.animation = `shake ${Timeout.SHAKE_ANIMATION / 1000}s`;
 
   setTimeout(() => {
     element.style.animation = ``;
-  }, SHAKE_ANIMATION_TIMEOUT);
+  }, Timeout.SHAKE_ANIMATION);
 };
 
 export const Mode = {
@@ -179,7 +178,7 @@ export default class FilmController {
 
     setTimeout(() => {
       remove(errorComponent);
-    }, SHOW_ERROR_TIMEOUT);
+    }, Timeout.SHOW_ERROR);
   }
 
   _onCommentChange(oldData, newData) {
