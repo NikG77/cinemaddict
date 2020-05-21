@@ -3,7 +3,7 @@ import AbstractComponent from "./abstract-component";
 
 const createErrorTemplate = (errorMessage) => {
   return (
-    `<div style="z-index: 100; margin: 0px auto; text-align: center; background-color: red; position: absolute; left: 100px; right: 100px; font-size: 30px;">
+    `<div style="margin: 0px auto; text-align: center; background-color: red; position: absolute; left: 50px; right: 50px; font-size: 30px;">
     ${errorMessage}</div>`
   );
 };
