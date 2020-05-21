@@ -17,6 +17,13 @@ export const MenuItem = {
   FILMS: `films`,
 };
 
+export const ProfileLevel = {
+  NOTHING_MAX: 0,
+  NOVICE_MAX: 10,
+  FAN_MAX: 20,
+  MOVIE_BUF_MIN: 21,
+};
+
 export const Timeout = {
   SHAKE_ANIMATION: 2000,
   SHOW_ERROR: 4000,

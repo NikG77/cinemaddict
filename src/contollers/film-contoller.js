@@ -5,25 +5,14 @@ import FilmDetailsComponent from "../components/film-details";
 import FilmNewCommentComponent from "../components/newComment";
 import MovieModel from "../models/movie";
 import {encode} from "he";
-import {isEscEvent} from "../utils/common";
+import {isCtrlOrCommandAndEnterEvent, isEscEvent, shake} from "../utils/common";
 import {render, remove, RenderPosition, replace} from "../utils/render";
 import {Timeout} from "../const";
 
-
-const shake = (element) => {
-  element.style.animation = `shake ${Timeout.SHAKE_ANIMATION / 1000}s`;
-
-  setTimeout(() => {
-    element.style.animation = ``;
-  }, Timeout.SHAKE_ANIMATION);
-};
-
-export const Mode = {
+const Mode = {
   DEFAULT: `default`,
   EDIT: `edit`,
 };
-
-export const EmptyComment = {};
 
 export default class FilmController {
   constructor(container, onDataChange, onViewChange, commentsModel, api, filmsModel) {
@@ -79,7 +68,6 @@ export default class FilmController {
     this._filmCardComponent.setFavoriteButtonClickHandler((evt) => {
       this._onFavoriteButtonClick(evt);
     });
-
   }
 
   setDefaultView() {
@@ -150,7 +138,6 @@ export default class FilmController {
 
   _renderPopupComment() {
     const comments = this._commentsModel.getComments();
-
     const filmCommets = this._getFilmComment(comments);
 
     this._filmCommentsComponent = new FilmCommentsComponent(this._film, filmCommets);
@@ -165,7 +152,6 @@ export default class FilmController {
     this._filmCommentsComponent.setCommentDeleteClickHandler((evt) => {
       this._onCommentDeleteClick(evt);
     });
-
 
     this._filmNewCommentComponent.setCommentAddClickHandler((evt) => {
       this._onCommentAddClick(evt);
@@ -201,7 +187,7 @@ export default class FilmController {
   }
 
   _onCommentAddClick(evt) {
-    if (evt.ctrlKey && evt.keyCode === 13 || evt.metaKey && evt.keyCode === 13) {
+    if (isCtrlOrCommandAndEnterEvent(evt)) {
       const commentEmotionElement = this._filmNewCommentComponent.getElement().querySelector(`.film-details__add-emoji-label img`);
       const notSanitizedCommentText = this._filmNewCommentComponent.getElement().querySelector(`.film-details__comment-input`).value;
       const commentText = encode(notSanitizedCommentText);
@@ -271,7 +257,7 @@ export default class FilmController {
         deleteButtonElement.disabled = false;
         this._filmCommentsComponent.recoveryListeners();
         shake(this._filmCommentsComponent.getElement().querySelectorAll(`li`)[index]);
-        const errorMessage = `Удаление комментария не возможна из-за отсутствия интернета`;
+        const errorMessage = `Удаление комментария не возможно из-за отсутствия интернета`;
         this._showError(errorMessage);
       });
   }

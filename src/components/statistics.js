@@ -22,9 +22,7 @@ const Day = {
   ONE_YEAR: 1,
 };
 
-// const GenreItems = [`Sci-Fi`, `Animation`, `Fantasy`, `Comedy`, `TV Series`];
 const GenreItems = [`Action`, `Sci-Fi`, `Adventure`, `Comedy`, `Animation`, `Thriller`, `Horror`, `Drama`, `Family`];
-
 
 const getDateFrom = (activeIntervalType) => {
   let dateFrom = new Date(0);

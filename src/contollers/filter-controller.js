@@ -40,6 +40,10 @@ export default class FilterController {
     }
   }
 
+  _onDataChange() {
+    this.render();
+  }
+
   _onFilterChange(filterType) {
     if (this._activeFilterType !== filterType) {
       this._filmsModel.setFilter(filterType);
@@ -47,10 +51,5 @@ export default class FilterController {
       this._onDataChange();
     }
   }
-
-  _onDataChange() {
-    this.render();
-  }
-
 }
 

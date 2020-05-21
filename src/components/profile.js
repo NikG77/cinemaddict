@@ -1,11 +1,5 @@
 import AbstractSmartComponent from "./abstract-smart-component";
-
-const PROFILE_LEVEL = {
-  NOTHING_MAX: 0,
-  NOVICE_MAX: 10,
-  FAN_MAX: 20,
-  MOVIE_BUF_MIN: 21,
-};
+import {ProfileLevel} from "../const";
 
 const getFilmsWatched = (films) => {
   return films.reduce((accumulator, current) => {
@@ -43,16 +37,16 @@ export default class Profile extends AbstractSmartComponent {
     let profileRating;
 
     switch (true) {
-      case numberWatched <= PROFILE_LEVEL.NOTHING_MAX:
+      case numberWatched <= ProfileLevel.NOTHING_MAX:
         profileRating = ``;
         break;
-      case numberWatched <= PROFILE_LEVEL.NOVICE_MAX:
+      case numberWatched <= ProfileLevel.NOVICE_MAX:
         profileRating = `Novice`;
         break;
-      case numberWatched <= PROFILE_LEVEL.FAN_MAX:
+      case numberWatched <= ProfileLevel.FAN_MAX:
         profileRating = `Fan`;
         break;
-      case numberWatched >= PROFILE_LEVEL.MOVIE_BUF_MIN:
+      case numberWatched >= ProfileLevel.MOVIE_BUF_MIN:
         profileRating = `Movie Buff`;
         break;
       default:

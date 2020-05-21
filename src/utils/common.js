@@ -1,4 +1,5 @@
 import moment from "moment";
+import {Timeout} from "../const";
 
 const MINUTES_IN_HOUR = 60;
 
@@ -23,5 +24,13 @@ export const transformDuration = (minutes) => {
   const hour = Math.floor(minutes / MINUTES_IN_HOUR);
   const minute = minutes - MINUTES_IN_HOUR * hour;
   return [hour, minute];
+};
+
+export const shake = (element) => {
+  element.style.animation = `shake ${Timeout.SHAKE_ANIMATION / 1000}s`;
+
+  setTimeout(() => {
+    element.style.animation = ``;
+  }, Timeout.SHAKE_ANIMATION);
 };
 
