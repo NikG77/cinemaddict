@@ -124,6 +124,7 @@ export default class FilmController {
 
   _renderPopup() {
     render(this._container, this._filmDetailsComponent, RenderPosition.BEFOREEND);
+
     if (this._commentsModel.getComments().length > 0) {
       this._renderPopupComment();
       this._modeFullPopup = Mode.EDIT;
@@ -192,6 +193,7 @@ export default class FilmController {
       const notSanitizedCommentText = this._filmNewCommentComponent.getElement().querySelector(`.film-details__comment-input`).value;
       const commentText = encode(notSanitizedCommentText);
       if (!commentEmotionElement || commentText.length === 0) {
+        shake(this._filmNewCommentComponent.getElement());
         return;
       }
 
@@ -218,8 +220,8 @@ export default class FilmController {
         .catch(() => {
           textareaElement.disabled = false;
           this._filmNewCommentComponent.showErrorBorder();
-          shake(this._filmDetailsComponent.getElement());
-          const errorMessage = `Отправка комментария не возможна из-за отсутствия интернета`;
+          shake(this._filmNewCommentComponent.getElement());
+          const errorMessage = `Отправка комментария невозможна из-за отсутствия интернета`;
           this._showError(errorMessage);
         });
     }
@@ -257,7 +259,7 @@ export default class FilmController {
         deleteButtonElement.disabled = false;
         this._filmCommentsComponent.recoveryListeners();
         shake(this._filmCommentsComponent.getElement().querySelectorAll(`li`)[index]);
-        const errorMessage = `Удаление комментария не возможно из-за отсутствия интернета`;
+        const errorMessage = `Удаление комментария невозможно из-за отсутствия интернета`;
         this._showError(errorMessage);
       });
   }

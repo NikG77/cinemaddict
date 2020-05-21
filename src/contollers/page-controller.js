@@ -100,17 +100,12 @@ export default class PageController {
     const films = this._filmsModel.getFilms();
 
     this._commentsModel = new CommentsModel();
-
-    films.forEach((film) => {
-      this._api.getComments(film.id)
-        .then((comments) => {
-          this._commentsModel.setComments(comments);
-        })
-        .catch(() => {
-          const errorMessage = `Комментарии не доступны для редактирования из-за отсутствия интернета`;
-          this._showError(errorMessage);
-        });
-    });
+    const isCommentsLoad = this._getComments(films);
+    if (!isCommentsLoad) {
+      window.addEventListener(`online`, () => {
+        this._getComments(this._filmsModel.getFilms());
+      });
+    }
 
     if (films.length === 0) {
       render(container, this._noFilmsComponent, RenderPosition.BEFOREEND);
@@ -202,6 +197,23 @@ export default class PageController {
     this._renderFilms(this._filmsModel.getFilms().slice(0, count));
     this._renderShowMoreButton();
   }
+
+  _getComments(films) {
+    films.forEach((film) => {
+      this._api.getComments(film.id)
+        .then((comments) => {
+          this._commentsModel.setComments(comments);
+          return true;
+        })
+        .catch(() => {
+          const errorMessage = `Комментарии не доступны для редактирования из-за отсутствия интернета`;
+          this._showError(errorMessage);
+
+          return false;
+        });
+    });
+  }
+
 
   _onDataChange(filmController, oldData, newData) {
     this._api.updateFilm(oldData.id, newData)
