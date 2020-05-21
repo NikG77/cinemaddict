@@ -5,6 +5,7 @@ import {FilterType} from "../const.js";
 import {getFilmsByFilter} from "../utils/filter.js";
 import {transformDuration} from "../utils/common";
 
+const NUMBER_BEST_GENRE = 0;
 
 const StaticticsTimeInterval = {
   ALL: `all-time`,
@@ -14,11 +15,14 @@ const StaticticsTimeInterval = {
   YEAR: `year`,
 };
 
-const NUMBER_BEST_GENRE = 0;
+const Day = {
+  ONE_DAY: 1,
+  ONE_MONTH: 1,
+  ONE_WEEK: 7,
+  ONE_YEAR: 1,
+};
 
-// const GenreItems = [`Sci-Fi`, `Animation`, `Fantasy`, `Comedy`, `TV Series`];
 const GenreItems = [`Action`, `Sci-Fi`, `Adventure`, `Comedy`, `Animation`, `Thriller`, `Horror`, `Drama`, `Family`];
-
 
 const getDateFrom = (activeIntervalType) => {
   let dateFrom = new Date(0);
@@ -29,16 +33,16 @@ const getDateFrom = (activeIntervalType) => {
       dateFrom = new Date(0);
       break;
     case StaticticsTimeInterval.MONTH:
-      dateFrom = dateTo.setMonth(dateTo.getMonth() - 1);
+      dateFrom = dateTo.setMonth(dateTo.getMonth() - Day.ONE_N);
       break;
     case StaticticsTimeInterval.TODAY:
-      dateFrom = dateTo.setDate(dateTo.getDate() - 1);
+      dateFrom = dateTo.setDate(dateTo.getDate() - Day.ONE_DAY);
       break;
     case StaticticsTimeInterval.WEEK:
-      dateFrom = dateTo.setDate(dateTo.getDate() - 7);
+      dateFrom = dateTo.setDate(dateTo.getDate() - Day.ONE_WEEK);
       break;
     case StaticticsTimeInterval.YEAR:
-      dateFrom = dateTo.setFullYear(dateTo.getFullYear() - 1);
+      dateFrom = dateTo.setFullYear(dateTo.getFullYear() - Day.ONE_YEAR);
       break;
   }
   return dateFrom;

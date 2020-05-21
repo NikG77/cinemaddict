@@ -1,20 +1,18 @@
+import ErrorComponent from "../components/error";
 import FilmCardComponent from "../components/film-card";
 import FilmCommentsComponent from "../components/comments";
 import FilmDetailsComponent from "../components/film-details";
 import FilmNewCommentComponent from "../components/newComment";
 import MovieModel from "../models/movie";
 import {encode} from "he";
-import {isEscEvent} from "../utils/common";
+import {isCtrlOrCommandAndEnterEvent, isEscEvent, shake} from "../utils/common";
 import {render, remove, RenderPosition, replace} from "../utils/render";
+import {Timeout} from "../const";
 
-const SHAKE_ANIMATION_TIMEOUT = 2000;
-
-export const Mode = {
+const Mode = {
   DEFAULT: `default`,
   EDIT: `edit`,
 };
-
-export const EmptyComment = {};
 
 export default class FilmController {
   constructor(container, onDataChange, onViewChange, commentsModel, api, filmsModel) {
@@ -27,6 +25,7 @@ export default class FilmController {
     this._commentsModel = commentsModel;
 
     this._mode = Mode.DEFAULT;
+    this._modeFullPopup = Mode.DEFAULT;
 
     this._filmCardComponent = null;
     this._filmDetailsComponent = null;
@@ -59,43 +58,17 @@ export default class FilmController {
     this._filmCardComponent.setClickHandler(this._onPopupOpenClick);
 
     this._filmCardComponent.setWatchListButtonClickHandler((evt) => {
-      this.onWatchListButtonClick(evt);
+      this._onWatchListButtonClick(evt);
     });
 
     this._filmCardComponent.setHistoryButtonClickHandler((evt) => {
-      this.onHistoryButtonClickHandler(evt);
+      this._onHistoryButtonClickHandler(evt);
     });
 
     this._filmCardComponent.setFavoriteButtonClickHandler((evt) => {
-      this.onFavoriteButtonClick(evt);
+      this._onFavoriteButtonClick(evt);
     });
-
   }
-
-  onWatchListButtonClick(evt) {
-    evt.preventDefault();
-    const newFilm = MovieModel.clone(this._film);
-    newFilm.watchlist = !this._film.watchlist;
-
-    this._onDataChange(this, this._film, newFilm);
-  }
-
-  onHistoryButtonClickHandler(evt) {
-    evt.preventDefault();
-    const newFilm = MovieModel.clone(this._film);
-    newFilm.alreadyWatched = !this._film.alreadyWatched;
-
-    this._onDataChange(this, this._film, newFilm);
-  }
-
-  onFavoriteButtonClick(evt) {
-    evt.preventDefault();
-    const newFilm = MovieModel.clone(this._film);
-    newFilm.favorite = !this._film.favorite;
-
-    this._onDataChange(this, this._film, newFilm);
-  }
-
 
   setDefaultView() {
     if (this._mode !== Mode.DEFAULT) {
@@ -111,13 +84,16 @@ export default class FilmController {
 
   _closePopup() {
     this._filmDetailsComponent.reset();
-    this._filmCommentsComponent.reset();
-    this._filmNewCommentComponent.reset();
+    if (this._modeFullPopup === Mode.EDIT) {
+      this._filmCommentsComponent.reset();
+      this._filmNewCommentComponent.reset();
+      remove(this._filmCommentsComponent);
+      remove(this._filmNewCommentComponent);
+      this._modeFullPopup = Mode.DEFAULT;
+    }
 
     this._mode = Mode.DEFAULT;
 
-    remove(this._filmCommentsComponent);
-    remove(this._filmNewCommentComponent);
     remove(this._filmDetailsComponent);
     document.querySelector(`body`).classList.remove(`hide-overflow`);
     document.removeEventListener(`keydown`, this._onPopupCloseEscPress);
@@ -148,7 +124,10 @@ export default class FilmController {
 
   _renderPopup() {
     render(this._container, this._filmDetailsComponent, RenderPosition.BEFOREEND);
-    this._renderPopupComment();
+    if (this._commentsModel.getComments().length > 0) {
+      this._renderPopupComment();
+      this._modeFullPopup = Mode.EDIT;
+    }
   }
 
   _rerenderPopupComment() {
@@ -159,7 +138,6 @@ export default class FilmController {
 
   _renderPopupComment() {
     const comments = this._commentsModel.getComments();
-
     const filmCommets = this._getFilmComment(comments);
 
     this._filmCommentsComponent = new FilmCommentsComponent(this._film, filmCommets);
@@ -175,23 +153,41 @@ export default class FilmController {
       this._onCommentDeleteClick(evt);
     });
 
-
     this._filmNewCommentComponent.setCommentAddClickHandler((evt) => {
       this._onCommentAddClick(evt);
     });
   }
 
-  shake(element) {
-    element.style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+  _showError(errorMessage) {
+    const errorComponent = new ErrorComponent(errorMessage);
+    render(this._filmCommentsComponent.getElement(), errorComponent, RenderPosition.AFTERBEGIN);
 
     setTimeout(() => {
-      element.style.animation = ``;
-    }, SHAKE_ANIMATION_TIMEOUT);
+      remove(errorComponent);
+    }, Timeout.SHOW_ERROR);
   }
 
+  _onCommentChange(oldData, newData) {
+    if (newData === null) {
+      const isSuccess = this._commentsModel.removeComments(oldData);
+      if (isSuccess) {
+        this._rerenderPopupComment();
+      }
+    }
+    if (oldData === null) {
+      this._commentsModel.addComment(newData);
+      this._rerenderPopupComment();
+      this._filmNewCommentComponent.reset();
+    }
+  }
+
+  _getFilmComment(comments) {
+    return this._film.comments.map((item) =>
+      comments.find((comment) => comment.id === item));
+  }
 
   _onCommentAddClick(evt) {
-    if (evt.ctrlKey && evt.keyCode === 13 || evt.metaKey && evt.keyCode === 13) {
+    if (isCtrlOrCommandAndEnterEvent(evt)) {
       const commentEmotionElement = this._filmNewCommentComponent.getElement().querySelector(`.film-details__add-emoji-label img`);
       const notSanitizedCommentText = this._filmNewCommentComponent.getElement().querySelector(`.film-details__comment-input`).value;
       const commentText = encode(notSanitizedCommentText);
@@ -222,10 +218,11 @@ export default class FilmController {
         .catch(() => {
           textareaElement.disabled = false;
           this._filmNewCommentComponent.showErrorBorder();
-          this.shake(this._filmDetailsComponent.getElement());
+          shake(this._filmDetailsComponent.getElement());
+          const errorMessage = `Отправка комментария не возможна из-за отсутствия интернета`;
+          this._showError(errorMessage);
         });
     }
-
   }
 
   _onCommentDeleteClick(evt) {
@@ -259,27 +256,34 @@ export default class FilmController {
         deleteButtonElement.innerHTML = `Delete`;
         deleteButtonElement.disabled = false;
         this._filmCommentsComponent.recoveryListeners();
-        this.shake(this._filmCommentsComponent.getElement().querySelectorAll(`li`)[index]);
+        shake(this._filmCommentsComponent.getElement().querySelectorAll(`li`)[index]);
+        const errorMessage = `Удаление комментария не возможно из-за отсутствия интернета`;
+        this._showError(errorMessage);
       });
   }
 
-  _onCommentChange(oldData, newData) {
-    if (newData === null) {
-      const isSuccess = this._commentsModel.removeComments(oldData);
-      if (isSuccess) {
-        this._rerenderPopupComment();
-      }
-    }
-    if (oldData === null) {
-      this._commentsModel.addComment(newData);
-      this._rerenderPopupComment();
-      this._filmNewCommentComponent.reset();
-    }
+  _onWatchListButtonClick(evt) {
+    evt.preventDefault();
+    const newFilm = MovieModel.clone(this._film);
+    newFilm.watchlist = !this._film.watchlist;
+
+    this._onDataChange(this, this._film, newFilm);
   }
 
-  _getFilmComment(comments) {
-    return this._film.comments.map((item) =>
-      comments.find((comment) => comment.id === item));
+  _onHistoryButtonClickHandler(evt) {
+    evt.preventDefault();
+    const newFilm = MovieModel.clone(this._film);
+    newFilm.alreadyWatched = !this._film.alreadyWatched;
+
+    this._onDataChange(this, this._film, newFilm);
+  }
+
+  _onFavoriteButtonClick(evt) {
+    evt.preventDefault();
+    const newFilm = MovieModel.clone(this._film);
+    newFilm.favorite = !this._film.favorite;
+
+    this._onDataChange(this, this._film, newFilm);
   }
 
 }

@@ -1,7 +1,7 @@
 import AbstractSmartComponent from "./abstract-smart-component";
 import {encode} from "he";
+import {Timeout} from "../const";
 
-const BORDER_ERROR_TIMEOUT = 3000;
 
 const emojis = [{
   name: `smile`,
@@ -99,7 +99,7 @@ export default class NeWComment extends AbstractSmartComponent {
     this.getElement().querySelector(`.film-details__comment-input`).style.border = `2px solid red`;
     setTimeout(() => {
       this.getElement().querySelector(`.film-details__comment-input`).style.border = 0;
-    }, BORDER_ERROR_TIMEOUT);
+    }, Timeout.SHOW_ERROR);
   }
 
   setCommentAddClickHandler(handler) {

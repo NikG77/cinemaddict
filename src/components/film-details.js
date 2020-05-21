@@ -1,6 +1,5 @@
 import AbstractSmartComponent from "./abstract-smart-component";
 import {formatDate, transformDuration} from "../utils/common";
-// const SHAKE_ANIMATION_TIMEOUT = 2000;
 
 const createGenreMarkup = (genres) => {
   return genres.map((genre) => {
@@ -154,41 +153,27 @@ export default class FilmDetails extends AbstractSmartComponent {
     this.rerender();
   }
 
-  // shake() {
-  //   this.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+  _subscribeOnEvents() {
+    const element = this.getElement();
 
-  //   setTimeout(() => {
-  //     this.getElement().style.animation = ``;
-  //   }, SHAKE_ANIMATION_TIMEOUT);
-  // }
+    element.querySelector(`#watchlist`).addEventListener(`click`, () => {
+      this._film.watchlist = !this._film.watchlist;
+    });
+
+    element.querySelector(`#watched`).addEventListener(`click`, () => {
+      this._film.alreadyWatched = !this._film.alreadyWatched;
+    });
+
+    element.querySelector(`#favorite`).addEventListener(`click`, () => {
+      this._film.favorite = !this._film.favorite;
+    });
+  }
 
   setPopupCloseClickHandler(handler) {
     this.getElement().querySelector(`.film-details__close-btn`)
       .addEventListener(`click`, handler);
 
     this._popupCloseClickHandler = handler;
-  }
-
-
-  _subscribeOnEvents() {
-    const element = this.getElement();
-
-    element.querySelector(`#watchlist`).addEventListener(`click`, () => {
-      this._film.watchlist = !this._film.watchlist;
-
-      // this.rerender();
-    });
-
-    element.querySelector(`#watched`).addEventListener(`click`, () => {
-      this._film.alreadyWatched = !this._film.alreadyWatched;
-      // this.rerender();
-    });
-
-    element.querySelector(`#favorite`).addEventListener(`click`, () => {
-      this._film.favorite = !this._film.favorite;
-      // this.rerender();
-    });
-
   }
 
 }

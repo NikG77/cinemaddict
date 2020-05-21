@@ -44,9 +44,7 @@ export default class SortController {
   reset() {
     this._activeSortType = SortType.DEFAULT;
     this._onSortTypeChange(this._activeSortType);
-
   }
-
 
   _onSortTypeChange(sortType) {
     this._activeSortType = sortType;

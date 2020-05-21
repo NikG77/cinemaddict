@@ -24,8 +24,6 @@ export default class Movies {
 
   setFilms(films) {
     this._films = Array.from(films);
-    // Здесь не нужно запускать этот обработчик
-    // this._callHandlers(this._dataChangeHandlers);
   }
 
   getSortType() {
