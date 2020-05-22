@@ -24,6 +24,12 @@ export const ProfileLevel = {
   MOVIE_BUF_MIN: 21,
 };
 
+export const StatusCode = {
+  OK: 200,
+  REDIRECTION: 300,
+};
+
+
 export const Timeout = {
   SHAKE_ANIMATION: 2000,
   SHOW_ERROR: 4000,
