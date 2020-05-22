@@ -24,9 +24,6 @@ export const getFilmsByFilter = (films, filterType) => {
       return getAlreadyWatchedFilms(films);
     case FilterType.WATCHLIST:
       return getWatchListFilms(films);
-    default:
-      // eslint-disable-next-line no-console
-      console.log(`filterType-`, filterType, `что-то пошло не так с getFilmsByFilter`);
   }
 
   return films;
