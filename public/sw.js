@@ -1,3 +1,5 @@
+import {StatusCode} from "../src/const";
+
 const CACHE_PREFIX = `cinemaddict-cache`;
 const CACHE_VER = `v1`;
 const CACHE_NAME = `${CACHE_PREFIX}-${CACHE_VER}`;
@@ -78,7 +80,7 @@ self.addEventListener(`fetch`, (evt) => {
               // Если ответа нет, или ответ со статусом отличным от 200 OK,
               // или ответ небезопасного типа (не basic), тогда просто передаём
               // ответ дальше, никак не обрабатываем
-              if (!response || response.status !== 200 || response.type !== `basic`) {
+              if (!response || response.status !== StatusCode.OK || response.type !== `basic`) {
                 return response;
               }
 
