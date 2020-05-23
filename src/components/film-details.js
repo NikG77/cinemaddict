@@ -38,7 +38,7 @@ const createFilmDetailsTemplate = (film) => {
 
   const [hours, minutes] = transformDuration(duration);
 
-  const genreDeyails = genre.length > 1 ? `Genres` : `Genre`;
+  const genreDetails = genre.length > 1 ? `Genres` : `Genre`;
   const genreMarkup = createGenreMarkup(genre);
 
   return (
@@ -93,7 +93,7 @@ const createFilmDetailsTemplate = (film) => {
                   <td class="film-details__cell">${country}</td>
                 </tr>
                 <tr class="film-details__row">
-                  <td class="film-details__term">${genreDeyails}</td>
+                  <td class="film-details__term">${genreDetails}</td>
                   <td class="film-details__cell">
                     ${genreMarkup}
                   </td>

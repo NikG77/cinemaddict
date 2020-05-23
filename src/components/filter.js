@@ -12,7 +12,7 @@ const createFilterMarkup = (filter, isMain) => {
 };
 
 const createNavigationTemplate = (filters) => {
-  const filtersMarkup = filters.map((it, i) => createFilterMarkup(it, i === 0)).join(`\n`);
+  const filtersMarkup = filters.map((filter, i) => createFilterMarkup(filter, i === 0)).join(`\n`);
   return (
     `<div class="main-navigation__items" data-navigation="filters">
       ${filtersMarkup}

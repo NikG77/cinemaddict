@@ -22,7 +22,7 @@ const Day = {
   ONE_YEAR: 1,
 };
 
-const GenreItems = [`Action`, `Sci-Fi`, `Adventure`, `Comedy`, `Animation`, `Thriller`, `Horror`, `Drama`, `Family`];
+const GENRES = [`Action`, `Sci-Fi`, `Adventure`, `Comedy`, `Animation`, `Thriller`, `Horror`, `Drama`, `Family`];
 
 const getDateFrom = (activeIntervalType) => {
   let dateFrom = new Date(0);
@@ -33,7 +33,7 @@ const getDateFrom = (activeIntervalType) => {
       dateFrom = new Date(0);
       break;
     case StaticticsTimeInterval.MONTH:
-      dateFrom = dateTo.setMonth(dateTo.getMonth() - Day.ONE_N);
+      dateFrom = dateTo.setMonth(dateTo.getMonth() - Day.ONE_MONTH);
       break;
     case StaticticsTimeInterval.TODAY:
       dateFrom = dateTo.setDate(dateTo.getDate() - Day.ONE_DAY);
@@ -63,10 +63,10 @@ const getCountGenre = (films, genreItem) => {
 
 };
 
-const rankMovies = (watchedMovies) => Object.values(GenreItems).map((genreItem) => {
+const rankMovies = (watchedMovies) => GENRES.map((genre) => {
   return {
-    genreName: genreItem,
-    count: getCountGenre(watchedMovies, genreItem),
+    genreName: genre,
+    count: getCountGenre(watchedMovies, genre),
   };
 });
 

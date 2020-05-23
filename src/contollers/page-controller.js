@@ -257,9 +257,9 @@ export default class PageController {
   }
 
   _onViewChange() {
-    this._showedFilmControllers.forEach((it) => it.setDefaultView());
-    this._showedTopRatedFilmControllers.forEach((it) => it.setDefaultView());
-    this._showedMostCommentedFilmControllers.forEach((it) => it.setDefaultView());
+    this._showedFilmControllers.forEach((controller) => controller.setDefaultView());
+    this._showedTopRatedFilmControllers.forEach((controller) => controller.setDefaultView());
+    this._showedMostCommentedFilmControllers.forEach((controller) => controller.setDefaultView());
   }
 
   _onSortTypeChange() {

@@ -4,8 +4,8 @@ const isOnline = () => {
   return window.navigator.onLine;
 };
 
-const createStoreStructure = (items) => {
-  return items.reduce((acc, current) => {
+const createStoreStructure = (films) => {
+  return films.reduce((acc, current) => {
     return Object.assign({}, acc, {
       [current.id]: current,
     });
@@ -22,9 +22,9 @@ export default class Provider {
     if (isOnline()) {
       return this._api.getFilms()
         .then((films) => {
-          const items = createStoreStructure(films.map((film) => film.toRAW()));
+          const filmsForStarage = createStoreStructure(films.map((film) => film.toRAW()));
 
-          this._store.setItems(items);
+          this._store.setItems(filmsForStarage);
 
           return films;
         });

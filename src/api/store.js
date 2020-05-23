@@ -12,10 +12,10 @@ export default class Store {
     }
   }
 
-  setItems(items) {
+  setItems(films) {
     this._storage.setItem(
         this._storeKey,
-        JSON.stringify(items)
+        JSON.stringify(films)
     );
   }
 
