@@ -108,7 +108,7 @@ export default class FilmController {
   _onPopupOpenClick(evt) {
     const target = evt.target;
 
-    if (target && target.className === `film-card__title` || target.className === `film-card__poster` || target.className === `film-card__comments`) {
+    if (target.className === `film-card__title` || target.className === `film-card__poster` || target.className === `film-card__comments`) {
       document.querySelector(`body`).classList.add(`hide-overflow`);
 
       this._onViewChange();
