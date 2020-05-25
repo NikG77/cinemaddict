@@ -20,16 +20,27 @@ export default class Profile extends AbstractSmartComponent {
   constructor(filmsModel) {
     super();
     this._filmsModel = filmsModel;
+
+    this._currentProfileRating = ``;
   }
 
   getTemplate() {
-    return createProfileTemplate(this.getRating());
+    this._currentProfileRating = this.getRating();
+    // console.log(`из getTemplate-`, this._currentProfileRating);
+    return createProfileTemplate(this._currentProfileRating);
   }
 
   recoveryListeners() {}
 
-  rerender() {
+  _rerender() {
     super.rerender();
+  }
+
+  changeRating() {
+    const newRating = this.getRating();
+    if (newRating !== this._currentProfileRating) {
+      this._rerender();
+    }
   }
 
   getRating() {

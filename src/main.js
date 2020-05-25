@@ -56,7 +56,7 @@ const footerComponent = new FooterComponent(filmsModel);
 render(footerStatisticsElement, footerComponent, RenderPosition.BEFOREEND);
 
 
-const pageController = new PageController(filmsComponent, filmsModel, apiWithProvider);
+const pageController = new PageController(filmsComponent, filmsModel, apiWithProvider, profileComponent.changeRating());
 let statisticsComponent = new StatisticsComponent(filmsModel, profileComponent.getRating());
 
 navigationComponent.setNavigationChangeHandler((menuItem) => {

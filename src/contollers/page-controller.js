@@ -53,10 +53,11 @@ const getSortedFilms = (films, sortType, from, to) => {
 
 
 export default class PageController {
-  constructor(container, filmsModel, api) {
+  constructor(container, filmsModel, api, changeRating) {
     this._container = container;
     this._filmsModel = filmsModel;
     this._api = api;
+    this._changeRating = changeRating;
 
     this._commentsModel = null;
 
@@ -77,6 +78,7 @@ export default class PageController {
     this._onViewChange = this._onViewChange.bind(this);
     this._onFilterChange = this._onFilterChange.bind(this);
     this._onShowMoreButtonClick = this._onShowMoreButtonClick.bind(this);
+    // this._changeRating = this._changeRating.bind(this);
 
     this._filmsModel.setFilterChangeHandler(this._onFilterChange);
     this._filmsModel.setSortTypeChangeHandler(this._onSortTypeChange);
@@ -223,6 +225,8 @@ export default class PageController {
         if (isSuccess) {
           filmController.render(filmModel);
           this._updateMostCommentedFilms();
+          debugger;
+          this._changeRating();
         }
       })
       .catch(() => {
