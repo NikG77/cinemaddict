@@ -100,9 +100,9 @@ apiWithProvider.getFilms().then((films) => {
 window.addEventListener(`load`, () => {
   navigator.serviceWorker.register(`/sw.js`)
     .then(() => {
-      // Действие, в случае успешной регистрации ServiceWorker
+
     }).catch(() => {
-      // Действие, в случае ошибки при регистрации ServiceWorker
+
     });
 });
 

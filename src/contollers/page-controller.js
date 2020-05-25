@@ -65,8 +65,6 @@ export default class PageController {
     this._showedTopRatedFilmControllers = [];
     this._showedMostCommentedFilmControllers = [];
 
-    this._showedRaringFilmControllers = [];
-
     this._showingFilmCount = Count.FILM_SHOW;
 
     this._noFilmsComponent = new NoFilmsComponent();
@@ -226,7 +224,6 @@ export default class PageController {
         if (isSuccess) {
           filmController.render(filmModel);
           this._updateMostCommentedFilms();
-          debugger;
           this._changeRating();
         }
       })

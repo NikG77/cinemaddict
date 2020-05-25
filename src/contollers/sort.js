@@ -1,6 +1,4 @@
-
 import SortComponent, {SortType} from "../components/sort";
-// import {FilterType, FilterTypeOutput} from "../const.js";
 import {render, replace, RenderPosition} from "../utils/render.js";
 
 

@@ -30,7 +30,9 @@ export default class Profile extends AbstractSmartComponent {
     return createProfileTemplate(this._currentProfileRating);
   }
 
-  recoveryListeners() {}
+  recoveryListeners() {
+
+  }
 
   _rerender() {
     super.rerender();

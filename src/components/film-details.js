@@ -130,7 +130,6 @@ export default class FilmDetails extends AbstractSmartComponent {
 
     this._film = film;
     this._popupCloseClickHandler = null;
-    this._submitHandler = null;
 
     this._subscribeOnEvents();
   }
