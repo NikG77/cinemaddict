@@ -78,7 +78,6 @@ export default class PageController {
     this._onViewChange = this._onViewChange.bind(this);
     this._onFilterChange = this._onFilterChange.bind(this);
     this._onShowMoreButtonClick = this._onShowMoreButtonClick.bind(this);
-    // this._changeRating = this._changeRating.bind(this);
 
     this._filmsModel.setFilterChangeHandler(this._onFilterChange);
     this._filmsModel.setSortTypeChangeHandler(this._onSortTypeChange);
@@ -134,8 +133,10 @@ export default class PageController {
   }
 
   _renderFilms(films) {
-    const newFilms = renderFilms(this._filmListContainerElements[FilmsListContainer.FILM], films, this._onDataChange, this._onViewChange, this._commentsModel, this._api, this._filmsModel);
-    this._showedFilmControllers = this._showedFilmControllers.concat(newFilms);
+    if (films.length > 0) {
+      const newFilms = renderFilms(this._filmListContainerElements[FilmsListContainer.FILM], films, this._onDataChange, this._onViewChange, this._commentsModel, this._api, this._filmsModel);
+      this._showedFilmControllers = this._showedFilmControllers.concat(newFilms);
+    }
   }
 
   _renderTopRatedFilms(films) {
