@@ -217,6 +217,16 @@ export default class Statistics extends AbstractSmartComponent {
     return createStatisticsTemplate(this._films, this._activeIntervalType, this._topGenreName, this._profileRating);
   }
 
+  recoveryListeners() {
+    this._subscribeOnEvents();
+  }
+
+  rerender() {
+    super.rerender();
+
+    this._renderCharts();
+  }
+
   show() {
     super.show();
 
@@ -235,16 +245,6 @@ export default class Statistics extends AbstractSmartComponent {
     }
 
     this.rerender();
-  }
-
-  recoveryListeners() {
-    this._subscribeOnEvents();
-  }
-
-  rerender() {
-    super.rerender();
-
-    this._renderCharts();
   }
 
   _renderCharts() {

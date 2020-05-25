@@ -138,6 +138,13 @@ export default class FilmDetails extends AbstractSmartComponent {
     return createFilmDetailsTemplate(this._film);
   }
 
+  setPopupCloseClickHandler(handler) {
+    this.getElement().querySelector(`.film-details__close-btn`)
+      .addEventListener(`click`, handler);
+
+    this._popupCloseClickHandler = handler;
+  }
+
   recoveryListeners() {
     this.setPopupCloseClickHandler(this._popupCloseClickHandler);
 
@@ -167,13 +174,5 @@ export default class FilmDetails extends AbstractSmartComponent {
       this._film.favorite = !this._film.favorite;
     });
   }
-
-  setPopupCloseClickHandler(handler) {
-    this.getElement().querySelector(`.film-details__close-btn`)
-      .addEventListener(`click`, handler);
-
-    this._popupCloseClickHandler = handler;
-  }
-
 }
 

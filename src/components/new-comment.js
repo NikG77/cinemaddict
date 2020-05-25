@@ -72,6 +72,14 @@ export default class NeWComment extends AbstractSmartComponent {
     return createNewCommentTemplate(this._activeEmoji, this._newTextariaEmojValue);
   }
 
+  setCommentAddClickHandler(handler) {
+    this.getElement()
+      .querySelector(`.film-details__comment-input`)
+      .addEventListener(`keydown`, handler);
+
+    this._commentAddClickHandler = handler;
+  }
+
   recoveryListeners() {
     this._subscribeOnEvents();
 
@@ -92,7 +100,6 @@ export default class NeWComment extends AbstractSmartComponent {
     this._newTextariaEmojValue = ``;
     this._activeEmoji = ``;
     emojis[0].isChecked = true;
-
   }
 
   showErrorBorder() {
@@ -100,14 +107,6 @@ export default class NeWComment extends AbstractSmartComponent {
     setTimeout(() => {
       this.getElement().querySelector(`.film-details__comment-input`).style.border = 0;
     }, Timeout.SHOW_ERROR);
-  }
-
-  setCommentAddClickHandler(handler) {
-    this.getElement()
-      .querySelector(`.film-details__comment-input`)
-      .addEventListener(`keydown`, handler);
-
-    this._commentAddClickHandler = handler;
   }
 
   _subscribeOnEvents() {
