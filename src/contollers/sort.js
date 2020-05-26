@@ -16,6 +16,14 @@ export default class SortController {
     this._filmsModel.setDataChangeHandler(this._onDataChange);
   }
 
+  hide() {
+    this._sortComponent.hide();
+  }
+
+  show() {
+    this._sortComponent.show();
+  }
+
   render() {
     this._activeSortType = this._filmsModel.getSortType();
 
@@ -31,17 +39,13 @@ export default class SortController {
     this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChange);
   }
 
-  hide() {
-    this._sortComponent.hide();
-  }
-
-  show() {
-    this._sortComponent.show();
-  }
-
   reset() {
     this._activeSortType = SortType.DEFAULT;
     this._onSortTypeChange(this._activeSortType);
+  }
+
+  _onDataChange() {
+    this.render();
   }
 
   _onSortTypeChange(sortType) {
@@ -50,7 +54,4 @@ export default class SortController {
     this._onDataChange();
   }
 
-  _onDataChange() {
-    this.render();
-  }
 }
