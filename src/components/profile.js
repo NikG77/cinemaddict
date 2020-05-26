@@ -22,6 +22,8 @@ export default class Profile extends AbstractSmartComponent {
     this._filmsModel = filmsModel;
 
     this._currentProfileRating = ``;
+    this.changeRating = this.changeRating.bind(this);
+    this.getRating = this.getRating.bind(this);
   }
 
   getTemplate() {

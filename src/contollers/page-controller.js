@@ -190,7 +190,7 @@ export default class PageController {
 
   _updateMostCommentedFilms() {
     this._removeMostCommentedFilms();
-    this._renderMostCommentedFilms(this._filmsModel.getFilms());
+    this._renderMostCommentedFilms(this._filmsModel.getFilmsAll());
   }
 
   _updateFilms(count) {

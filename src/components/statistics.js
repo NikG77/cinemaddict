@@ -195,11 +195,11 @@ const createStatisticsTemplate = (films, activeIntervalType, topGenreName, profi
 };
 
 export default class Statistics extends AbstractSmartComponent {
-  constructor(filmsModel, profileRating) {
+  constructor(filmsModel, getProfileRating) {
     super();
 
     this._filmsModel = filmsModel;
-    this._profileRating = profileRating;
+    this._getProfileRating = getProfileRating;
 
     this._dateFrom = new Date(0);
     this._films = this._filmsModel.getFilmsAll();
@@ -214,7 +214,7 @@ export default class Statistics extends AbstractSmartComponent {
   }
 
   getTemplate() {
-    return createStatisticsTemplate(this._films, this._activeIntervalType, this._topGenreName, this._profileRating);
+    return createStatisticsTemplate(this._films, this._activeIntervalType, this._topGenreName, this._getProfileRating());
   }
 
   recoveryListeners() {

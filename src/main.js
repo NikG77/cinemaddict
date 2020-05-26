@@ -56,8 +56,8 @@ const footerComponent = new FooterComponent(filmsModel);
 render(footerStatisticsElement, footerComponent, RenderPosition.BEFOREEND);
 
 
-const pageController = new PageController(filmsComponent, filmsModel, apiWithProvider, profileComponent.changeRating());
-let statisticsComponent = new StatisticsComponent(filmsModel, profileComponent.getRating());
+const pageController = new PageController(filmsComponent, filmsModel, apiWithProvider, profileComponent.changeRating);
+let statisticsComponent = new StatisticsComponent(filmsModel, profileComponent.getRating);
 
 navigationComponent.setNavigationChangeHandler((menuItem) => {
   switch (menuItem) {
@@ -86,7 +86,7 @@ apiWithProvider.getFilms().then((films) => {
   pageController.render();
   footerComponent.rerender();
 
-  statisticsComponent = new StatisticsComponent(filmsModel, profileComponent.getRating());
+  statisticsComponent = new StatisticsComponent(filmsModel, profileComponent.getRating);
   render(siteMainElement, statisticsComponent, RenderPosition.BEFOREEND);
   statisticsComponent.hide();
 
@@ -100,9 +100,8 @@ apiWithProvider.getFilms().then((films) => {
 window.addEventListener(`load`, () => {
   navigator.serviceWorker.register(`/sw.js`)
     .then(() => {
-
-    }).catch(() => {
-
+    })
+    .catch(() => {
     });
 });
 
