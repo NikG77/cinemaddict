@@ -32,10 +32,6 @@ export const replace = (newComponent, oldComponent) => {
   }
 };
 
-// export const remove = (element) => {
-//   element.remove();
-// };
-
 export const remove = (component) => {
   const parentElement = component.getElement().parentElement;
   const isExistElements = !!(parentElement && component.getElement());
@@ -44,6 +40,3 @@ export const remove = (component) => {
   }
 };
 
-export const append = (container, component) => {
-  container.appendChild(component.getElement());
-};

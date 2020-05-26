@@ -2,7 +2,7 @@ import ErrorComponent from "../components/error";
 import FilmCardComponent from "../components/film-card";
 import FilmCommentsComponent from "../components/comments";
 import FilmDetailsComponent from "../components/film-details";
-import FilmNewCommentComponent from "../components/newComment";
+import FilmNewCommentComponent from "../components/new-comment";
 import MovieModel from "../models/movie";
 import {encode} from "he";
 import {isCtrlOrCommandAndEnterEvent, isEscEvent, shake} from "../utils/common";
@@ -183,8 +183,8 @@ export default class FilmController {
   }
 
   _getFilmComment(comments) {
-    return this._film.comments.map((item) =>
-      comments.find((comment) => comment.id === item));
+    return this._film.comments.map((filmComment) =>
+      comments.find((comment) => comment.id === filmComment));
   }
 
   _onCommentAddClick(evt) {
@@ -237,8 +237,8 @@ export default class FilmController {
 
     const commentId = target.dataset.id;
     const deleteButtonElement = target;
-    const index = this._film.comments.findIndex((it) => {
-      return it === commentId;
+    const index = this._film.comments.findIndex((filmComment) => {
+      return filmComment === commentId;
     });
 
     deleteButtonElement.innerHTML = `Deleting...`;

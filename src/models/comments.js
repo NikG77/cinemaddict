@@ -12,7 +12,7 @@ export default class Comments {
   }
 
   removeComments(id) {
-    const index = this._comments.findIndex((it) => it.id === id);
+    const index = this._comments.findIndex((comment) => comment.id === id);
 
     if (index === -1) {
       return false;
@@ -24,7 +24,7 @@ export default class Comments {
   }
 
   addComment(newComments) {
-    this._comments = this._comments.concat(newComments.filter((item) => this._comments.indexOf(item) < 0));
+    this._comments = this._comments.concat(newComments.filter((comment) => this._comments.indexOf(comment) < 0));
   }
 
 }

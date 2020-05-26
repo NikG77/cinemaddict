@@ -2,9 +2,9 @@ import AbstractSmartComponent from "./abstract-smart-component";
 import {formatDateComment} from "../utils/common";
 
 
-const createCommmentsMarkup = (comments) => {
-  return comments.map((item) => {
-    const {date, emotion, id, author, comment} = item;
+const createCommentsMarkup = (comments) => {
+  return comments.map((newComment) => {
+    const {date, emotion, id, author, comment} = newComment;
     const commentTimeAgo = formatDateComment(date);
     return (
       `<li class="film-details__comment">
@@ -28,14 +28,14 @@ const createCommentsTemplate = (comments) => {
 
   const commentsNumber = comments.length;
 
-  const сommmentsMarkup = createCommmentsMarkup(comments);
+  const commentsMarkup = createCommentsMarkup(comments);
   return (
     `<div class="form-details__bottom-container">
       <section class="film-details__comments-wrap">
         <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${commentsNumber}</span></h3>
 
         <ul class="film-details__comments-list">
-          ${сommmentsMarkup}
+          ${commentsMarkup}
         </ul>
 
       </section>
@@ -57,6 +57,15 @@ export default class Comments extends AbstractSmartComponent {
     return createCommentsTemplate(this._comments);
   }
 
+  setCommentDeleteClickHandler(handler) {
+    this.getElement()
+      .querySelector(`.film-details__comments-list`)
+        .addEventListener(`click`, handler);
+
+    this._commentDeleteClickHandler = handler;
+
+  }
+
   recoveryListeners() {
     this.setCommentDeleteClickHandler(this._commentDeleteClickHandler);
   }
@@ -69,14 +78,6 @@ export default class Comments extends AbstractSmartComponent {
     this.rerender();
   }
 
-  setCommentDeleteClickHandler(handler) {
-    this.getElement()
-      .querySelector(`.film-details__comments-list`)
-        .addEventListener(`click`, handler);
-
-    this._commentDeleteClickHandler = handler;
-
-  }
 
 }
 

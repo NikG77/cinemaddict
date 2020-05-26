@@ -56,7 +56,7 @@ const footerComponent = new FooterComponent(filmsModel);
 render(footerStatisticsElement, footerComponent, RenderPosition.BEFOREEND);
 
 
-const pageController = new PageController(filmsComponent, filmsModel, apiWithProvider);
+const pageController = new PageController(filmsComponent, filmsModel, apiWithProvider, profileComponent.changeRating());
 let statisticsComponent = new StatisticsComponent(filmsModel, profileComponent.getRating());
 
 navigationComponent.setNavigationChangeHandler((menuItem) => {
@@ -100,9 +100,9 @@ apiWithProvider.getFilms().then((films) => {
 window.addEventListener(`load`, () => {
   navigator.serviceWorker.register(`/sw.js`)
     .then(() => {
-      // Действие, в случае успешной регистрации ServiceWorker
+
     }).catch(() => {
-      // Действие, в случае ошибки при регистрации ServiceWorker
+
     });
 });
 

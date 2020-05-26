@@ -53,18 +53,17 @@ const getSortedFilms = (films, sortType, from, to) => {
 
 
 export default class PageController {
-  constructor(container, filmsModel, api) {
+  constructor(container, filmsModel, api, changeRating) {
     this._container = container;
     this._filmsModel = filmsModel;
     this._api = api;
+    this._changeRating = changeRating;
 
     this._commentsModel = null;
 
     this._showedFilmControllers = [];
     this._showedTopRatedFilmControllers = [];
     this._showedMostCommentedFilmControllers = [];
-
-    this._showedRaringFilmControllers = [];
 
     this._showingFilmCount = Count.FILM_SHOW;
 
@@ -132,8 +131,10 @@ export default class PageController {
   }
 
   _renderFilms(films) {
-    const newFilms = renderFilms(this._filmListContainerElements[FilmsListContainer.FILM], films, this._onDataChange, this._onViewChange, this._commentsModel, this._api, this._filmsModel);
-    this._showedFilmControllers = this._showedFilmControllers.concat(newFilms);
+    if (films.length > 0) {
+      const newFilms = renderFilms(this._filmListContainerElements[FilmsListContainer.FILM], films, this._onDataChange, this._onViewChange, this._commentsModel, this._api, this._filmsModel);
+      this._showedFilmControllers = this._showedFilmControllers.concat(newFilms);
+    }
   }
 
   _renderTopRatedFilms(films) {
@@ -223,6 +224,7 @@ export default class PageController {
         if (isSuccess) {
           filmController.render(filmModel);
           this._updateMostCommentedFilms();
+          this._changeRating();
         }
       })
       .catch(() => {
@@ -257,9 +259,9 @@ export default class PageController {
   }
 
   _onViewChange() {
-    this._showedFilmControllers.forEach((it) => it.setDefaultView());
-    this._showedTopRatedFilmControllers.forEach((it) => it.setDefaultView());
-    this._showedMostCommentedFilmControllers.forEach((it) => it.setDefaultView());
+    this._showedFilmControllers.forEach((controller) => controller.setDefaultView());
+    this._showedTopRatedFilmControllers.forEach((controller) => controller.setDefaultView());
+    this._showedMostCommentedFilmControllers.forEach((controller) => controller.setDefaultView());
   }
 
   _onSortTypeChange() {

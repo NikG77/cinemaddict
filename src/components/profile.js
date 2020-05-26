@@ -20,16 +20,13 @@ export default class Profile extends AbstractSmartComponent {
   constructor(filmsModel) {
     super();
     this._filmsModel = filmsModel;
+
+    this._currentProfileRating = ``;
   }
 
   getTemplate() {
-    return createProfileTemplate(this.getRating());
-  }
-
-  recoveryListeners() {}
-
-  rerender() {
-    super.rerender();
+    this._currentProfileRating = this.getRating();
+    return createProfileTemplate(this._currentProfileRating);
   }
 
   getRating() {
@@ -49,10 +46,23 @@ export default class Profile extends AbstractSmartComponent {
       case numberWatched >= ProfileLevel.MOVIE_BUF_MIN:
         profileRating = `Movie Buff`;
         break;
-      default:
-        profileRating = `Что то пошло не так`;
     }
     return profileRating;
+  }
+
+  recoveryListeners() {
+
+  }
+
+  rerender() {
+    super.rerender();
+  }
+
+  changeRating() {
+    const newRating = this.getRating();
+    if (newRating !== this._currentProfileRating) {
+      this.rerender();
+    }
   }
 
 }

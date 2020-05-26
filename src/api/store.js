@@ -12,10 +12,10 @@ export default class Store {
     }
   }
 
-  setItems(items) {
+  setItems(films) {
     this._storage.setItem(
         this._storeKey,
-        JSON.stringify(items)
+        JSON.stringify(films)
     );
   }
 
@@ -30,18 +30,6 @@ export default class Store {
             })
         )
     );
-
   }
 
-  removeItem(key) {
-    const store = this.getItems();
-
-    delete store[key];
-
-    this._storage.setItem(
-        this._storeKey,
-        JSON.stringify(store)
-    );
-
-  }
 }
